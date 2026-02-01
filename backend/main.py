@@ -4,6 +4,7 @@ import os
 import re
 from contextlib import asynccontextmanager
 from typing import Optional
+from urllib.parse import urlparse
 
 from fastapi import FastAPI, HTTPException, Request
 from pydantic import BaseModel, Field
@@ -18,7 +19,7 @@ logger = logging.getLogger(__name__)
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
 client = genai.Client(api_key=GEMINI_API_KEY) if GEMINI_API_KEY else None
-RUBE_MCP_BASE_URL = os.getenv("RUBE_MCP_BASE_URL", "https://rube.app").rstrip("/")
+RUBE_MCP_BASE_URL = os.getenv("RUBE_MCP_BASE_URL")
 RUBE_MCP_VALIDATED_BASE_URL: Optional[str] = None
 RUBE_HTTP_CLIENT: Optional[httpx.AsyncClient] = None
 def parse_rube_timeout() -> float:
@@ -26,15 +27,9 @@ def parse_rube_timeout() -> float:
     try:
         timeout = float(raw_timeout)
     except ValueError:
-        raise HTTPException(
-            status_code=500,
-            detail="RUBE_MCP_TIMEOUT must be a number."
-        )
+        raise ValueError("RUBE_MCP_TIMEOUT must be a number.")
     if timeout <= 0:
-        raise HTTPException(
-            status_code=500,
-            detail="RUBE_MCP_TIMEOUT must be greater than 0."
-        )
+        raise ValueError("RUBE_MCP_TIMEOUT must be greater than 0.")
     return timeout
 
 RUBE_HTTP_TIMEOUT = parse_rube_timeout()
@@ -81,17 +76,15 @@ def require_rube_token() -> str:
     return token
 
 def validate_rube_base_url() -> str:
-    if not RUBE_MCP_BASE_URL.strip():
-        raise HTTPException(
-            status_code=500,
-            detail="RUBE_MCP_BASE_URL must be set."
-        )
-    if not RUBE_MCP_BASE_URL.startswith("https://"):
-        raise HTTPException(
-            status_code=500,
-            detail="RUBE_MCP_BASE_URL must use https."
-        )
-    return RUBE_MCP_BASE_URL
+    if not RUBE_MCP_BASE_URL:
+        raise ValueError("RUBE_MCP_BASE_URL must be set.")
+    url = RUBE_MCP_BASE_URL.strip()
+    if not url:
+        raise ValueError("RUBE_MCP_BASE_URL must be set.")
+    parsed = urlparse(url)
+    if parsed.scheme != "https" or not parsed.netloc:
+        raise ValueError("RUBE_MCP_BASE_URL must be a valid https URL.")
+    return url.rstrip("/")
 
 async def get_rube_http_client() -> httpx.AsyncClient:
     global RUBE_HTTP_CLIENT
@@ -102,8 +95,11 @@ async def get_rube_http_client() -> httpx.AsyncClient:
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     global RUBE_MCP_VALIDATED_BASE_URL
-    RUBE_MCP_VALIDATED_BASE_URL = validate_rube_base_url()
-    await get_rube_http_client()
+    try:
+        RUBE_MCP_VALIDATED_BASE_URL = validate_rube_base_url()
+        await get_rube_http_client()
+    except ValueError as exc:
+        raise RuntimeError(str(exc)) from exc
     try:
         yield
     finally:
@@ -255,10 +251,7 @@ async def translate_text(request: TranslationRequest):
 async def rube_recipe_discover(request: Request):
     token = require_rube_token()
     params = dict(request.query_params)
-    base_url = RUBE_MCP_VALIDATED_BASE_URL
-    if base_url is None:
-        raise HTTPException(status_code=500, detail="Rube MCP base URL is not initialized.")
-    url = f"{base_url}/recipe-hub/discover"
+    url = f"{RUBE_MCP_VALIDATED_BASE_URL}/recipe-hub/discover"
     return await fetch_rube_json(url, token, params=params)
 
 if __name__ == "__main__":

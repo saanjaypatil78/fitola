@@ -23,7 +23,7 @@ This guide explains how to deploy and run the Fitola backend.
 
 4. **Configure Environment Variables**:
    - Copy `.env.example` to `.env`.
-   - Add your `GEMINI_API_KEY`, `RUBE_MCP_JWT`, and Supabase credentials.
+   - Add your `GEMINI_API_KEY`, `RUBE_MCP_JWT`, `RUBE_MCP_BASE_URL`, and Supabase credentials.
    - **CRITICAL**: Do not commit your `.env` file to version control.
 
 5. **Run the Server**:

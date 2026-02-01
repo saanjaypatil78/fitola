@@ -52,7 +52,7 @@ graph TD
 3. **Configure environment variables**:
    ```bash
    cp .env.example .env
-   # Add your GEMINI_API_KEY (and optional GEMINI_MODEL), SUPABASE keys, and RUBE_MCP_JWT to .env
+   # Add your GEMINI_API_KEY (and optional GEMINI_MODEL), SUPABASE keys, RUBE_MCP_JWT, and RUBE_MCP_BASE_URL to .env
    ```
 
 4. **Run development server**:
