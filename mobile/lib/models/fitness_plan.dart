@@ -73,6 +73,87 @@ class FitnessPlan {
     if (currentDay == null || durationDays == 0) return 0.0;
     return (currentDay! / durationDays * 100).clamp(0.0, 100.0);
   }
+  
+  FitnessPlan copyWith({
+    String? id,
+    String? userId,
+    String? title,
+    String? description,
+    PlanType? type,
+    DifficultyLevel? difficulty,
+    int? durationDays,
+    List<WorkoutDay>? workoutDays,
+    String? aiGenerated,
+    DateTime? createdAt,
+    DateTime? startDate,
+    int? currentDay,
+  }) {
+    return FitnessPlan(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      type: type ?? this.type,
+      difficulty: difficulty ?? this.difficulty,
+      durationDays: durationDays ?? this.durationDays,
+      workoutDays: workoutDays ?? this.workoutDays,
+      aiGenerated: aiGenerated ?? this.aiGenerated,
+      createdAt: createdAt ?? this.createdAt,
+      startDate: startDate ?? this.startDate,
+      currentDay: currentDay ?? this.currentDay,
+    );
+  }
+  
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    
+    return other is FitnessPlan &&
+        other.id == id &&
+        other.userId == userId &&
+        other.title == title &&
+        other.description == description &&
+        other.type == type &&
+        other.difficulty == difficulty &&
+        other.durationDays == durationDays &&
+        _listEquals(other.workoutDays, workoutDays) &&
+        other.aiGenerated == aiGenerated &&
+        other.createdAt == createdAt &&
+        other.startDate == startDate &&
+        other.currentDay == currentDay;
+  }
+  
+  @override
+  int get hashCode {
+    return Object.hash(
+      id,
+      userId,
+      title,
+      description,
+      type,
+      difficulty,
+      durationDays,
+      Object.hashAll(workoutDays),
+      aiGenerated,
+      createdAt,
+      startDate,
+      currentDay,
+    );
+  }
+  
+  @override
+  String toString() {
+    return 'FitnessPlan(id: $id, title: $title, type: $type, difficulty: $difficulty)';
+  }
+  
+  bool _listEquals<T>(List<T>? a, List<T>? b) {
+    if (a == null) return b == null;
+    if (b == null || a.length != b.length) return false;
+    for (int i = 0; i < a.length; i++) {
+      if (a[i] != b[i]) return false;
+    }
+    return true;
+  }
 }
 
 class WorkoutDay {
@@ -110,6 +191,58 @@ class WorkoutDay {
       'estimated_duration': estimatedDuration,
       'is_rest_day': isRestDay,
     };
+  }
+  
+  WorkoutDay copyWith({
+    int? dayNumber,
+    String? title,
+    List<Exercise>? exercises,
+    int? estimatedDuration,
+    bool? isRestDay,
+  }) {
+    return WorkoutDay(
+      dayNumber: dayNumber ?? this.dayNumber,
+      title: title ?? this.title,
+      exercises: exercises ?? this.exercises,
+      estimatedDuration: estimatedDuration ?? this.estimatedDuration,
+      isRestDay: isRestDay ?? this.isRestDay,
+    );
+  }
+  
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    
+    return other is WorkoutDay &&
+        other.dayNumber == dayNumber &&
+        other.title == title &&
+        _listEquals(other.exercises, exercises) &&
+        other.estimatedDuration == estimatedDuration &&
+        other.isRestDay == isRestDay;
+  }
+  
+  @override
+  int get hashCode {
+    return Object.hash(
+      dayNumber,
+      title,
+      Object.hashAll(exercises),
+      estimatedDuration,
+      isRestDay,
+    );
+  }
+  
+  @override
+  String toString() {
+    return 'WorkoutDay(day: $dayNumber, title: $title, exercises: ${exercises.length})';
+  }
+  
+  bool _listEquals<T>(List<T> a, List<T> b) {
+    if (a.length != b.length) return false;
+    for (int i = 0; i < a.length; i++) {
+      if (a[i] != b[i]) return false;
+    }
+    return true;
   }
 }
 
@@ -150,6 +283,54 @@ class Exercise {
       'duration': duration,
       'video_url': videoUrl,
     };
+  }
+  
+  Exercise copyWith({
+    String? name,
+    String? description,
+    int? sets,
+    int? reps,
+    int? duration,
+    String? videoUrl,
+  }) {
+    return Exercise(
+      name: name ?? this.name,
+      description: description ?? this.description,
+      sets: sets ?? this.sets,
+      reps: reps ?? this.reps,
+      duration: duration ?? this.duration,
+      videoUrl: videoUrl ?? this.videoUrl,
+    );
+  }
+  
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    
+    return other is Exercise &&
+        other.name == name &&
+        other.description == description &&
+        other.sets == sets &&
+        other.reps == reps &&
+        other.duration == duration &&
+        other.videoUrl == videoUrl;
+  }
+  
+  @override
+  int get hashCode {
+    return Object.hash(
+      name,
+      description,
+      sets,
+      reps,
+      duration,
+      videoUrl,
+    );
+  }
+  
+  @override
+  String toString() {
+    return 'Exercise(name: $name, sets: $sets, reps: $reps)';
   }
 }
 

@@ -58,6 +58,91 @@ class NutritionPlan {
       'duration_days': durationDays,
     };
   }
+  
+  NutritionPlan copyWith({
+    String? id,
+    String? userId,
+    String? title,
+    String? description,
+    int? dailyCalories,
+    Map<String, double>? macros,
+    List<Meal>? meals,
+    List<String>? dietaryRestrictions,
+    String? aiGenerated,
+    DateTime? createdAt,
+    int? durationDays,
+  }) {
+    return NutritionPlan(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      dailyCalories: dailyCalories ?? this.dailyCalories,
+      macros: macros ?? this.macros,
+      meals: meals ?? this.meals,
+      dietaryRestrictions: dietaryRestrictions ?? this.dietaryRestrictions,
+      aiGenerated: aiGenerated ?? this.aiGenerated,
+      createdAt: createdAt ?? this.createdAt,
+      durationDays: durationDays ?? this.durationDays,
+    );
+  }
+  
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    
+    return other is NutritionPlan &&
+        other.id == id &&
+        other.userId == userId &&
+        other.title == title &&
+        other.description == description &&
+        other.dailyCalories == dailyCalories &&
+        _mapEquals(other.macros, macros) &&
+        _listEquals(other.meals, meals) &&
+        _listEquals(other.dietaryRestrictions, dietaryRestrictions) &&
+        other.aiGenerated == aiGenerated &&
+        other.createdAt == createdAt &&
+        other.durationDays == durationDays;
+  }
+  
+  @override
+  int get hashCode {
+    return Object.hash(
+      id,
+      userId,
+      title,
+      description,
+      dailyCalories,
+      Object.hashAll(macros.entries.map((e) => Object.hash(e.key, e.value))),
+      Object.hashAll(meals),
+      Object.hashAll(dietaryRestrictions ?? []),
+      aiGenerated,
+      createdAt,
+      durationDays,
+    );
+  }
+  
+  @override
+  String toString() {
+    return 'NutritionPlan(id: $id, title: $title, dailyCalories: $dailyCalories)';
+  }
+  
+  bool _listEquals<T>(List<T>? a, List<T>? b) {
+    if (a == null) return b == null;
+    if (b == null || a.length != b.length) return false;
+    for (int i = 0; i < a.length; i++) {
+      if (a[i] != b[i]) return false;
+    }
+    return true;
+  }
+  
+  bool _mapEquals<K, V>(Map<K, V> a, Map<K, V> b) {
+    if (a.length != b.length) return false;
+    for (final key in a.keys) {
+      if (!b.containsKey(key) || a[key] != b[key]) return false;
+    }
+    return true;
+  }
 }
 
 class Meal {
@@ -105,6 +190,74 @@ class Meal {
       'image_url': imageUrl,
     };
   }
+  
+  Meal copyWith({
+    String? name,
+    MealType? type,
+    List<FoodItem>? foods,
+    int? calories,
+    Map<String, double>? macros,
+    String? instructions,
+    String? imageUrl,
+  }) {
+    return Meal(
+      name: name ?? this.name,
+      type: type ?? this.type,
+      foods: foods ?? this.foods,
+      calories: calories ?? this.calories,
+      macros: macros ?? this.macros,
+      instructions: instructions ?? this.instructions,
+      imageUrl: imageUrl ?? this.imageUrl,
+    );
+  }
+  
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    
+    return other is Meal &&
+        other.name == name &&
+        other.type == type &&
+        _listEquals(other.foods, foods) &&
+        other.calories == calories &&
+        _mapEquals(other.macros, macros) &&
+        other.instructions == instructions &&
+        other.imageUrl == imageUrl;
+  }
+  
+  @override
+  int get hashCode {
+    return Object.hash(
+      name,
+      type,
+      Object.hashAll(foods),
+      calories,
+      Object.hashAll(macros.entries.map((e) => Object.hash(e.key, e.value))),
+      instructions,
+      imageUrl,
+    );
+  }
+  
+  @override
+  String toString() {
+    return 'Meal(name: $name, type: $type, calories: $calories)';
+  }
+  
+  bool _listEquals<T>(List<T> a, List<T> b) {
+    if (a.length != b.length) return false;
+    for (int i = 0; i < a.length; i++) {
+      if (a[i] != b[i]) return false;
+    }
+    return true;
+  }
+  
+  bool _mapEquals<K, V>(Map<K, V> a, Map<K, V> b) {
+    if (a.length != b.length) return false;
+    for (final key in a.keys) {
+      if (!b.containsKey(key) || a[key] != b[key]) return false;
+    }
+    return true;
+  }
 }
 
 class FoodItem {
@@ -136,6 +289,46 @@ class FoodItem {
       'unit': unit,
       'calories': calories,
     };
+  }
+  
+  FoodItem copyWith({
+    String? name,
+    double? quantity,
+    String? unit,
+    int? calories,
+  }) {
+    return FoodItem(
+      name: name ?? this.name,
+      quantity: quantity ?? this.quantity,
+      unit: unit ?? this.unit,
+      calories: calories ?? this.calories,
+    );
+  }
+  
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    
+    return other is FoodItem &&
+        other.name == name &&
+        other.quantity == quantity &&
+        other.unit == unit &&
+        other.calories == calories;
+  }
+  
+  @override
+  int get hashCode {
+    return Object.hash(
+      name,
+      quantity,
+      unit,
+      calories,
+    );
+  }
+  
+  @override
+  String toString() {
+    return 'FoodItem(name: $name, quantity: $quantity $unit, calories: $calories)';
   }
 }
 

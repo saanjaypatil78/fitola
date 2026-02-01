@@ -123,4 +123,61 @@ class UserModel {
     if (bmiValue < 30.0) return 'Overweight';
     return 'Obese';
   }
+  
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    
+    return other is UserModel &&
+        other.id == id &&
+        other.name == name &&
+        other.email == email &&
+        other.photoUrl == photoUrl &&
+        other.ageGroup == ageGroup &&
+        other.weight == weight &&
+        other.height == height &&
+        other.city == city &&
+        other.bodyType == bodyType &&
+        _listEquals(other.goals, goals) &&
+        other.interestedInCompetition == interestedInCompetition &&
+        other.gender == gender &&
+        _listEquals(other.allergies, allergies) &&
+        other.createdAt == createdAt &&
+        other.updatedAt == updatedAt;
+  }
+  
+  @override
+  int get hashCode {
+    return Object.hash(
+      id,
+      name,
+      email,
+      photoUrl,
+      ageGroup,
+      weight,
+      height,
+      city,
+      bodyType,
+      Object.hashAll(goals ?? []),
+      interestedInCompetition,
+      gender,
+      Object.hashAll(allergies ?? []),
+      createdAt,
+      updatedAt,
+    );
+  }
+  
+  @override
+  String toString() {
+    return 'UserModel(id: $id, name: $name, email: $email)';
+  }
+  
+  bool _listEquals<T>(List<T>? a, List<T>? b) {
+    if (a == null) return b == null;
+    if (b == null || a.length != b.length) return false;
+    for (int i = 0; i < a.length; i++) {
+      if (a[i] != b[i]) return false;
+    }
+    return true;
+  }
 }

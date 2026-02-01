@@ -93,6 +93,48 @@ class ChatMessage {
       isRead: isRead ?? this.isRead,
     );
   }
+  
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    
+    return other is ChatMessage &&
+        other.id == id &&
+        other.senderId == senderId &&
+        other.receiverId == receiverId &&
+        other.conversationId == conversationId &&
+        other.message == message &&
+        other.type == type &&
+        other.fileUrl == fileUrl &&
+        other.fileName == fileName &&
+        other.isTranslated == isTranslated &&
+        other.translatedMessage == translatedMessage &&
+        other.timestamp == timestamp &&
+        other.isRead == isRead;
+  }
+  
+  @override
+  int get hashCode {
+    return Object.hash(
+      id,
+      senderId,
+      receiverId,
+      conversationId,
+      message,
+      type,
+      fileUrl,
+      fileName,
+      isTranslated,
+      translatedMessage,
+      timestamp,
+      isRead,
+    );
+  }
+  
+  @override
+  String toString() {
+    return 'ChatMessage(id: $id, senderId: $senderId, receiverId: $receiverId, type: $type)';
+  }
 }
 
 enum MessageType {

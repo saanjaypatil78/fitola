@@ -76,6 +76,89 @@ class FitBuddy {
     final difference = now.difference(lastActive!);
     return difference.inMinutes < 5;
   }
+  
+  FitBuddy copyWith({
+    String? id,
+    String? name,
+    String? photoUrl,
+    String? gender,
+    LatLng? location,
+    double? distance,
+    UserStatus? status,
+    String? bio,
+    List<String>? interests,
+    bool? allowVoiceCalls,
+    bool? allowVideoCalls,
+    DateTime? lastActive,
+  }) {
+    return FitBuddy(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      photoUrl: photoUrl ?? this.photoUrl,
+      gender: gender ?? this.gender,
+      location: location ?? this.location,
+      distance: distance ?? this.distance,
+      status: status ?? this.status,
+      bio: bio ?? this.bio,
+      interests: interests ?? this.interests,
+      allowVoiceCalls: allowVoiceCalls ?? this.allowVoiceCalls,
+      allowVideoCalls: allowVideoCalls ?? this.allowVideoCalls,
+      lastActive: lastActive ?? this.lastActive,
+    );
+  }
+  
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    
+    return other is FitBuddy &&
+        other.id == id &&
+        other.name == name &&
+        other.photoUrl == photoUrl &&
+        other.gender == gender &&
+        other.location.latitude == location.latitude &&
+        other.location.longitude == location.longitude &&
+        other.distance == distance &&
+        other.status == status &&
+        other.bio == bio &&
+        _listEquals(other.interests, interests) &&
+        other.allowVoiceCalls == allowVoiceCalls &&
+        other.allowVideoCalls == allowVideoCalls &&
+        other.lastActive == lastActive;
+  }
+  
+  @override
+  int get hashCode {
+    return Object.hash(
+      id,
+      name,
+      photoUrl,
+      gender,
+      location.latitude,
+      location.longitude,
+      distance,
+      status,
+      bio,
+      Object.hashAll(interests ?? []),
+      allowVoiceCalls,
+      allowVideoCalls,
+      lastActive,
+    );
+  }
+  
+  @override
+  String toString() {
+    return 'FitBuddy(id: $id, name: $name, distance: ${distance}km, status: $status)';
+  }
+  
+  bool _listEquals<T>(List<T>? a, List<T>? b) {
+    if (a == null) return b == null;
+    if (b == null || a.length != b.length) return false;
+    for (int i = 0; i < a.length; i++) {
+      if (a[i] != b[i]) return false;
+    }
+    return true;
+  }
 }
 
 enum UserStatus {
