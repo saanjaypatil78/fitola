@@ -1,0 +1,79 @@
+name: fitola
+description: AI-Powered Personal Fitness & Social Wellness Platform
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  
+  # State Management
+  provider: ^6.1.0
+  
+  # Supabase
+  supabase_flutter: ^2.0.0
+  
+  # HTTP & API
+  http: ^1.1.0
+  dio: ^5.4.0
+  
+  # Maps
+  flutter_map: ^6.0.0
+  latlong2: ^0.9.0
+  geolocator: ^10.1.0
+  
+  # Location & Permissions
+  permission_handler: ^11.0.1
+  location: ^5.0.3
+  
+  # Chat & Realtime
+  socket_io_client: ^2.0.3
+  file_picker: ^6.1.1
+  image_picker: ^1.0.5
+  
+  # Translation
+  translator: ^1.0.0
+  
+  # UI/UX
+  google_fonts: ^6.1.0
+  flutter_svg: ^2.0.9
+  lottie: ^2.7.0
+  shimmer: ^3.0.0
+  
+  # Auth
+  google_sign_in: ^6.1.6
+  flutter_secure_storage: ^9.0.0
+  
+  # Charts & Analytics
+  fl_chart: ^0.65.0
+  
+  # Health Integration
+  health: ^10.0.0
+  
+  # Utils
+  intl: ^0.18.1
+  shared_preferences: ^2.2.2
+  uuid: ^4.2.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true
+  
+  assets:
+    - assets/images/
+    - assets/animations/
+    - assets/icons/
+  
+  fonts:
+    - family: Poppins
+      fonts:
+        - asset: fonts/Poppins-Regular.ttf
+        - asset: fonts/Poppins-Bold.ttf
+          weight: 700
