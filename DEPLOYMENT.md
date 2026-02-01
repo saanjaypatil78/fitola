@@ -44,10 +44,11 @@ Fitola is pre-configured for Vercel using `vercel.json`.
 
 2. **Configure Environment Variables**:
    - In the Vercel project settings, go to **Environment Variables**.
-   - Add the following keys:
-     - `GEMINI_API_KEY`: Your Google Gemini API Key.
-     - `SUPABASE_URL`: Your Supabase Project URL.
-     - `SUPABASE_KEY`: Your Supabase API Key.
+    - Add the following keys:
+      - `GEMINI_API_KEY`: Your Google Gemini API Key.
+      - `GEMINI_MODEL` (optional): Override the Gemini model (defaults to `gemini-2.5-flash`).
+      - `SUPABASE_URL`: Your Supabase Project URL.
+      - `SUPABASE_KEY`: Your Supabase API Key.
 
 3. **Deploy**:
    - Vercel will automatically build and deploy your project on every push to the `main` branch.
@@ -56,9 +57,11 @@ Fitola is pre-configured for Vercel using `vercel.json`.
 
 ## 3. API Endpoints
 
-- `POST /api/v1/chat`: AI-powered chat (Gemini 2.0 Flash).
+- `POST /api/v1/chat`: AI-powered chat (Gemini 2.5 Flash).
 - `GET /api/v1/map/nearby`: FitBuddy locator logic.
 - `GET /api/v1/plans/ai`: Personalized fitness plans.
+- `POST /api/v1/plans/ai`: AI-generated weekly workout + diet plans.
+- `POST /api/v1/translate`: Gemini-powered translation.
 
 ---
 

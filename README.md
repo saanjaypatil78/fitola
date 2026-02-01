@@ -9,7 +9,7 @@ Fitola is a next-generation wellness platform combining personalized AI fitness 
 
 ## 🚀 Key Features
 
-- **🧠 AI Brain**: Personalized workout and nutrition plans powered by Gemini 2.0 Flash.
+- **🧠 AI Brain**: Personalized workout and nutrition plans powered by Gemini 2.5 Flash.
 - **💬 FitChat**: Real-time social messaging with integrated translation.
 - **📍 FitBuddy Locator**: Find workout partners nearby with a privacy-first "Ghost Mode."
 - **🛡️ Privacy-First**: Secure data handling with Supabase and optional location masking.
@@ -29,7 +29,7 @@ graph TD
 ## 🛠️ Tech Stack
 
 - **Backend**: Python 3.10, FastAPI, Pydantic, Uvicorn
-- **AI**: Google Generative AI (Gemini 2.0)
+- **AI**: Google Generative AI (Gemini 2.5)
 - **Database**: Supabase (PostgreSQL)
 - **Deployment**: Vercel (Serverless Functions)
 - **CI/CD**: GitHub Actions
@@ -52,7 +52,7 @@ graph TD
 3. **Configure environment variables**:
    ```bash
    cp .env.example .env
-   # Add your GEMINI_API_KEY and SUPABASE keys to .env
+   # Add your GEMINI_API_KEY (and optional GEMINI_MODEL) and SUPABASE keys to .env
    ```
 
 4. **Run development server**:
