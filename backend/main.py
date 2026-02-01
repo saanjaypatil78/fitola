@@ -2,17 +2,16 @@ import json
 import logging
 import os
 import re
+from contextlib import asynccontextmanager
+from typing import Optional
 
 from fastapi import FastAPI, HTTPException, Request
 from pydantic import BaseModel, Field
-import httpx
-from google import genai
 from dotenv import load_dotenv
-from typing import Optional
+from google import genai
+import httpx
 
 load_dotenv()
-
-app = FastAPI(title="Fitola Backend", version="1.0.0")
 logger = logging.getLogger(__name__)
 
 # Initialize Gemini Client
@@ -72,18 +71,23 @@ def validate_rube_base_url() -> str:
         )
     return RUBE_MCP_BASE_URL
 
-@app.on_event("startup")
-async def validate_rube_on_startup() -> None:
+@asynccontextmanager
+async def lifespan(_: FastAPI):
     global RUBE_MCP_VALIDATED_BASE_URL
     RUBE_MCP_VALIDATED_BASE_URL = validate_rube_base_url()
     await get_rube_http_client()
+    try:
+        yield
+    finally:
+        await close_rube_http_client()
 
-@app.on_event("shutdown")
 async def close_rube_http_client() -> None:
     global RUBE_HTTP_CLIENT
     if RUBE_HTTP_CLIENT is not None:
         await RUBE_HTTP_CLIENT.aclose()
         RUBE_HTTP_CLIENT = None
+
+app = FastAPI(title="Fitola Backend", version="1.0.0", lifespan=lifespan)
 
 async def get_rube_http_client() -> httpx.AsyncClient:
     global RUBE_HTTP_CLIENT
