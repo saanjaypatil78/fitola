@@ -4,3 +4,4 @@ export 'chat_message.dart';
 export 'fitbuddy.dart';
 export 'fitness_plan.dart';
 export 'nutrition_plan.dart';
+export 'model_utils.dart';

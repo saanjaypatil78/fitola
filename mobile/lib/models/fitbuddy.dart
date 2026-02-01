@@ -1,4 +1,5 @@
 import 'package:latlong2/latlong.dart';
+import 'model_utils.dart';
 
 class FitBuddy {
   final String id;
@@ -48,18 +49,8 @@ class FitBuddy {
       interests: json['interests'] != null ? List<String>.from(json['interests']) : null,
       allowVoiceCalls: json['allow_voice_calls'] as bool? ?? true,
       allowVideoCalls: json['allow_video_calls'] as bool? ?? true,
-      lastActive: json['last_active'] != null ? _parseDateTime(json['last_active']) : null,
+      lastActive: json['last_active'] != null ? parseDateTime(json['last_active']) : null,
     );
-  }
-  
-  static DateTime? _parseDateTime(dynamic value) {
-    if (value == null) return null;
-    if (value is DateTime) return value;
-    try {
-      return DateTime.parse(value.toString());
-    } catch (e) {
-      return null;
-    }
   }
   
   Map<String, dynamic> toJson() {
@@ -131,7 +122,7 @@ class FitBuddy {
         other.distance == distance &&
         other.status == status &&
         other.bio == bio &&
-        _listEquals(other.interests, interests) &&
+        listEquals(other.interests, interests) &&
         other.allowVoiceCalls == allowVoiceCalls &&
         other.allowVideoCalls == allowVideoCalls &&
         other.lastActive == lastActive;
@@ -175,15 +166,6 @@ class FitBuddy {
       return '${(distance * 1000).round()}m';
     }
     return '${distance.toStringAsFixed(1)}km';
-  }
-  
-  bool _listEquals<T>(List<T>? a, List<T>? b) {
-    if (a == null) return b == null;
-    if (b == null || a.length != b.length) return false;
-    for (int i = 0; i < a.length; i++) {
-      if (a[i] != b[i]) return false;
-    }
-    return true;
   }
 }
 

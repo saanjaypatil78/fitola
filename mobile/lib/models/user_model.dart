@@ -1,3 +1,5 @@
+import 'model_utils.dart';
+
 class UserModel {
   final String id;
   final String name;
@@ -48,19 +50,9 @@ class UserModel {
       interestedInCompetition: json['interested_in_competition'] as bool?,
       gender: json['gender'] as String?,
       allergies: json['allergies'] != null ? List<String>.from(json['allergies']) : null,
-      createdAt: json['created_at'] != null ? _parseDateTime(json['created_at']) : null,
-      updatedAt: json['updated_at'] != null ? _parseDateTime(json['updated_at']) : null,
+      createdAt: json['created_at'] != null ? parseDateTime(json['created_at']) : null,
+      updatedAt: json['updated_at'] != null ? parseDateTime(json['updated_at']) : null,
     );
-  }
-  
-  static DateTime? _parseDateTime(dynamic value) {
-    if (value == null) return null;
-    if (value is DateTime) return value;
-    try {
-      return DateTime.parse(value.toString());
-    } catch (e) {
-      return null; // Return null if parsing fails
-    }
   }
   
   Map<String, dynamic> toJson() {
@@ -148,10 +140,10 @@ class UserModel {
         other.height == height &&
         other.city == city &&
         other.bodyType == bodyType &&
-        _listEquals(other.goals, goals) &&
+        listEquals(other.goals, goals) &&
         other.interestedInCompetition == interestedInCompetition &&
         other.gender == gender &&
-        _listEquals(other.allergies, allergies) &&
+        listEquals(other.allergies, allergies) &&
         other.createdAt == createdAt &&
         other.updatedAt == updatedAt;
   }
@@ -203,14 +195,5 @@ class UserModel {
     final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
     if (!emailRegex.hasMatch(email)) return 'Invalid email format';
     return null;
-  }
-  
-  bool _listEquals<T>(List<T>? a, List<T>? b) {
-    if (a == null) return b == null;
-    if (b == null || a.length != b.length) return false;
-    for (int i = 0; i < a.length; i++) {
-      if (a[i] != b[i]) return false;
-    }
-    return true;
   }
 }

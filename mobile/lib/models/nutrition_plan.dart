@@ -1,3 +1,5 @@
+import 'model_utils.dart';
+
 class NutritionPlan {
   final String id;
   final String userId;
@@ -38,19 +40,9 @@ class NutritionPlan {
           ? List<String>.from(json['dietary_restrictions'])
           : null,
       aiGenerated: json['ai_generated'] as String?,
-      createdAt: _parseDateTime(json['created_at'])!,
+      createdAt: parseDateTimeRequired(json['created_at']),
       durationDays: json['duration_days'] as int? ?? 7,
     );
-  }
-  
-  static DateTime? _parseDateTime(dynamic value) {
-    if (value == null) return null;
-    if (value is DateTime) return value;
-    try {
-      return DateTime.parse(value.toString());
-    } catch (e) {
-      return DateTime.now(); // Fallback to now for required fields
-    }
   }
   
   Map<String, dynamic> toJson() {
@@ -107,9 +99,9 @@ class NutritionPlan {
         other.title == title &&
         other.description == description &&
         other.dailyCalories == dailyCalories &&
-        _mapEquals(other.macros, macros) &&
-        _listEquals(other.meals, meals) &&
-        _listEquals(other.dietaryRestrictions, dietaryRestrictions) &&
+        mapEquals(other.macros, macros) &&
+        listEquals(other.meals, meals) &&
+        listEquals(other.dietaryRestrictions, dietaryRestrictions) &&
         other.aiGenerated == aiGenerated &&
         other.createdAt == createdAt &&
         other.durationDays == durationDays;
@@ -154,23 +146,6 @@ class NutritionPlan {
     final carbs = (macros['carbs'] ?? 0) * 4;
     final fats = (macros['fats'] ?? 0) * 9;
     return (protein + carbs + fats).round();
-  }
-  
-  bool _listEquals<T>(List<T>? a, List<T>? b) {
-    if (a == null) return b == null;
-    if (b == null || a.length != b.length) return false;
-    for (int i = 0; i < a.length; i++) {
-      if (a[i] != b[i]) return false;
-    }
-    return true;
-  }
-  
-  bool _mapEquals<K, V>(Map<K, V> a, Map<K, V> b) {
-    if (a.length != b.length) return false;
-    for (final key in a.keys) {
-      if (!b.containsKey(key) || a[key] != b[key]) return false;
-    }
-    return true;
   }
 }
 
@@ -247,9 +222,9 @@ class Meal {
     return other is Meal &&
         other.name == name &&
         other.type == type &&
-        _listEquals(other.foods, foods) &&
+        listEquals(other.foods, foods) &&
         other.calories == calories &&
-        _mapEquals(other.macros, macros) &&
+        mapEquals(other.macros, macros) &&
         other.instructions == instructions &&
         other.imageUrl == imageUrl;
   }
@@ -279,22 +254,6 @@ class Meal {
   
   bool get hasValidCalories {
     return (calculatedCalories - calories).abs() <= 10; // Allow 10 cal margin
-  }
-  
-  bool _listEquals<T>(List<T> a, List<T> b) {
-    if (a.length != b.length) return false;
-    for (int i = 0; i < a.length; i++) {
-      if (a[i] != b[i]) return false;
-    }
-    return true;
-  }
-  
-  bool _mapEquals<K, V>(Map<K, V> a, Map<K, V> b) {
-    if (a.length != b.length) return false;
-    for (final key in a.keys) {
-      if (!b.containsKey(key) || a[key] != b[key]) return false;
-    }
-    return true;
   }
 }
 

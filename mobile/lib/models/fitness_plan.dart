@@ -1,3 +1,5 @@
+import 'model_utils.dart';
+
 class FitnessPlan {
   final String id;
   final String userId;
@@ -46,20 +48,10 @@ class FitnessPlan {
           .map((e) => WorkoutDay.fromJson(e))
           .toList(),
       aiGenerated: json['ai_generated'] as String?,
-      createdAt: _parseDateTime(json['created_at'])!,
-      startDate: json['start_date'] != null ? _parseDateTime(json['start_date']) : null,
+      createdAt: parseDateTimeRequired(json['created_at']),
+      startDate: json['start_date'] != null ? parseDateTime(json['start_date']) : null,
       currentDay: json['current_day'] as int?,
     );
-  }
-  
-  static DateTime? _parseDateTime(dynamic value) {
-    if (value == null) return null;
-    if (value is DateTime) return value;
-    try {
-      return DateTime.parse(value.toString());
-    } catch (e) {
-      return DateTime.now(); // Fallback to now for required fields
-    }
   }
   
   Map<String, dynamic> toJson() {
@@ -126,7 +118,7 @@ class FitnessPlan {
         other.type == type &&
         other.difficulty == difficulty &&
         other.durationDays == durationDays &&
-        _listEquals(other.workoutDays, workoutDays) &&
+        listEquals(other.workoutDays, workoutDays) &&
         other.aiGenerated == aiGenerated &&
         other.createdAt == createdAt &&
         other.startDate == startDate &&
@@ -168,15 +160,6 @@ class FitnessPlan {
   int get remainingDays {
     if (currentDay == null) return durationDays;
     return (durationDays - currentDay!).clamp(0, durationDays);
-  }
-  
-  bool _listEquals<T>(List<T>? a, List<T>? b) {
-    if (a == null) return b == null;
-    if (b == null || a.length != b.length) return false;
-    for (int i = 0; i < a.length; i++) {
-      if (a[i] != b[i]) return false;
-    }
-    return true;
   }
 }
 
@@ -240,7 +223,7 @@ class WorkoutDay {
     return other is WorkoutDay &&
         other.dayNumber == dayNumber &&
         other.title == title &&
-        _listEquals(other.exercises, exercises) &&
+        listEquals(other.exercises, exercises) &&
         other.estimatedDuration == estimatedDuration &&
         other.isRestDay == isRestDay;
   }
@@ -259,14 +242,6 @@ class WorkoutDay {
   @override
   String toString() {
     return 'WorkoutDay(day: $dayNumber, title: $title, exercises: ${exercises.length})';
-  }
-  
-  bool _listEquals<T>(List<T> a, List<T> b) {
-    if (a.length != b.length) return false;
-    for (int i = 0; i < a.length; i++) {
-      if (a[i] != b[i]) return false;
-    }
-    return true;
   }
 }
 
