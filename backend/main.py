@@ -1,0 +1,1 @@
+from fastapi import FastAPI\n\napp = FastAPI()\n\n@app.get("/chat")\ndef chat():\n    return {"message": "Chat endpoint not implemented yet"}\n\n@app.get("/map")\ndef map_endpoint():\n    return {"message": "Map endpoint not implemented yet"}\n\n@app.get("/ai-plans")\ndef ai_plans():\n    return {"message": "AI Plans endpoint not implemented yet"}
