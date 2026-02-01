@@ -21,6 +21,7 @@ client = genai.Client(api_key=GEMINI_API_KEY) if GEMINI_API_KEY else None
 RUBE_MCP_BASE_URL = os.getenv("RUBE_MCP_BASE_URL", "https://rube.app").rstrip("/")
 RUBE_MCP_VALIDATED_BASE_URL: Optional[str] = None
 RUBE_HTTP_CLIENT: Optional[httpx.AsyncClient] = None
+RUBE_HTTP_TIMEOUT = float(os.getenv("RUBE_MCP_TIMEOUT", "10"))
 
 class ChatRequest(BaseModel):
     message: str
@@ -72,7 +73,7 @@ def validate_rube_base_url() -> str:
     return RUBE_MCP_BASE_URL
 
 @asynccontextmanager
-async def lifespan(_: FastAPI):
+async def lifespan(app: FastAPI):
     global RUBE_MCP_VALIDATED_BASE_URL
     RUBE_MCP_VALIDATED_BASE_URL = validate_rube_base_url()
     await get_rube_http_client()
@@ -92,7 +93,7 @@ app = FastAPI(title="Fitola Backend", version="1.0.0", lifespan=lifespan)
 async def get_rube_http_client() -> httpx.AsyncClient:
     global RUBE_HTTP_CLIENT
     if RUBE_HTTP_CLIENT is None:
-        RUBE_HTTP_CLIENT = httpx.AsyncClient(timeout=10)
+        RUBE_HTTP_CLIENT = httpx.AsyncClient(timeout=RUBE_HTTP_TIMEOUT)
     return RUBE_HTTP_CLIENT
 
 async def fetch_rube_json(url: str, token: str, params: Optional[dict] = None) -> dict:
@@ -233,7 +234,9 @@ async def translate_text(request: TranslationRequest):
 async def rube_recipe_discover(request: Request):
     token = require_rube_token()
     params = dict(request.query_params)
-    base_url = RUBE_MCP_VALIDATED_BASE_URL or validate_rube_base_url()
+    base_url = RUBE_MCP_VALIDATED_BASE_URL
+    if base_url is None:
+        raise HTTPException(status_code=500, detail="Rube MCP base URL is not initialized.")
     url = f"{base_url}/recipe-hub/discover"
     return await fetch_rube_json(url, token, params=params)
 

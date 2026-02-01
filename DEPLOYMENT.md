@@ -49,6 +49,7 @@ Fitola is pre-configured for Vercel using `vercel.json`.
      - `GEMINI_MODEL` (optional): Override the Gemini model (defaults to `gemini-2.5-flash`).
      - `RUBE_MCP_JWT`: JWT for the Rube MCP API (Authorization: Bearer <token>).
      - `RUBE_MCP_BASE_URL` (optional): Base URL for Rube MCP (defaults to `https://rube.app`).
+     - `RUBE_MCP_TIMEOUT` (optional): HTTP timeout in seconds (defaults to `10`).
      - `SUPABASE_URL`: Your Supabase Project URL.
      - `SUPABASE_KEY`: Your Supabase API Key.
 
