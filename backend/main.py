@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
 client = genai.Client(api_key=GEMINI_API_KEY) if GEMINI_API_KEY else None
-RUBE_MCP_BASE_URL = os.getenv("RUBE_MCP_BASE_URL")
+RUBE_MCP_BASE_URL = os.getenv("RUBE_MCP_BASE_URL", "https://rube.app")
 RUBE_MCP_VALIDATED_BASE_URL: Optional[str] = None
 RUBE_HTTP_CLIENT: Optional[httpx.AsyncClient] = None
 def parse_rube_timeout() -> float:
@@ -27,9 +27,9 @@ def parse_rube_timeout() -> float:
     try:
         timeout = float(raw_timeout)
     except ValueError:
-        raise ValueError("RUBE_MCP_TIMEOUT must be a number.")
+        raise ValueError("RUBE_MCP_TIMEOUT must be a valid number.")
     if timeout <= 0:
-        raise ValueError("RUBE_MCP_TIMEOUT must be greater than 0.")
+        raise ValueError("RUBE_MCP_TIMEOUT must be a positive number.")
     return timeout
 
 RUBE_HTTP_TIMEOUT = parse_rube_timeout()
@@ -76,8 +76,6 @@ def require_rube_token() -> str:
     return token
 
 def validate_rube_base_url() -> str:
-    if not RUBE_MCP_BASE_URL:
-        raise ValueError("RUBE_MCP_BASE_URL must be set.")
     url = RUBE_MCP_BASE_URL.strip()
     if not url:
         raise ValueError("RUBE_MCP_BASE_URL must be set.")
