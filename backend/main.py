@@ -40,7 +40,7 @@ def require_gemini() -> genai.Client:
         raise HTTPException(status_code=500, detail="GEMINI_API_KEY is not configured")
     return client
 
-def format_language_instruction(language: Optional[str]) -> str:
+def build_language_instruction(language: Optional[str]) -> str:
     if not language:
         return ""
     return f"Respond in {language}."
@@ -63,7 +63,7 @@ async def chat(request: ChatRequest):
     """
     try:
         gemini_client = require_gemini()
-        language_instruction = format_language_instruction(request.language)
+        language_instruction = build_language_instruction(request.language)
         message = request.message
         if language_instruction:
             message = f"{language_instruction}\n\n{request.message}"
@@ -87,7 +87,7 @@ async def ai_plans():
 async def ai_plans_generate(request: PlanRequest):
     try:
         gemini_client = require_gemini()
-        language_note = format_language_instruction(request.language)
+        language_note = build_language_instruction(request.language)
         preferences = request.preferences or "None"
         prompt = (
             "Create a weekly workout plan and diet plan as JSON with keys "
@@ -117,7 +117,7 @@ async def ai_plans_generate(request: PlanRequest):
 async def translate_text(request: TranslationRequest):
     try:
         gemini_client = require_gemini()
-        language_instruction = format_language_instruction(request.target_language)
+        language_instruction = build_language_instruction(request.target_language)
         prompt = (
             "Translate the following text from "
             f"{request.source_language} to {request.target_language}. "
