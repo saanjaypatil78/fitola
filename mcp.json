@@ -1,0 +1,1 @@
+{\n  "servers": {\n    "sequential-thinking": {\n      "command": "npx",\n      "args": [\n        "-y",\n        "@modelcontextprotocol/server-sequential-thinking"\n      ]\n    }\n  }\n}
