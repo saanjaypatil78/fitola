@@ -1,4 +1,5 @@
 import json
+import logging
 import os
 import re
 from fastapi import FastAPI, HTTPException
@@ -10,6 +11,7 @@ from typing import Optional
 load_dotenv()
 
 app = FastAPI(title="Fitola Backend", version="1.0.0")
+logger = logging.getLogger(__name__)
 
 # Initialize Gemini Client
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
@@ -21,9 +23,9 @@ class ChatRequest(BaseModel):
     language: Optional[str] = None
 
 class PlanRequest(BaseModel):
-    age: int = Field(gt=0, lt=150)
-    height_cm: float = Field(gt=0, lt=300)
-    weight_kg: float = Field(gt=0, lt=500)
+    age: int = Field(ge=1, le=120)
+    height_cm: float = Field(ge=1, le=300)
+    weight_kg: float = Field(ge=1, le=500)
     body_type: str
     goal: str
     duration_weeks: int = 4
@@ -36,8 +38,16 @@ class TranslationRequest(BaseModel):
     target_language: str
 
 def require_gemini() -> genai.Client:
-    if not GEMINI_API_KEY or client is None:
-        raise HTTPException(status_code=500, detail="GEMINI_API_KEY is not configured")
+    if not GEMINI_API_KEY:
+        raise HTTPException(
+            status_code=500,
+            detail="GEMINI_API_KEY is not configured. Please set GEMINI_API_KEY."
+        )
+    if client is None:
+        raise HTTPException(
+            status_code=500,
+            detail="Gemini client failed to initialize. Verify GEMINI_API_KEY."
+        )
     return client
 
 def get_language_instruction(language: Optional[str]) -> str:
@@ -53,6 +63,7 @@ def parse_json_response(text: str) -> Optional[dict]:
     try:
         return json.loads(cleaned)
     except json.JSONDecodeError:
+        logger.warning("Failed to parse Gemini JSON response (length=%s).", len(cleaned))
         return None
 
 def sanitize_prompt_value(value: Optional[str], max_length: int = 200) -> str:
@@ -63,6 +74,11 @@ def sanitize_prompt_value(value: Optional[str], max_length: int = 200) -> str:
         return cleaned
     truncated_length = max(max_length - 3, 0)
     return f"{cleaned[:truncated_length].rstrip()}..."
+
+def sanitize_language_identifier(value: str, max_length: int = 40) -> str:
+    cleaned = sanitize_prompt_value(value, max_length=max_length)
+    cleaned = re.sub(r"[^a-zA-Z0-9\-_]", "", cleaned).strip()
+    return cleaned or "unknown"
 
 @app.post("/api/v1/chat")
 async def chat(request: ChatRequest):
@@ -100,6 +116,7 @@ async def ai_plans_generate(request: PlanRequest):
         body_type = sanitize_prompt_value(request.body_type)
         goal = sanitize_prompt_value(request.goal)
         preferences = sanitize_prompt_value(request.preferences)
+        # Expected JSON keys: workout_plan, diet_plan, rationale
         prompt = (
             "Create a weekly workout plan and diet plan as JSON with keys "
             "`workout_plan`, `diet_plan`, and `rationale`.\n"
@@ -129,9 +146,11 @@ async def ai_plans_generate(request: PlanRequest):
 async def translate_text(request: TranslationRequest):
     try:
         gemini_client = require_gemini()
+        source_language = sanitize_language_identifier(request.source_language)
+        target_language = sanitize_language_identifier(request.target_language)
         prompt = (
             "Translate the following text from "
-            f"{request.source_language} to {request.target_language}. "
+            f"{source_language} to {target_language}. "
             "Return only the translated text.\n\n"
             f"{request.text}"
         )
