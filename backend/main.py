@@ -1,14 +1,11 @@
-import asyncio
 import json
 import logging
 import os
 import re
-from urllib.error import HTTPError, URLError
-from urllib.parse import urlencode
-from urllib.request import Request as UrlRequest, urlopen
 
 from fastapi import FastAPI, HTTPException, Request
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, HttpUrl
+import httpx
 from google import genai
 from dotenv import load_dotenv
 from typing import Optional
@@ -65,28 +62,33 @@ def require_rube_token() -> str:
         )
     return token
 
+def validate_rube_base_url() -> HttpUrl:
+    if not RUBE_MCP_BASE_URL.startswith("https://"):
+        raise HTTPException(
+            status_code=500,
+            detail="RUBE_MCP_BASE_URL must use https."
+        )
+    try:
+        return HttpUrl(RUBE_MCP_BASE_URL)
+    except Exception:
+        raise HTTPException(status_code=500, detail="RUBE_MCP_BASE_URL is invalid.")
+
 async def fetch_rube_json(url: str, token: str, params: Optional[dict] = None) -> dict:
-    query_string = f"?{urlencode(params)}" if params else ""
-    request = UrlRequest(
-        f"{url}{query_string}",
-        headers={"Authorization": f"Bearer {token}", "Accept": "application/json"}
-    )
-
-    def _load() -> tuple[int, bytes]:
-        with urlopen(request, timeout=10) as response:
-            return response.status, response.read()
+    try:
+        async with httpx.AsyncClient(timeout=10) as client:
+            response = await client.get(
+                url,
+                params=params,
+                headers={"Authorization": f"Bearer {token}", "Accept": "application/json"}
+            )
+            response.raise_for_status()
+    except httpx.HTTPStatusError:
+        raise HTTPException(status_code=response.status_code, detail="Rube MCP request failed.")
+    except httpx.RequestError as exc:
+        raise HTTPException(status_code=502, detail=f"Rube MCP request failed: {exc}")
 
     try:
-        status, payload = await asyncio.to_thread(_load)
-    except HTTPError as exc:
-        raise HTTPException(status_code=exc.code, detail=exc.read().decode("utf-8", "ignore"))
-    except URLError as exc:
-        raise HTTPException(status_code=502, detail=f"Rube MCP request failed: {exc.reason}")
-
-    if status >= 400:
-        raise HTTPException(status_code=status, detail="Rube MCP request failed.")
-    try:
-        return json.loads(payload)
+        return response.json()
     except json.JSONDecodeError:
         raise HTTPException(status_code=502, detail="Invalid JSON returned from Rube MCP.")
 
@@ -206,7 +208,8 @@ async def translate_text(request: TranslationRequest):
 async def rube_recipe_discover(request: Request):
     token = require_rube_token()
     params = dict(request.query_params)
-    url = f"{RUBE_MCP_BASE_URL}/recipe-hub/discover"
+    base_url = validate_rube_base_url()
+    url = f"{base_url}/recipe-hub/discover"
     return await fetch_rube_json(url, token, params=params)
 
 if __name__ == "__main__":
