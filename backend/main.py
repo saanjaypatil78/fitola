@@ -3,7 +3,7 @@ import logging
 import os
 import re
 from contextlib import asynccontextmanager
-from typing import Optional
+from typing import Any, Dict, Optional
 from urllib.parse import urlparse
 
 from fastapi import FastAPI, HTTPException, Request
@@ -27,9 +27,9 @@ def parse_rube_timeout() -> float:
     try:
         timeout = float(raw_timeout)
     except ValueError:
-        raise ValueError("RUBE_MCP_TIMEOUT must be a valid number.")
+        raise ValueError(f"RUBE_MCP_TIMEOUT must be a valid number (got '{raw_timeout}').")
     if timeout <= 0:
-        raise ValueError("RUBE_MCP_TIMEOUT must be a positive number.")
+        raise ValueError(f"RUBE_MCP_TIMEOUT must be a positive number (got '{raw_timeout}').")
     return timeout
 
 RUBE_HTTP_TIMEOUT = parse_rube_timeout()
@@ -97,7 +97,8 @@ async def lifespan(app: FastAPI):
         RUBE_MCP_VALIDATED_BASE_URL = validate_rube_base_url()
         await get_rube_http_client()
     except ValueError as exc:
-        raise RuntimeError(str(exc)) from exc
+        logger.error("Rube MCP configuration error: %s", exc)
+        raise RuntimeError(f"Rube MCP configuration error: {exc}") from exc
     try:
         yield
     finally:
@@ -111,7 +112,7 @@ async def close_rube_http_client() -> None:
 
 app = FastAPI(title="Fitola Backend", version="1.0.0", lifespan=lifespan)
 
-async def fetch_rube_json(url: str, token: str, params: Optional[dict] = None) -> dict:
+async def fetch_rube_json(url: str, token: str, params: Optional[Dict[str, Any]] = None) -> dict:
     try:
         http_client = await get_rube_http_client()
         response = await http_client.get(
