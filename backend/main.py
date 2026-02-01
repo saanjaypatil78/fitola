@@ -21,7 +21,23 @@ client = genai.Client(api_key=GEMINI_API_KEY) if GEMINI_API_KEY else None
 RUBE_MCP_BASE_URL = os.getenv("RUBE_MCP_BASE_URL", "https://rube.app").rstrip("/")
 RUBE_MCP_VALIDATED_BASE_URL: Optional[str] = None
 RUBE_HTTP_CLIENT: Optional[httpx.AsyncClient] = None
-RUBE_HTTP_TIMEOUT = float(os.getenv("RUBE_MCP_TIMEOUT", "10"))
+def parse_rube_timeout() -> float:
+    raw_timeout = os.getenv("RUBE_MCP_TIMEOUT", "10")
+    try:
+        timeout = float(raw_timeout)
+    except ValueError:
+        raise HTTPException(
+            status_code=500,
+            detail="RUBE_MCP_TIMEOUT must be a number."
+        )
+    if timeout <= 0:
+        raise HTTPException(
+            status_code=500,
+            detail="RUBE_MCP_TIMEOUT must be greater than 0."
+        )
+    return timeout
+
+RUBE_HTTP_TIMEOUT = parse_rube_timeout()
 
 class ChatRequest(BaseModel):
     message: str
@@ -65,12 +81,23 @@ def require_rube_token() -> str:
     return token
 
 def validate_rube_base_url() -> str:
+    if not RUBE_MCP_BASE_URL.strip():
+        raise HTTPException(
+            status_code=500,
+            detail="RUBE_MCP_BASE_URL must be set."
+        )
     if not RUBE_MCP_BASE_URL.startswith("https://"):
         raise HTTPException(
             status_code=500,
             detail="RUBE_MCP_BASE_URL must use https."
         )
     return RUBE_MCP_BASE_URL
+
+async def get_rube_http_client() -> httpx.AsyncClient:
+    global RUBE_HTTP_CLIENT
+    if RUBE_HTTP_CLIENT is None:
+        RUBE_HTTP_CLIENT = httpx.AsyncClient(timeout=RUBE_HTTP_TIMEOUT)
+    return RUBE_HTTP_CLIENT
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -89,12 +116,6 @@ async def close_rube_http_client() -> None:
         RUBE_HTTP_CLIENT = None
 
 app = FastAPI(title="Fitola Backend", version="1.0.0", lifespan=lifespan)
-
-async def get_rube_http_client() -> httpx.AsyncClient:
-    global RUBE_HTTP_CLIENT
-    if RUBE_HTTP_CLIENT is None:
-        RUBE_HTTP_CLIENT = httpx.AsyncClient(timeout=RUBE_HTTP_TIMEOUT)
-    return RUBE_HTTP_CLIENT
 
 async def fetch_rube_json(url: str, token: str, params: Optional[dict] = None) -> dict:
     try:
