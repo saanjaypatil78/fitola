@@ -44,11 +44,11 @@ Fitola is pre-configured for Vercel using `vercel.json`.
 
 2. **Configure Environment Variables**:
    - In the Vercel project settings, go to **Environment Variables**.
-    - Add the following keys:
-      - `GEMINI_API_KEY`: Your Google Gemini API Key.
-      - `GEMINI_MODEL` (optional): Override the Gemini model (defaults to `gemini-2.5-flash`).
-      - `SUPABASE_URL`: Your Supabase Project URL.
-      - `SUPABASE_KEY`: Your Supabase API Key.
+   - Add the following keys:
+     - `GEMINI_API_KEY`: Your Google Gemini API Key.
+     - `GEMINI_MODEL` (optional): Override the Gemini model (defaults to `gemini-2.5-flash`).
+     - `SUPABASE_URL`: Your Supabase Project URL.
+     - `SUPABASE_KEY`: Your Supabase API Key.
 
 3. **Deploy**:
    - Vercel will automatically build and deploy your project on every push to the `main` branch.

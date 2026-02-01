@@ -117,12 +117,10 @@ async def ai_plans_generate(request: PlanRequest):
 async def translate_text(request: TranslationRequest):
     try:
         gemini_client = require_gemini()
-        language_instruction = build_language_instruction(request.target_language)
         prompt = (
             "Translate the following text from "
             f"{request.source_language} to {request.target_language}. "
             "Return only the translated text.\n\n"
-            f"{language_instruction}\n"
             f"{request.text}"
         )
         response = gemini_client.models.generate_content(
