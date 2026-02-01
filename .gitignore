@@ -1,0 +1,136 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+*.log
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Flutter/Dart
+mobile/.dart_tool/
+mobile/.flutter-plugins
+mobile/.flutter-plugins-dependencies
+mobile/.packages
+mobile/.pub-cache/
+mobile/.pub/
+mobile/build/
+mobile/ios/Flutter/Generated.xcconfig
+mobile/ios/Flutter/flutter_export_environment.sh
+mobile/ios/Flutter/Flutter.podspec
+mobile/ios/.symlinks/
+mobile/linux/flutter/generated_plugin_registrant.cc
+mobile/linux/flutter/generated_plugin_registrant.h
+mobile/macos/Flutter/GeneratedPluginRegistrant.swift
+mobile/windows/flutter/generated_plugin_registrant.cc
+mobile/windows/flutter/generated_plugin_registrant.h
+mobile/windows/flutter/generated_plugins.cmake
+
+# IDEs
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Testing
+coverage/
+.coverage
+.pytest_cache/
+htmlcov/
+.tox/
+.nox/
+
+# Misc
+*.bak
+*.orig
+*.rej
+.tmp/
+tmp/
+temp/
+
+# Secrets
+*.pem
+*.key
+secrets/
+
+# Node (if using any JS tools)
+node_modules/
+package-lock.json
+yarn.lock
+
+# Android
+mobile/android/.gradle/
+mobile/android/gradle/
+mobile/android/local.properties
+mobile/android/app/debug/
+mobile/android/app/release/
+mobile/android/app/profile/
+mobile/android/.idea/
+mobile/android/captures/
+mobile/android/.externalNativeBuild/
+mobile/android/app/*.jks
+mobile/android/app/*.keystore
+mobile/android/key.properties
+
+# iOS
+mobile/ios/**/*.mode1v3
+mobile/ios/**/*.mode2v3
+mobile/ios/**/*.moved-aside
+mobile/ios/**/*.pbxuser
+mobile/ios/**/*.perspectivev3
+mobile/ios/**/*sync/
+mobile/ios/**/.sconsign.dblite
+mobile/ios/**/.tags*
+mobile/ios/**/.vagrant/
+mobile/ios/**/DerivedData/
+mobile/ios/**/Icon?
+mobile/ios/**/Pods/
+mobile/ios/**/.symlinks/
+mobile/ios/**/profile
+mobile/ios/**/xcuserdata
+mobile/ios/.generated/
+mobile/ios/Flutter/App.framework
+mobile/ios/Flutter/Flutter.framework
+mobile/ios/Flutter/Flutter.podspec
+mobile/ios/ServiceDefinitions.json
+mobile/ios/Runner/GeneratedPluginRegistrant.*
+
+# Web
+mobile/web/.last_build_id
+
+# macOS
+mobile/macos/Flutter/GeneratedPluginRegistrant.swift
+
+# Windows
+mobile/windows/flutter/generated_plugins.cmake
+
+# Documentation builds
+site/
+_site/
+
+# CI/CD
+.github/workflows/*_cache
