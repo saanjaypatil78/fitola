@@ -63,6 +63,9 @@ Fitola is pre-configured for Vercel using `vercel.json`.
 - `POST /api/v1/plans/ai`: AI-generated weekly workout + diet plans.
 - `POST /api/v1/translate`: Gemini-powered translation.
 
+The `POST /api/v1/plans/ai` response includes `plan_json` when the model returns valid JSON,
+along with `plan_text` for the raw response and `plan_format` to indicate parsing success.
+
 ---
 
 ## ⚠️ Security Notice

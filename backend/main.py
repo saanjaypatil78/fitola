@@ -2,7 +2,7 @@ import json
 import os
 import re
 from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from google import genai
 from dotenv import load_dotenv
 from typing import Optional
@@ -21,9 +21,9 @@ class ChatRequest(BaseModel):
     language: Optional[str] = None
 
 class PlanRequest(BaseModel):
-    age: int
-    height_cm: float
-    weight_kg: float
+    age: int = Field(gt=0, lt=150)
+    height_cm: float = Field(gt=0, lt=300)
+    weight_kg: float = Field(gt=0, lt=500)
     body_type: str
     goal: str
     duration_weeks: int = 4
@@ -40,7 +40,7 @@ def require_gemini() -> genai.Client:
         raise HTTPException(status_code=500, detail="GEMINI_API_KEY is not configured")
     return client
 
-def build_language_instruction(language: Optional[str]) -> str:
+def get_language_instruction(language: Optional[str]) -> str:
     if not language:
         return ""
     return f"Respond in {language}."
@@ -55,6 +55,15 @@ def parse_json_response(text: str) -> Optional[dict]:
     except json.JSONDecodeError:
         return None
 
+def sanitize_prompt_value(value: Optional[str], max_length: int = 200) -> str:
+    if not value:
+        return "None"
+    cleaned = " ".join(value.split())
+    if len(cleaned) <= max_length:
+        return cleaned
+    truncated_length = max(max_length - 3, 0)
+    return f"{cleaned[:truncated_length].rstrip()}..."
+
 @app.post("/api/v1/chat")
 async def chat(request: ChatRequest):
     """
@@ -63,7 +72,7 @@ async def chat(request: ChatRequest):
     """
     try:
         gemini_client = require_gemini()
-        language_instruction = build_language_instruction(request.language)
+        language_instruction = get_language_instruction(request.language)
         message = request.message
         if language_instruction:
             message = f"{language_instruction}\n\n{request.message}"
@@ -87,16 +96,18 @@ async def ai_plans():
 async def ai_plans_generate(request: PlanRequest):
     try:
         gemini_client = require_gemini()
-        language_note = build_language_instruction(request.language)
-        preferences = request.preferences or "None"
+        language_note = get_language_instruction(request.language)
+        body_type = sanitize_prompt_value(request.body_type)
+        goal = sanitize_prompt_value(request.goal)
+        preferences = sanitize_prompt_value(request.preferences)
         prompt = (
             "Create a weekly workout plan and diet plan as JSON with keys "
             "`workout_plan`, `diet_plan`, and `rationale`.\n"
             f"Age: {request.age}\n"
             f"Height (cm): {request.height_cm}\n"
             f"Weight (kg): {request.weight_kg}\n"
-            f"Body Type: {request.body_type}\n"
-            f"Goal: {request.goal}\n"
+            f"Body Type: {body_type}\n"
+            f"Goal: {goal}\n"
             f"Duration (weeks): {request.duration_weeks}\n"
             f"Preferences: {preferences}\n"
             f"{language_note}"
@@ -107,7 +118,8 @@ async def ai_plans_generate(request: PlanRequest):
         )
         parsed_plan = parse_json_response(response.text)
         return {
-            "plan": parsed_plan or response.text,
+            "plan_json": parsed_plan,
+            "plan_text": response.text,
             "plan_format": "json" if parsed_plan else "text"
         }
     except Exception as e:
