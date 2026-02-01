@@ -63,6 +63,8 @@ Fitola is a revolutionary AI-powered fitness and social wellness platform that c
 
 ## 🛠️ Tech Stack
 
+- **Backend**: Python 3.10, FastAPI, Pydantic, Uvicorn
+- **AI**: Google Generative AI (Gemini 2.5)
 ### Mobile App (Flutter)
 - **Framework**: Flutter 3.24.5
 - **Language**: Dart 3.0+
@@ -119,6 +121,7 @@ Fitola is a revolutionary AI-powered fitness and social wellness platform that c
 4. **Set up environment variables**:
    ```bash
    cp .env.example .env
+   # Add your GEMINI_API_KEY (and optional GEMINI_MODEL), SUPABASE keys, RUBE_MCP_JWT, and RUBE_MCP_BASE_URL to .env
    # Edit .env and add:
    # GEMINI_API_KEY=your_gemini_api_key
    # SUPABASE_URL=your_supabase_url
@@ -284,6 +287,7 @@ Distributed under the MIT License. See `LICENSE` for more information.
 - **Website**: https://fitola.vercel.app
 
 ---
+Developed with ❤️ by [Sanjay Santosh Patil](https://github.com/saanjaypatil78)
 
 **Made with ❤️ for the fitness community**
 
