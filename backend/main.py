@@ -1,8 +1,13 @@
+import asyncio
 import json
 import logging
 import os
 import re
-from fastapi import FastAPI, HTTPException
+from urllib.error import HTTPError, URLError
+from urllib.parse import urlencode
+from urllib.request import Request as UrlRequest, urlopen
+
+from fastapi import FastAPI, HTTPException, Request
 from pydantic import BaseModel, Field
 from google import genai
 from dotenv import load_dotenv
@@ -17,6 +22,7 @@ logger = logging.getLogger(__name__)
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
 client = genai.Client(api_key=GEMINI_API_KEY) if GEMINI_API_KEY else None
+RUBE_MCP_BASE_URL = os.getenv("RUBE_MCP_BASE_URL", "https://rube.app").rstrip("/")
 
 class ChatRequest(BaseModel):
     message: str
@@ -49,6 +55,40 @@ def require_gemini() -> genai.Client:
             detail="Gemini client failed to initialize. Verify GEMINI_API_KEY."
         )
     return client
+
+def require_rube_token() -> str:
+    token = os.getenv("RUBE_MCP_JWT")
+    if not token:
+        raise HTTPException(
+            status_code=500,
+            detail="RUBE_MCP_JWT is not configured. Please set RUBE_MCP_JWT."
+        )
+    return token
+
+async def fetch_rube_json(url: str, token: str, params: Optional[dict] = None) -> dict:
+    query_string = f"?{urlencode(params)}" if params else ""
+    request = UrlRequest(
+        f"{url}{query_string}",
+        headers={"Authorization": f"Bearer {token}", "Accept": "application/json"}
+    )
+
+    def _load() -> tuple[int, bytes]:
+        with urlopen(request, timeout=10) as response:
+            return response.status, response.read()
+
+    try:
+        status, payload = await asyncio.to_thread(_load)
+    except HTTPError as exc:
+        raise HTTPException(status_code=exc.code, detail=exc.read().decode("utf-8", "ignore"))
+    except URLError as exc:
+        raise HTTPException(status_code=502, detail=f"Rube MCP request failed: {exc.reason}")
+
+    if status >= 400:
+        raise HTTPException(status_code=status, detail="Rube MCP request failed.")
+    try:
+        return json.loads(payload)
+    except json.JSONDecodeError:
+        raise HTTPException(status_code=502, detail="Invalid JSON returned from Rube MCP.")
 
 def get_language_instruction(language: Optional[str]) -> str:
     if not language:
@@ -161,6 +201,13 @@ async def translate_text(request: TranslationRequest):
         return {"translation": response.text}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/v1/rube/recipe-hub/discover")
+async def rube_recipe_discover(request: Request):
+    token = require_rube_token()
+    params = dict(request.query_params)
+    url = f"{RUBE_MCP_BASE_URL}/recipe-hub/discover"
+    return await fetch_rube_json(url, token, params=params)
 
 if __name__ == "__main__":
     import uvicorn

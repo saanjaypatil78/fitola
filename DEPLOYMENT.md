@@ -23,7 +23,7 @@ This guide explains how to deploy and run the Fitola backend.
 
 4. **Configure Environment Variables**:
    - Copy `.env.example` to `.env`.
-   - Add your `GEMINI_API_KEY` and Supabase credentials.
+   - Add your `GEMINI_API_KEY`, `RUBE_MCP_JWT`, and Supabase credentials.
    - **CRITICAL**: Do not commit your `.env` file to version control.
 
 5. **Run the Server**:
@@ -47,6 +47,8 @@ Fitola is pre-configured for Vercel using `vercel.json`.
    - Add the following keys:
      - `GEMINI_API_KEY`: Your Google Gemini API Key.
      - `GEMINI_MODEL` (optional): Override the Gemini model (defaults to `gemini-2.5-flash`).
+     - `RUBE_MCP_JWT`: JWT for the Rube MCP API (Authorization: Bearer <token>).
+     - `RUBE_MCP_BASE_URL` (optional): Base URL for Rube MCP (defaults to `https://rube.app`).
      - `SUPABASE_URL`: Your Supabase Project URL.
      - `SUPABASE_KEY`: Your Supabase API Key.
 
@@ -62,6 +64,7 @@ Fitola is pre-configured for Vercel using `vercel.json`.
 - `GET /api/v1/plans/ai`: Personalized fitness plans.
 - `POST /api/v1/plans/ai`: AI-generated weekly workout + diet plans.
 - `POST /api/v1/translate`: Gemini-powered translation.
+- `GET /api/v1/rube/recipe-hub/discover`: Proxy to Rube MCP Recipe Hub discover.
 
 The `POST /api/v1/plans/ai` response includes `plan_json` (parsed JSON or null),
 `plan_text` for the raw response, and `plan_format` to indicate parsing success.
