@@ -4,7 +4,7 @@ import os
 import re
 
 from fastapi import FastAPI, HTTPException, Request
-from pydantic import BaseModel, Field, HttpUrl
+from pydantic import BaseModel, Field
 import httpx
 from google import genai
 from dotenv import load_dotenv
@@ -20,6 +20,7 @@ GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
 client = genai.Client(api_key=GEMINI_API_KEY) if GEMINI_API_KEY else None
 RUBE_MCP_BASE_URL = os.getenv("RUBE_MCP_BASE_URL", "https://rube.app").rstrip("/")
+RUBE_MCP_VALIDATED_BASE_URL: Optional[str] = None
 
 class ChatRequest(BaseModel):
     message: str
@@ -62,28 +63,30 @@ def require_rube_token() -> str:
         )
     return token
 
-def validate_rube_base_url() -> HttpUrl:
+def validate_rube_base_url() -> str:
     if not RUBE_MCP_BASE_URL.startswith("https://"):
         raise HTTPException(
             status_code=500,
             detail="RUBE_MCP_BASE_URL must use https."
         )
-    try:
-        return HttpUrl(RUBE_MCP_BASE_URL)
-    except Exception:
-        raise HTTPException(status_code=500, detail="RUBE_MCP_BASE_URL is invalid.")
+    return RUBE_MCP_BASE_URL
+
+@app.on_event("startup")
+async def validate_rube_on_startup() -> None:
+    global RUBE_MCP_VALIDATED_BASE_URL
+    RUBE_MCP_VALIDATED_BASE_URL = validate_rube_base_url()
 
 async def fetch_rube_json(url: str, token: str, params: Optional[dict] = None) -> dict:
     try:
-        async with httpx.AsyncClient(timeout=10) as client:
-            response = await client.get(
+        async with httpx.AsyncClient(timeout=10) as http_client:
+            response = await http_client.get(
                 url,
                 params=params,
                 headers={"Authorization": f"Bearer {token}", "Accept": "application/json"}
             )
             response.raise_for_status()
-    except httpx.HTTPStatusError:
-        raise HTTPException(status_code=response.status_code, detail="Rube MCP request failed.")
+    except httpx.HTTPStatusError as exc:
+        raise HTTPException(status_code=exc.response.status_code, detail="Rube MCP request failed.")
     except httpx.RequestError as exc:
         raise HTTPException(status_code=502, detail=f"Rube MCP request failed: {exc}")
 
@@ -208,7 +211,7 @@ async def translate_text(request: TranslationRequest):
 async def rube_recipe_discover(request: Request):
     token = require_rube_token()
     params = dict(request.query_params)
-    base_url = validate_rube_base_url()
+    base_url = RUBE_MCP_VALIDATED_BASE_URL or validate_rube_base_url()
     url = f"{base_url}/recipe-hub/discover"
     return await fetch_rube_json(url, token, params=params)
 
