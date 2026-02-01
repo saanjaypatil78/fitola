@@ -1,4 +1,6 @@
+import json
 import os
+import re
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from google import genai
@@ -38,6 +40,21 @@ def require_gemini() -> genai.Client:
         raise HTTPException(status_code=500, detail="GEMINI_API_KEY is not configured")
     return client
 
+def format_language_instruction(language: Optional[str]) -> str:
+    if not language:
+        return ""
+    return f"Respond in {language}."
+
+def parse_json_response(text: str) -> Optional[dict]:
+    cleaned = text.strip()
+    if cleaned.startswith("```"):
+        cleaned = re.sub(r"^```(?:json)?\n", "", cleaned)
+        cleaned = re.sub(r"\n```$", "", cleaned)
+    try:
+        return json.loads(cleaned)
+    except json.JSONDecodeError:
+        return None
+
 @app.post("/api/v1/chat")
 async def chat(request: ChatRequest):
     """
@@ -46,9 +63,10 @@ async def chat(request: ChatRequest):
     """
     try:
         gemini_client = require_gemini()
+        language_instruction = format_language_instruction(request.language)
         message = request.message
-        if request.language:
-            message = f"Respond in {request.language}.\n\n{request.message}"
+        if language_instruction:
+            message = f"{language_instruction}\n\n{request.message}"
         response = gemini_client.models.generate_content(
             model=GEMINI_MODEL,
             contents=message
@@ -69,7 +87,7 @@ async def ai_plans():
 async def ai_plans_generate(request: PlanRequest):
     try:
         gemini_client = require_gemini()
-        language_note = f"Respond in {request.language}." if request.language else ""
+        language_note = format_language_instruction(request.language)
         preferences = request.preferences or "None"
         prompt = (
             "Create a weekly workout plan and diet plan as JSON with keys "
@@ -87,7 +105,11 @@ async def ai_plans_generate(request: PlanRequest):
             model=GEMINI_MODEL,
             contents=prompt
         )
-        return {"plan": response.text}
+        parsed_plan = parse_json_response(response.text)
+        return {
+            "plan": parsed_plan or response.text,
+            "plan_format": "json" if parsed_plan else "text"
+        }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -95,10 +117,12 @@ async def ai_plans_generate(request: PlanRequest):
 async def translate_text(request: TranslationRequest):
     try:
         gemini_client = require_gemini()
+        language_instruction = format_language_instruction(request.target_language)
         prompt = (
             "Translate the following text from "
             f"{request.source_language} to {request.target_language}. "
             "Return only the translated text.\n\n"
+            f"{language_instruction}\n"
             f"{request.text}"
         )
         response = gemini_client.models.generate_content(
