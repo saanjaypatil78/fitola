@@ -21,6 +21,7 @@ GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
 client = genai.Client(api_key=GEMINI_API_KEY) if GEMINI_API_KEY else None
 RUBE_MCP_BASE_URL = os.getenv("RUBE_MCP_BASE_URL", "https://rube.app").rstrip("/")
 RUBE_MCP_VALIDATED_BASE_URL: Optional[str] = None
+RUBE_HTTP_CLIENT: Optional[httpx.AsyncClient] = None
 
 class ChatRequest(BaseModel):
     message: str
@@ -75,18 +76,35 @@ def validate_rube_base_url() -> str:
 async def validate_rube_on_startup() -> None:
     global RUBE_MCP_VALIDATED_BASE_URL
     RUBE_MCP_VALIDATED_BASE_URL = validate_rube_base_url()
+    await get_rube_http_client()
+
+@app.on_event("shutdown")
+async def close_rube_http_client() -> None:
+    global RUBE_HTTP_CLIENT
+    if RUBE_HTTP_CLIENT is not None:
+        await RUBE_HTTP_CLIENT.aclose()
+        RUBE_HTTP_CLIENT = None
+
+async def get_rube_http_client() -> httpx.AsyncClient:
+    global RUBE_HTTP_CLIENT
+    if RUBE_HTTP_CLIENT is None:
+        RUBE_HTTP_CLIENT = httpx.AsyncClient(timeout=10)
+    return RUBE_HTTP_CLIENT
 
 async def fetch_rube_json(url: str, token: str, params: Optional[dict] = None) -> dict:
     try:
-        async with httpx.AsyncClient(timeout=10) as http_client:
-            response = await http_client.get(
-                url,
-                params=params,
-                headers={"Authorization": f"Bearer {token}", "Accept": "application/json"}
-            )
-            response.raise_for_status()
+        http_client = await get_rube_http_client()
+        response = await http_client.get(
+            url,
+            params=params,
+            headers={"Authorization": f"Bearer {token}", "Accept": "application/json"}
+        )
+        response.raise_for_status()
     except httpx.HTTPStatusError as exc:
-        raise HTTPException(status_code=exc.response.status_code, detail="Rube MCP request failed.")
+        raise HTTPException(
+            status_code=exc.response.status_code,
+            detail=f"Rube MCP request failed with status {exc.response.status_code}."
+        )
     except httpx.RequestError as exc:
         raise HTTPException(status_code=502, detail=f"Rube MCP request failed: {exc}")
 
