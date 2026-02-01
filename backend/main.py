@@ -22,6 +22,8 @@ client = genai.Client(api_key=GEMINI_API_KEY) if GEMINI_API_KEY else None
 RUBE_MCP_BASE_URL = os.getenv("RUBE_MCP_BASE_URL", "https://rube.app")
 RUBE_MCP_VALIDATED_BASE_URL: Optional[str] = None
 RUBE_HTTP_CLIENT: Optional[httpx.AsyncClient] = None
+RUBE_HTTP_TIMEOUT: Optional[float] = None
+
 def parse_rube_timeout() -> float:
     raw_timeout = os.getenv("RUBE_MCP_TIMEOUT", "10")
     try:
@@ -31,8 +33,6 @@ def parse_rube_timeout() -> float:
     if timeout <= 0:
         raise ValueError(f"RUBE_MCP_TIMEOUT must be a positive number (got '{raw_timeout}').")
     return timeout
-
-RUBE_HTTP_TIMEOUT = parse_rube_timeout()
 
 class ChatRequest(BaseModel):
     message: str
@@ -86,15 +86,18 @@ def validate_rube_base_url() -> str:
 
 async def get_rube_http_client() -> httpx.AsyncClient:
     global RUBE_HTTP_CLIENT
+    if RUBE_HTTP_TIMEOUT is None:
+        raise RuntimeError("Rube MCP timeout is not initialized.")
     if RUBE_HTTP_CLIENT is None:
         RUBE_HTTP_CLIENT = httpx.AsyncClient(timeout=RUBE_HTTP_TIMEOUT)
     return RUBE_HTTP_CLIENT
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    global RUBE_MCP_VALIDATED_BASE_URL
+    global RUBE_MCP_VALIDATED_BASE_URL, RUBE_HTTP_TIMEOUT
     try:
         RUBE_MCP_VALIDATED_BASE_URL = validate_rube_base_url()
+        RUBE_HTTP_TIMEOUT = parse_rube_timeout()
         await get_rube_http_client()
     except ValueError as exc:
         logger.error("Rube MCP configuration error: %s", exc)
@@ -113,6 +116,7 @@ async def close_rube_http_client() -> None:
 app = FastAPI(title="Fitola Backend", version="1.0.0", lifespan=lifespan)
 
 async def fetch_rube_json(url: str, token: str, params: Optional[Dict[str, Any]] = None) -> dict:
+    """Fetch JSON payloads from the Rube MCP API with Bearer auth."""
     try:
         http_client = await get_rube_http_client()
         response = await http_client.get(
