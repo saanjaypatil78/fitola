@@ -48,8 +48,18 @@ class FitBuddy {
       interests: json['interests'] != null ? List<String>.from(json['interests']) : null,
       allowVoiceCalls: json['allow_voice_calls'] as bool? ?? true,
       allowVideoCalls: json['allow_video_calls'] as bool? ?? true,
-      lastActive: json['last_active'] != null ? DateTime.parse(json['last_active']) : null,
+      lastActive: json['last_active'] != null ? _parseDateTime(json['last_active']) : null,
     );
+  }
+  
+  static DateTime? _parseDateTime(dynamic value) {
+    if (value == null) return null;
+    if (value is DateTime) return value;
+    try {
+      return DateTime.parse(value.toString());
+    } catch (e) {
+      return null;
+    }
   }
   
   Map<String, dynamic> toJson() {
@@ -149,6 +159,22 @@ class FitBuddy {
   @override
   String toString() {
     return 'FitBuddy(id: $id, name: $name, distance: ${distance}km, status: $status)';
+  }
+  
+  // Validation helpers
+  bool get isNearby {
+    return distance <= 5.0; // Within 5km
+  }
+  
+  bool get canChat {
+    return status == UserStatus.available;
+  }
+  
+  String get formattedDistance {
+    if (distance < 1) {
+      return '${(distance * 1000).round()}m';
+    }
+    return '${distance.toStringAsFixed(1)}km';
   }
   
   bool _listEquals<T>(List<T>? a, List<T>? b) {

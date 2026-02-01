@@ -38,9 +38,19 @@ class NutritionPlan {
           ? List<String>.from(json['dietary_restrictions'])
           : null,
       aiGenerated: json['ai_generated'] as String?,
-      createdAt: DateTime.parse(json['created_at']),
+      createdAt: _parseDateTime(json['created_at'])!,
       durationDays: json['duration_days'] as int? ?? 7,
     );
+  }
+  
+  static DateTime? _parseDateTime(dynamic value) {
+    if (value == null) return null;
+    if (value is DateTime) return value;
+    try {
+      return DateTime.parse(value.toString());
+    } catch (e) {
+      return DateTime.now(); // Fallback to now for required fields
+    }
   }
   
   Map<String, dynamic> toJson() {
@@ -125,6 +135,25 @@ class NutritionPlan {
   @override
   String toString() {
     return 'NutritionPlan(id: $id, title: $title, dailyCalories: $dailyCalories)';
+  }
+  
+  // Validation helpers
+  bool get hasValidMacros {
+    return macros.containsKey('protein') &&
+        macros.containsKey('carbs') &&
+        macros.containsKey('fats');
+  }
+  
+  double get totalMacros {
+    return (macros['protein'] ?? 0) + (macros['carbs'] ?? 0) + (macros['fats'] ?? 0);
+  }
+  
+  int get calculatedCalories {
+    // Protein: 4 cal/g, Carbs: 4 cal/g, Fats: 9 cal/g
+    final protein = (macros['protein'] ?? 0) * 4;
+    final carbs = (macros['carbs'] ?? 0) * 4;
+    final fats = (macros['fats'] ?? 0) * 9;
+    return (protein + carbs + fats).round();
   }
   
   bool _listEquals<T>(List<T>? a, List<T>? b) {
@@ -241,6 +270,15 @@ class Meal {
   @override
   String toString() {
     return 'Meal(name: $name, type: $type, calories: $calories)';
+  }
+  
+  // Validation helpers
+  int get calculatedCalories {
+    return foods.fold(0, (sum, food) => sum + food.calories);
+  }
+  
+  bool get hasValidCalories {
+    return (calculatedCalories - calories).abs() <= 10; // Allow 10 cal margin
   }
   
   bool _listEquals<T>(List<T> a, List<T> b) {

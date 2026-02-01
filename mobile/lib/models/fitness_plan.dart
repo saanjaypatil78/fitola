@@ -46,10 +46,20 @@ class FitnessPlan {
           .map((e) => WorkoutDay.fromJson(e))
           .toList(),
       aiGenerated: json['ai_generated'] as String?,
-      createdAt: DateTime.parse(json['created_at']),
-      startDate: json['start_date'] != null ? DateTime.parse(json['start_date']) : null,
+      createdAt: _parseDateTime(json['created_at'])!,
+      startDate: json['start_date'] != null ? _parseDateTime(json['start_date']) : null,
       currentDay: json['current_day'] as int?,
     );
+  }
+  
+  static DateTime? _parseDateTime(dynamic value) {
+    if (value == null) return null;
+    if (value is DateTime) return value;
+    try {
+      return DateTime.parse(value.toString());
+    } catch (e) {
+      return DateTime.now(); // Fallback to now for required fields
+    }
   }
   
   Map<String, dynamic> toJson() {
@@ -144,6 +154,20 @@ class FitnessPlan {
   @override
   String toString() {
     return 'FitnessPlan(id: $id, title: $title, type: $type, difficulty: $difficulty)';
+  }
+  
+  // Validation helpers
+  bool get isActive {
+    return startDate != null && currentDay != null && currentDay! < durationDays;
+  }
+  
+  bool get isCompleted {
+    return currentDay != null && currentDay! >= durationDays;
+  }
+  
+  int get remainingDays {
+    if (currentDay == null) return durationDays;
+    return (durationDays - currentDay!).clamp(0, durationDays);
   }
   
   bool _listEquals<T>(List<T>? a, List<T>? b) {
@@ -331,6 +355,15 @@ class Exercise {
   @override
   String toString() {
     return 'Exercise(name: $name, sets: $sets, reps: $reps)';
+  }
+  
+  // Validation helpers
+  bool get isValid {
+    return name.isNotEmpty && sets > 0 && reps > 0;
+  }
+  
+  int get totalReps {
+    return sets * reps;
   }
 }
 

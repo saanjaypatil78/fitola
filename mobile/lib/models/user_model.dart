@@ -48,9 +48,19 @@ class UserModel {
       interestedInCompetition: json['interested_in_competition'] as bool?,
       gender: json['gender'] as String?,
       allergies: json['allergies'] != null ? List<String>.from(json['allergies']) : null,
-      createdAt: json['created_at'] != null ? DateTime.parse(json['created_at']) : null,
-      updatedAt: json['updated_at'] != null ? DateTime.parse(json['updated_at']) : null,
+      createdAt: json['created_at'] != null ? _parseDateTime(json['created_at']) : null,
+      updatedAt: json['updated_at'] != null ? _parseDateTime(json['updated_at']) : null,
     );
+  }
+  
+  static DateTime? _parseDateTime(dynamic value) {
+    if (value == null) return null;
+    if (value is DateTime) return value;
+    try {
+      return DateTime.parse(value.toString());
+    } catch (e) {
+      return null; // Return null if parsing fails
+    }
   }
   
   Map<String, dynamic> toJson() {
@@ -170,6 +180,29 @@ class UserModel {
   @override
   String toString() {
     return 'UserModel(id: $id, name: $name, email: $email)';
+  }
+  
+  // Validation helpers
+  bool get isProfileComplete {
+    return name.isNotEmpty &&
+        email.isNotEmpty &&
+        ageGroup != null &&
+        weight != null &&
+        height != null &&
+        bodyType != null &&
+        goals != null && goals!.isNotEmpty;
+  }
+  
+  bool get hasValidMeasurements {
+    if (weight == null || height == null) return false;
+    return weight! > 0 && weight! <= 500 && height! > 0 && height! <= 300;
+  }
+  
+  String? validateEmail() {
+    if (email.isEmpty) return 'Email is required';
+    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+    if (!emailRegex.hasMatch(email)) return 'Invalid email format';
+    return null;
   }
   
   bool _listEquals<T>(List<T>? a, List<T>? b) {

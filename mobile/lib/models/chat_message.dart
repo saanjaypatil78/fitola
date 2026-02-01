@@ -42,9 +42,19 @@ class ChatMessage {
       fileName: json['file_name'] as String?,
       isTranslated: json['is_translated'] as bool? ?? false,
       translatedMessage: json['translated_message'] as String?,
-      timestamp: DateTime.parse(json['timestamp']),
+      timestamp: _parseDateTime(json['timestamp'])!,
       isRead: json['is_read'] as bool? ?? false,
     );
+  }
+  
+  static DateTime? _parseDateTime(dynamic value) {
+    if (value == null) return null;
+    if (value is DateTime) return value;
+    try {
+      return DateTime.parse(value.toString());
+    } catch (e) {
+      return DateTime.now(); // Fallback to now if parsing fails
+    }
   }
   
   Map<String, dynamic> toJson() {
