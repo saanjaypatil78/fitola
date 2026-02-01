@@ -11,9 +11,10 @@ bool listEquals<T>(List<T>? a, List<T>? b) {
   return true;
 }
 
-/// Compares two maps for equality
-bool mapEquals<K, V>(Map<K, V> a, Map<K, V> b) {
-  if (a.length != b.length) return false;
+/// Compares two maps for equality, handling null values
+bool mapEquals<K, V>(Map<K, V>? a, Map<K, V>? b) {
+  if (a == null) return b == null;
+  if (b == null || a.length != b.length) return false;
   for (final key in a.keys) {
     if (!b.containsKey(key) || a[key] != b[key]) return false;
   }

@@ -334,7 +334,7 @@ class Exercise {
   
   // Validation helpers
   bool get isValid {
-    return name.isNotEmpty && sets > 0 && reps > 0;
+    return name.isNotEmpty && sets > 0 && (reps > 0 || (duration != null && duration! > 0));
   }
   
   int get totalReps {

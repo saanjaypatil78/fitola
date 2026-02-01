@@ -150,6 +150,8 @@ class NutritionPlan {
 }
 
 class Meal {
+  static const int calorieMarginTolerance = 10;
+  
   final String name;
   final MealType type;
   final List<FoodItem> foods;
@@ -253,7 +255,7 @@ class Meal {
   }
   
   bool get hasValidCalories {
-    return (calculatedCalories - calories).abs() <= 10; // Allow 10 cal margin
+    return (calculatedCalories - calories).abs() <= calorieMarginTolerance;
   }
 }
 

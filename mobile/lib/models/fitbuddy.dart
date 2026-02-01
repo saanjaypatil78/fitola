@@ -2,6 +2,8 @@ import 'package:latlong2/latlong.dart';
 import 'model_utils.dart';
 
 class FitBuddy {
+  static const double nearbyDistanceKm = 5.0;
+  
   final String id;
   final String name;
   final String? photoUrl;
@@ -154,7 +156,7 @@ class FitBuddy {
   
   // Validation helpers
   bool get isNearby {
-    return distance <= 5.0; // Within 5km
+    return distance <= nearbyDistanceKm;
   }
   
   bool get canChat {
