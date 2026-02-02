@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 
 /// An information or alert card with colored background.
 /// Used to display messages, warnings, errors, or informational content.
-/// 
-/// Types:
-/// - info: Blue background for informational messages
-/// - warning: Orange background for warnings
-/// - error: Red background for errors
-/// - success: Green background for success messages
+///
+/// Types (colors are derived from the current [ThemeData.colorScheme]):
+/// - info: Uses the theme's primary container colors for informational messages
+/// - warning: Uses the theme's tertiary container colors for warnings
+/// - error: Uses the theme's error container colors for errors
+/// - success: Uses the theme's secondary container colors for success messages
 class InfoCard extends StatelessWidget {
   final String message;
   final InfoCardType type;
