@@ -70,7 +70,6 @@ class FormTextField extends StatelessWidget {
         hintText: hint,
         prefixIcon: prefixIcon != null ? Icon(prefixIcon) : null,
         suffixIcon: suffixIcon,
-        counterText: maxLength != null ? null : '',
       ),
     );
   }

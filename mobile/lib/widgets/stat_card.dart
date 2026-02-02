@@ -50,7 +50,7 @@ class StatCard extends StatelessWidget {
                         Text(
                           title,
                           style: theme.textTheme.bodyMedium?.copyWith(
-                            color: theme.textTheme.bodySmall?.color,
+                            color: theme.colorScheme.onSurfaceVariant,
                           ),
                         ),
                         const SizedBox(height: 4),

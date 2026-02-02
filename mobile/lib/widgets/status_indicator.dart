@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fitola/config/theme.dart';
+import 'package:fitola/models/fitbuddy.dart';
 
 /// A stateless visual status indicator component.
 /// Used to display user availability status (available, busy, ghost).
@@ -82,11 +83,4 @@ class StatusIndicator extends StatelessWidget {
         return 'Ghost';
     }
   }
-}
-
-/// Enum for user availability status
-enum UserStatus {
-  available,
-  busy,
-  ghost,
 }
