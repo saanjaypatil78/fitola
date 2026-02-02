@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// A list tile widget with status badge and leading widget.
+/// A list tile widget with status badge and leading widget (e.g., an avatar).
 /// Provides consistent styling for list items across the app.
 ///
 /// Used in:
