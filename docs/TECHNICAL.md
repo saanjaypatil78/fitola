@@ -653,7 +653,7 @@ cd backend
 2. **Create virtual environment:**
 ```bash
 python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+source venv/bin/activate  # On Windows: venv\\Scripts\\activate
 ```
 
 3. **Install dependencies:**
@@ -743,6 +743,7 @@ flutter build apk --release
 
 2. **Build App Bundle (for Play Store):**
 ```bash
+cd mobile
 flutter build appbundle --release
 ```
 
@@ -779,25 +780,53 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    
+
     steps:
     - uses: actions/checkout@v3
-    
+
     - uses: subosito/flutter-action@v2
       with:
         flutter-version: '3.24.5'
-    
+
     - name: Install dependencies
       run: flutter pub get
       working-directory: mobile
-    
+
     - name: Run tests
       run: flutter test
       working-directory: mobile
-    
+
     - name: Build APK
       run: flutter build apk --release
       working-directory: mobile
+```
+
+### GitHub Packages (NuGet) Publishing (Open Source)
+
+If you publish any .NET tooling or supporting libraries, GitHub Packages supports free publishing for public NuGet packages. Use GitHub Actions for CI publishing and `GITHUB_TOKEN` for authentication.
+
+**Best practices:**
+- Publish **public** packages to stay within free limits.
+- Use `GITHUB_TOKEN` in CI for publishing.
+- Use a PAT only for local/manual publishing.
+- Set `RepositoryUrl` in your `.csproj` so packages link back to the repo.
+
+**NuGet source setup (CI or local):**
+```bash
+dotnet nuget add source \
+  --username USERNAME \
+  --password ${{ secrets.GITHUB_TOKEN }} \
+  --store-password-in-clear-text \
+  --name github \
+  "https://nuget.pkg.github.com/NAMESPACE/index.json"
+```
+
+**Minimal GitHub Actions publish step:**
+```yaml
+- name: Publish NuGet package
+  run: dotnet nuget push "./nupkg/*.nupkg" \
+    --api-key ${{ secrets.GITHUB_TOKEN }} \
+    --source "https://nuget.pkg.github.com/NAMESPACE/index.json"
 ```
 
 ## Testing Strategy
@@ -821,10 +850,10 @@ void main() {
         weight: 70.0,
         height: 170.0,
       );
-      
+
       expect(user.bmi, closeTo(24.2, 0.1));
     });
-    
+
     test('should return correct BMI category', () {
       final user = UserModel(
         id: '1',
@@ -833,7 +862,7 @@ void main() {
         weight: 70.0,
         height: 170.0,
       );
-      
+
       expect(user.bmiCategory, 'Normal');
     });
   });
@@ -863,7 +892,7 @@ void main() {
         ),
       ),
     );
-    
+
     expect(find.text('Test message'), findsOneWidget);
   });
 }
@@ -881,20 +910,20 @@ import 'package:fitola/main.dart' as app;
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
-  
+
   testWidgets('Complete onboarding flow', (WidgetTester tester) async {
     app.main();
     await tester.pumpAndSettle();
-    
+
     // Splash screen
     expect(find.text('Fitola'), findsOneWidget);
     await tester.pumpAndSettle(Duration(seconds: 3));
-    
+
     // Language selection
     expect(find.text('Select Language'), findsOneWidget);
     await tester.tap(find.text('Continue'));
     await tester.pumpAndSettle();
-    
+
     // ... test other screens
   });
 }
@@ -967,5 +996,5 @@ flutter test --coverage
 ---
 
 **Document Version**: 1.0  
-**Last Updated**: February 2026  
+**Last Updated**: 2026-02-02 14:48:31  
 **Maintainer**: Fitola Development Team
