@@ -105,11 +105,11 @@ class CustomMarkers {
     }
 
     // Extract initials
-    final parts = name.trim().split(' ');
-    final initials = parts.length >= 2
+    final parts = name.trim().split(' ').where((p) => p.isNotEmpty).toList();
+    final initials = parts.length >= 2 && parts[0].isNotEmpty && parts[1].isNotEmpty
         ? '${parts[0][0]}${parts[1][0]}'.toUpperCase()
-        : name.isNotEmpty
-            ? name[0].toUpperCase()
+        : parts.isNotEmpty && parts[0].isNotEmpty
+            ? parts[0][0].toUpperCase()
             : '?';
 
     return Container(
