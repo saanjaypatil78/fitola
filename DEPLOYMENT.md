@@ -48,12 +48,12 @@ Fitola is pre-configured for Vercel using `vercel.json`.
      - `GEMINI_API_KEY`: Your Google Gemini API Key.
      - `GEMINI_MODEL` (optional): Override the Gemini model (defaults to `gemini-2.5-flash`).
      - `RUBE_MCP_JWT`: JWT for the Rube MCP API (Authorization: Bearer <token>).
-     - `RUBE_MCP_BASE_URL` (optional): Base URL for Rube MCP (defaults to `https://rube.app`).
+      - `RUBE_MCP_BASE_URL` (optional): Base URL for Rube MCP (defaults to `https://rube.app`).
       - `RUBE_MCP_TIMEOUT` (optional): HTTP timeout in seconds (defaults to `10`).
-     - `STITCH_PROJECT_ID`: Google Cloud project ID for Stitch MCP (required for Stitch MCP).
-     - `STITCH_USE_SYSTEM_GCLOUD` (optional): Set to `1` to reuse your system gcloud credentials.
-     - `SUPABASE_URL`: Your Supabase Project URL.
-     - `SUPABASE_KEY`: Your Supabase API Key.
+      - `STITCH_PROJECT_ID`: Google Cloud project ID for Stitch MCP (required for Stitch MCP).
+      - `STITCH_USE_SYSTEM_GCLOUD` (optional): Set to `1` to reuse your system gcloud credentials.
+      - `SUPABASE_URL`: Your Supabase Project URL.
+      - `SUPABASE_KEY`: Your Supabase API Key.
 
 3. **Deploy**:
    - Vercel will automatically build and deploy your project on every push to the `main` branch.
