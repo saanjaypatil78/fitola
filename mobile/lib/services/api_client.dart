@@ -132,7 +132,9 @@ class ApiClient {
       );
     }
     
-    await Future.delayed(retryDelay * (retryCount + 1));
+    // Exponential backoff: 2s, 4s, 8s
+    final delaySeconds = retryDelay.inSeconds * (1 << retryCount); // 2^retryCount
+    await Future.delayed(Duration(seconds: delaySeconds));
     return request();
   }
   

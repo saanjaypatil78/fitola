@@ -13,7 +13,7 @@ The Fitola mobile app now has full integration with the FastAPI backend, includi
 ## API Client Enhancements
 
 ### Features
-- **Automatic Retry Logic**: Up to 3 retries with exponential backoff (2s, 4s, 6s)
+- **Automatic Retry Logic**: Up to 3 retries with exponential backoff (2s, 4s, 8s)
 - **Timeout Handling**: 30-second timeout for all requests
 - **Comprehensive Error Types**: 
   - Network errors (connectivity issues)

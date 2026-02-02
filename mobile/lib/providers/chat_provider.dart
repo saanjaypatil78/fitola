@@ -53,8 +53,27 @@ class ChatProvider with ChangeNotifier {
       // Reload conversations list to check for new messages
       final newConversationsList = await _chatService.getConversationsList(_currentUserId!);
       
-      // Check if there are any changes
+      // Check if there are any changes by comparing both length and content
+      bool hasChanges = false;
+      
       if (newConversationsList.length != _conversationsList.length) {
+        hasChanges = true;
+      } else {
+        // Compare last message timestamps or message counts
+        for (int i = 0; i < newConversationsList.length; i++) {
+          final newConv = newConversationsList[i];
+          final oldConv = _conversationsList.length > i ? _conversationsList[i] : null;
+          
+          if (oldConv == null || 
+              newConv['last_message_time'] != oldConv['last_message_time'] ||
+              newConv['unread_count'] != oldConv['unread_count']) {
+            hasChanges = true;
+            break;
+          }
+        }
+      }
+      
+      if (hasChanges) {
         _conversationsList = newConversationsList;
         notifyListeners();
       }

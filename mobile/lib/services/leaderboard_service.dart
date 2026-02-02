@@ -17,7 +17,12 @@ class LeaderboardService {
         '/leaderboard/global?limit=$limit&offset=$offset',
       );
       
-      final entries = (response['leaderboard'] as List)
+      final leaderboardData = response['leaderboard'];
+      if (leaderboardData == null) {
+        return [];
+      }
+      
+      final entries = (leaderboardData as List)
           .map((json) => LeaderboardEntry.fromJson(json))
           .toList();
       
@@ -38,7 +43,12 @@ class LeaderboardService {
         '/leaderboard/national/$country?limit=$limit&offset=$offset',
       );
       
-      final entries = (response['leaderboard'] as List)
+      final leaderboardData = response['leaderboard'];
+      if (leaderboardData == null) {
+        return [];
+      }
+      
+      final entries = (leaderboardData as List)
           .map((json) => LeaderboardEntry.fromJson(json))
           .toList();
       
@@ -59,7 +69,12 @@ class LeaderboardService {
         '/leaderboard/friends/$userId?limit=$limit&offset=$offset',
       );
       
-      final entries = (response['leaderboard'] as List)
+      final leaderboardData = response['leaderboard'];
+      if (leaderboardData == null) {
+        return [];
+      }
+      
+      final entries = (leaderboardData as List)
           .map((json) => LeaderboardEntry.fromJson(json))
           .toList();
       
