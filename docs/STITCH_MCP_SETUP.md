@@ -43,7 +43,7 @@ Use the generated output from the setup helper. For this repo, update the root `
       "command": "npx",
       "args": ["@_davideast/stitch-mcp", "proxy"],
       "env": {
-        "STITCH_PROJECT_ID": "your-google-cloud-project-id"
+        "STITCH_PROJECT_ID": "YOUR_PROJECT_ID_HERE"
       }
     }
   }
@@ -55,7 +55,7 @@ If you prefer to reuse your existing `gcloud` configuration, set:
 ```json
 "env": {
   "STITCH_USE_SYSTEM_GCLOUD": "1",
-  "STITCH_PROJECT_ID": "your-google-cloud-project-id"
+  "STITCH_PROJECT_ID": "YOUR_PROJECT_ID_HERE"
 }
 ```
 
@@ -78,4 +78,3 @@ npx @_davideast/stitch-mcp doctor
 
 - Stitch daily credits and redesign credits are enforced by Stitch settings.
 - Review privacy preferences on the Stitch settings page if you want to opt-out of training on future Stitch conversations.
-

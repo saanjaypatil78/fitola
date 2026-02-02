@@ -14,7 +14,7 @@
         "proxy"
       ],
       "env": {
-        "STITCH_PROJECT_ID": "your-google-cloud-project-id"
+        "STITCH_PROJECT_ID": "YOUR_PROJECT_ID_HERE"
       }
     }
   }
