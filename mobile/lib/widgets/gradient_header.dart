@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 /// A header widget with gradient background, commonly used at the top of screens.
 /// Supports custom gradient colors, icon, title, subtitle, and additional child content.
-/// 
+///
 /// Used in:
 /// - Profile screens
 /// - Nutrition plan headers
@@ -37,10 +37,10 @@ class GradientHeader extends StatelessWidget {
       theme.colorScheme.primary,
       theme.colorScheme.primary.withOpacity(0.8),
     ];
-    
+
     return Container(
+      alignment: alignment ?? Alignment.center,
       height: height,
-      alignment: alignment,
       padding: padding ?? const EdgeInsets.all(24),
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -59,11 +59,11 @@ class GradientHeader extends StatelessWidget {
 
   Widget _buildDefaultContent(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     // Determine text alignment based on provided alignment
     final textAlign = _getTextAlign(alignment);
     final crossAxisAlign = _getCrossAxisAlignment(alignment);
-    
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: crossAxisAlign,
@@ -98,7 +98,7 @@ class GradientHeader extends StatelessWidget {
       ],
     );
   }
-  
+
   CrossAxisAlignment _getCrossAxisAlignment(AlignmentGeometry? align) {
     if (align == null) return CrossAxisAlignment.center;
     if (align == Alignment.centerLeft || align == Alignment.topLeft || align == Alignment.bottomLeft) {
@@ -109,7 +109,7 @@ class GradientHeader extends StatelessWidget {
     }
     return CrossAxisAlignment.center;
   }
-  
+
   TextAlign _getTextAlign(AlignmentGeometry? align) {
     if (align == null) return TextAlign.center;
     if (align == Alignment.centerLeft || align == Alignment.topLeft || align == Alignment.bottomLeft) {
