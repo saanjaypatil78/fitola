@@ -1,1 +1,21 @@
-{\n  "servers": {\n    "sequential-thinking": {\n      "command": "npx",\n      "args": [\n        "-y",\n        "@modelcontextprotocol/server-sequential-thinking"\n      ]\n    }\n  }\n}
+{
+  "servers": {
+    "sequential-thinking": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-sequential-thinking"
+      ]
+    },
+    "stitch": {
+      "command": "npx",
+      "args": [
+        "@_davideast/stitch-mcp",
+        "proxy"
+      ],
+      "env": {
+        "STITCH_PROJECT_ID": "YOUR_PROJECT_ID_HERE"
+      }
+    }
+  }
+}

@@ -231,6 +231,9 @@ To make these configurable, modify `mobile/lib/services/api_client.dart` to use 
 ### Backend (.env)
 See `/backend/.env.example` for backend configuration.
 
+### Stitch MCP
+For UI generation workflows using Stitch, follow the setup guide in `docs/STITCH_MCP_SETUP.md` and ensure `STITCH_PROJECT_ID` (and optionally `STITCH_USE_SYSTEM_GCLOUD`) are configured.
+
 ## Error Handling Strategy
 
 ### API Client Level

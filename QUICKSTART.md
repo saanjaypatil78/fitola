@@ -46,6 +46,8 @@ cp .env.example .env
 # GEMINI_API_KEY=your_gemini_api_key_here
 # SUPABASE_URL=your_supabase_url_here
 # SUPABASE_KEY=your_supabase_key_here
+# STITCH_PROJECT_ID=your_google_cloud_project_id
+# STITCH_USE_SYSTEM_GCLOUD=1
 ```
 
 ### 2.4 Start Backend Server
