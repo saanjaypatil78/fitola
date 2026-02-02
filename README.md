@@ -202,6 +202,7 @@ flutter test integration_test
 
 - **[Product Requirements Document (PRD)](docs/PRD.md)**: Complete product specifications
 - **[Technical Documentation](docs/TECHNICAL.md)**: Architecture, API docs, deployment
+- **[Backend Integration Guide](BACKEND_INTEGRATION.md)**: API integration, error handling, services documentation
 - **[UX Wireframes](docs/UX_WIREFRAMES.md)**: Design specifications and screen flows
 - **[API Documentation](http://localhost:8000/docs)**: Interactive Swagger UI (when backend is running)
 
@@ -238,6 +239,9 @@ flutter build web --release
 - ✅ AI fitness & nutrition plans
 - ✅ Competition leaderboard
 - ✅ Status/Translate FAB
+- ✅ Backend Integration with retry logic and error handling
+- ✅ REST-based messaging with polling
+- ✅ Comprehensive API client with timeout handling
 
 ### Phase 2 (Next 3 months)
 - Live video consultations
