@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 /// A button that shows a loading indicator when processing.
 /// Disables interaction during loading state.
-/// 
+///
 /// Used for:
 /// - Login/Register buttons
 /// - Form submissions
@@ -33,7 +33,7 @@ class LoadingButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final effectiveForegroundColor = foregroundColor ?? theme.colorScheme.onPrimary;
-    
+
     return ElevatedButton(
       onPressed: isLoading ? null : onPressed,
       style: ElevatedButton.styleFrom(
@@ -46,7 +46,7 @@ class LoadingButton extends StatelessWidget {
         ),
       ),
       child: ConstrainedBox(
-        constraints: const BoxConstraints(minHeight: 24),
+        constraints: const BoxConstraints(minHeight: 40),
         child: isLoading
             ? Center(
                 child: SizedBox(
@@ -66,7 +66,12 @@ class LoadingButton extends StatelessWidget {
                     Icon(icon, size: 20),
                     const SizedBox(width: 8),
                   ],
-                  Text(text),
+                  Flexible(
+                    child: Text(
+                      text,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
                 ],
               ),
       ),
