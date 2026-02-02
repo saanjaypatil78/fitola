@@ -29,7 +29,8 @@ class IconBadge extends StatelessWidget {
           icon != null || (text != null && text!.isNotEmpty),
           'IconBadge requires either a non-null icon or non-empty text.',
         ),
-        super(key: key);
+        assert(icon != null || (text != null && text!.trim().isNotEmpty),
+          'IconBadge requires either a non-null icon or non-empty text.'),
 
   @override
   Widget build(BuildContext context) {
