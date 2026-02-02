@@ -64,42 +64,36 @@ class InfoCard extends StatelessWidget {
   }
 
   _InfoCardColors _getColors(ThemeData theme) {
+    final colorScheme = theme.colorScheme;
+
     switch (type) {
       case InfoCardType.info:
         return _InfoCardColors(
-          backgroundColor: const Color(0xFF2196F3).withOpacity(0.1),
-          borderColor: const Color(0xFF2196F3).withOpacity(0.3),
-          iconColor: const Color(0xFF2196F3),
-          textColor: theme.brightness == Brightness.light 
-              ? const Color(0xFF1565C0) 
-              : const Color(0xFF90CAF9),
+          backgroundColor: colorScheme.primaryContainer,
+          borderColor: colorScheme.primary,
+          iconColor: colorScheme.primary,
+          textColor: colorScheme.onPrimaryContainer,
         );
       case InfoCardType.warning:
         return _InfoCardColors(
-          backgroundColor: const Color(0xFFFF9800).withOpacity(0.1),
-          borderColor: const Color(0xFFFF9800).withOpacity(0.3),
-          iconColor: const Color(0xFFFF9800),
-          textColor: theme.brightness == Brightness.light 
-              ? const Color(0xFFE65100) 
-              : const Color(0xFFFFB74D),
+          backgroundColor: colorScheme.tertiaryContainer,
+          borderColor: colorScheme.tertiary,
+          iconColor: colorScheme.tertiary,
+          textColor: colorScheme.onTertiaryContainer,
         );
       case InfoCardType.error:
         return _InfoCardColors(
-          backgroundColor: const Color(0xFFF44336).withOpacity(0.1),
-          borderColor: const Color(0xFFF44336).withOpacity(0.3),
-          iconColor: const Color(0xFFF44336),
-          textColor: theme.brightness == Brightness.light 
-              ? const Color(0xFFC62828) 
-              : const Color(0xFFE57373),
+          backgroundColor: colorScheme.errorContainer,
+          borderColor: colorScheme.error,
+          iconColor: colorScheme.error,
+          textColor: colorScheme.onErrorContainer,
         );
       case InfoCardType.success:
         return _InfoCardColors(
-          backgroundColor: const Color(0xFF4CAF50).withOpacity(0.1),
-          borderColor: const Color(0xFF4CAF50).withOpacity(0.3),
-          iconColor: const Color(0xFF4CAF50),
-          textColor: theme.brightness == Brightness.light 
-              ? const Color(0xFF2E7D32) 
-              : const Color(0xFF81C784),
+          backgroundColor: colorScheme.secondaryContainer,
+          borderColor: colorScheme.secondary,
+          iconColor: colorScheme.secondary,
+          textColor: colorScheme.onSecondaryContainer,
         );
     }
   }
