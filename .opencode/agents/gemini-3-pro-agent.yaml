@@ -1,0 +1,13 @@
+name: gemini-3-pro
+description: Agentic CI/CD planner for Fitola using Gemini 3 Pro.
+model: gemini-3-pro
+permissions:
+  default: ask
+  allow:
+    - .opencode/skills/ci/*
+    - .opencode/skills/test/*
+    - .opencode/skills/build/*
+  ask:
+    - .opencode/skills/deploy/*
+    - .opencode/skills/docker/*
+    - .opencode/skills/notify/*
