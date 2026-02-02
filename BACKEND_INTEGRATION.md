@@ -162,26 +162,71 @@ User availability status management.
 
 ## Environment Configuration
 
-### Mobile App (.env)
-Create a `.env` file in `/mobile` with:
+### Mobile App Configuration
 
-```env
-# Backend API Configuration
-API_BASE_URL=https://fitola.vercel.app/api/v1
+The Flutter app uses compile-time environment variables via `String.fromEnvironment` and `--dart-define` flags. Configuration values are defined in `mobile/lib/config/constants.dart` with default values.
 
-# Supabase Configuration
-SUPABASE_URL=https://your-project.supabase.co
-SUPABASE_ANON_KEY=your-anon-key-here
+#### Setting Environment Variables
 
-# Feature Flags
-ENABLE_SOCKET_IO=false
-ENABLE_POLLING=true
-POLLING_INTERVAL_SECONDS=5
+**During Development:**
+```bash
+# Run with custom API endpoint
+flutter run --dart-define=API_BASE_URL=http://localhost:8000/api/v1
 
-# Timeout Configuration
-API_TIMEOUT_SECONDS=30
-MAX_RETRIES=3
+# Run with all custom values
+flutter run \
+  --dart-define=API_BASE_URL=https://fitola.vercel.app/api/v1 \
+  --dart-define=SUPABASE_URL=https://your-project.supabase.co \
+  --dart-define=SUPABASE_ANON_KEY=your-anon-key-here
 ```
+
+**For Production Builds:**
+```bash
+# Android
+flutter build apk \
+  --dart-define=API_BASE_URL=https://fitola.vercel.app/api/v1 \
+  --dart-define=SUPABASE_URL=https://your-project.supabase.co \
+  --dart-define=SUPABASE_ANON_KEY=your-anon-key-here
+
+# iOS
+flutter build ios \
+  --dart-define=API_BASE_URL=https://fitola.vercel.app/api/v1 \
+  --dart-define=SUPABASE_URL=https://your-project.supabase.co \
+  --dart-define=SUPABASE_ANON_KEY=your-anon-key-here
+```
+
+**Using --dart-define-from-file (Flutter 3.7+):**
+
+Create a `mobile/dart_defines.json` file:
+```json
+{
+  "API_BASE_URL": "https://fitola.vercel.app/api/v1",
+  "SUPABASE_URL": "https://your-project.supabase.co",
+  "SUPABASE_ANON_KEY": "your-anon-key-here"
+}
+```
+
+Then run:
+```bash
+flutter run --dart-define-from-file=dart_defines.json
+flutter build apk --dart-define-from-file=dart_defines.json
+```
+
+**Note:** Add `dart_defines.json` to `.gitignore` to avoid committing sensitive credentials.
+
+#### Available Configuration Variables
+
+- `API_BASE_URL` - Backend API base URL (default: `https://fitola.vercel.app/api/v1`)
+- `SUPABASE_URL` - Supabase project URL (default: `https://your-project.supabase.co`)
+- `SUPABASE_ANON_KEY` - Supabase anonymous key (default: `your-anon-key-here`)
+
+#### Hard-coded Configuration
+
+Some configuration values are hard-coded in `ApiClient`:
+- `timeout` - 30 seconds (line 17)
+- `maxRetries` - 3 attempts (line 16)
+
+To make these configurable, modify `mobile/lib/services/api_client.dart` to use `int.fromEnvironment`.
 
 ### Backend (.env)
 See `/backend/.env.example` for backend configuration.

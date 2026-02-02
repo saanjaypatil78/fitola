@@ -46,9 +46,11 @@ class ApiClient {
       
       return _handleResponse(response);
     } on TimeoutException {
-      return _handleRetry(() => get(endpoint, retryCount: retryCount + 1), retryCount);
+      return _handleRetry(() => get(endpoint, retryCount: retryCount + 1), retryCount, ApiErrorType.timeout);
     } on SocketException {
-      return _handleRetry(() => get(endpoint, retryCount: retryCount + 1), retryCount);
+      return _handleRetry(() => get(endpoint, retryCount: retryCount + 1), retryCount, ApiErrorType.network);
+    } on ApiException {
+      rethrow;
     } catch (e) {
       throw ApiException('Network error: $e', type: ApiErrorType.network);
     }
@@ -71,9 +73,11 @@ class ApiClient {
       
       return _handleResponse(response);
     } on TimeoutException {
-      return _handleRetry(() => post(endpoint, body, retryCount: retryCount + 1), retryCount);
+      return _handleRetry(() => post(endpoint, body, retryCount: retryCount + 1), retryCount, ApiErrorType.timeout);
     } on SocketException {
-      return _handleRetry(() => post(endpoint, body, retryCount: retryCount + 1), retryCount);
+      return _handleRetry(() => post(endpoint, body, retryCount: retryCount + 1), retryCount, ApiErrorType.network);
+    } on ApiException {
+      rethrow;
     } catch (e) {
       throw ApiException('Network error: $e', type: ApiErrorType.network);
     }
@@ -96,9 +100,11 @@ class ApiClient {
       
       return _handleResponse(response);
     } on TimeoutException {
-      return _handleRetry(() => put(endpoint, body, retryCount: retryCount + 1), retryCount);
+      return _handleRetry(() => put(endpoint, body, retryCount: retryCount + 1), retryCount, ApiErrorType.timeout);
     } on SocketException {
-      return _handleRetry(() => put(endpoint, body, retryCount: retryCount + 1), retryCount);
+      return _handleRetry(() => put(endpoint, body, retryCount: retryCount + 1), retryCount, ApiErrorType.network);
+    } on ApiException {
+      rethrow;
     } catch (e) {
       throw ApiException('Network error: $e', type: ApiErrorType.network);
     }
@@ -113,9 +119,11 @@ class ApiClient {
       
       return _handleResponse(response);
     } on TimeoutException {
-      return _handleRetry(() => delete(endpoint, retryCount: retryCount + 1), retryCount);
+      return _handleRetry(() => delete(endpoint, retryCount: retryCount + 1), retryCount, ApiErrorType.timeout);
     } on SocketException {
-      return _handleRetry(() => delete(endpoint, retryCount: retryCount + 1), retryCount);
+      return _handleRetry(() => delete(endpoint, retryCount: retryCount + 1), retryCount, ApiErrorType.network);
+    } on ApiException {
+      rethrow;
     } catch (e) {
       throw ApiException('Network error: $e', type: ApiErrorType.network);
     }
@@ -124,11 +132,12 @@ class ApiClient {
   Future<Map<String, dynamic>> _handleRetry(
     Future<Map<String, dynamic>> Function() request,
     int retryCount,
+    ApiErrorType errorType,
   ) async {
     if (retryCount >= maxRetries) {
       throw ApiException(
         'Request failed after $maxRetries retries',
-        type: ApiErrorType.timeout,
+        type: errorType,
       );
     }
     
