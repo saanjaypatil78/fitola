@@ -41,24 +41,33 @@ class StatusIndicator extends StatelessWidget {
   }
 
   Widget _buildIndicator() {
-    return Container(
-      width: size,
-      height: size,
-      decoration: BoxDecoration(
-        color: _getStatusColor(),
-        shape: BoxShape.circle,
-        border: Border.all(
-          color: Colors.white,
-          width: size > 12 ? 2 : 1,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.2),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
+    return Builder(
+      builder: (context) {
+        final theme = Theme.of(context);
+        final borderColor = theme.brightness == Brightness.dark
+            ? theme.colorScheme.surface
+            : Colors.white;
+
+        return Container(
+          width: size,
+          height: size,
+          decoration: BoxDecoration(
+            color: _getStatusColor(),
+            shape: BoxShape.circle,
+            border: Border.all(
+              color: borderColor,
+              width: size > 12 ? 2 : 1,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.2),
+                blurRadius: 4,
+                offset: const Offset(0, 2),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 

@@ -3,6 +3,9 @@ import 'package:fitola/config/theme.dart';
 
 /// Static utility class for building custom map markers with Material 3 theming.
 /// Used in map and location-based features.
+/// 
+/// Note: Map markers use white borders intentionally as they appear on map tiles
+/// (not app backgrounds) and need universal contrast against any map style.
 class CustomMarkers {
   /// Builds a circular map marker for a user
   static Widget buildMarker({
