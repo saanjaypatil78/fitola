@@ -8,6 +8,8 @@ import 'package:fitola/providers/auth_provider.dart';
 import 'package:fitola/providers/chat_provider.dart';
 import 'package:fitola/providers/status_provider.dart';
 import 'package:fitola/providers/map_provider.dart';
+import 'package:fitola/providers/fitness_provider.dart';
+import 'package:fitola/providers/settings_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,6 +34,8 @@ class FitolaApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => ChatProvider()),
         ChangeNotifierProvider(create: (_) => StatusProvider()),
         ChangeNotifierProvider(create: (_) => MapProvider()),
+        ChangeNotifierProvider(create: (_) => FitnessProvider()),
+        ChangeNotifierProvider(create: (_) => SettingsProvider()),
       ],
       child: MaterialApp(
         title: AppConstants.appName,
