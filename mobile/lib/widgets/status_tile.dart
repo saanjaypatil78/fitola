@@ -60,7 +60,7 @@ class StatusTile extends StatelessWidget {
                   children: [
                     Text(
                       title,
-                      style: theme.textTheme.titleLarge?.copyWith(
+                      style: theme.textTheme.titleMedium?.copyWith(
                         color: isDestructive 
                             ? theme.colorScheme.error 
                             : theme.colorScheme.onSurface,
