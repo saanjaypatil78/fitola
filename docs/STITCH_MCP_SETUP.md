@@ -12,6 +12,8 @@ Stitch MCP lets compatible coding agents generate UI designs and export code by 
 - Free tier usage limits (daily credits and redesign credits) managed in Stitch settings
 - Optional privacy controls to opt-out of training on future Stitch conversations
 
+The Stitch settings page currently shows a free tier with **400 daily credits** and **15 daily redesign credits** (subject to change). Check the Stitch settings page to confirm your current limits.
+
 ## Prerequisites
 
 - Node.js 18+ with `npx`
@@ -78,3 +80,7 @@ npx @_davideast/stitch-mcp doctor
 
 - Stitch daily credits and redesign credits are enforced by Stitch settings.
 - Review privacy preferences on the Stitch settings page if you want to opt-out of training on future Stitch conversations.
+
+## Video Walkthrough
+
+If you prefer a guided setup walkthrough, see: https://youtu.be/AUNzWyjYIi0
