@@ -202,6 +202,7 @@ flutter test integration_test
 
 - **[Product Requirements Document (PRD)](docs/PRD.md)**: Complete product specifications
 - **[Technical Documentation](docs/TECHNICAL.md)**: Architecture, API docs, deployment
+- **[Stitch MCP Setup](docs/STITCH_MCP_SETUP.md)**: Integrate Stitch MCP server for UI generation
 - **[Backend Integration Guide](BACKEND_INTEGRATION.md)**: API integration, error handling, services documentation
 - **[UX Wireframes](docs/UX_WIREFRAMES.md)**: Design specifications and screen flows
 - **[API Documentation](http://localhost:8000/docs)**: Interactive Swagger UI (when backend is running)

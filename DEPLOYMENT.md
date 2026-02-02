@@ -23,7 +23,7 @@ This guide explains how to deploy and run the Fitola backend.
 
 4. **Configure Environment Variables**:
    - Copy `.env.example` to `.env`.
-   - Add your `GEMINI_API_KEY`, `RUBE_MCP_JWT`, `RUBE_MCP_BASE_URL`, and Supabase credentials.
+   - Add your `GEMINI_API_KEY`, `RUBE_MCP_JWT`, `RUBE_MCP_BASE_URL`, `STITCH_PROJECT_ID`, and Supabase credentials.
    - **CRITICAL**: Do not commit your `.env` file to version control.
 
 5. **Run the Server**:
@@ -49,9 +49,11 @@ Fitola is pre-configured for Vercel using `vercel.json`.
      - `GEMINI_MODEL` (optional): Override the Gemini model (defaults to `gemini-2.5-flash`).
      - `RUBE_MCP_JWT`: JWT for the Rube MCP API (Authorization: Bearer <token>).
      - `RUBE_MCP_BASE_URL` (optional): Base URL for Rube MCP (defaults to `https://rube.app`).
-     - `RUBE_MCP_TIMEOUT` (optional): HTTP timeout in seconds (defaults to `10`).
-     - `SUPABASE_URL`: Your Supabase Project URL.
-     - `SUPABASE_KEY`: Your Supabase API Key.
+      - `RUBE_MCP_TIMEOUT` (optional): HTTP timeout in seconds (defaults to `10`).
+      - `STITCH_PROJECT_ID`: Google Cloud project ID for Stitch MCP (required for Stitch MCP).
+      - `STITCH_USE_SYSTEM_GCLOUD` (optional): Set to `1` to reuse your system gcloud credentials.
+      - `SUPABASE_URL`: Your Supabase Project URL.
+      - `SUPABASE_KEY`: Your Supabase API Key.
 
 3. **Deploy**:
    - Vercel will automatically build and deploy your project on every push to the `main` branch.
