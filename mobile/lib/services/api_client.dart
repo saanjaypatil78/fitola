@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:fitola/config/constants.dart';
@@ -9,6 +10,9 @@ class ApiClient {
   
   final _client = http.Client();
   String? _authToken;
+  
+  // Request timeout configuration
+  static const Duration _requestTimeout = Duration(seconds: 30);
   
   void setAuthToken(String token) {
     _authToken = token;
@@ -33,9 +37,13 @@ class ApiClient {
   Future<Map<String, dynamic>> get(String endpoint) async {
     try {
       final url = Uri.parse('${AppConstants.apiBaseUrl}$endpoint');
-      final response = await _client.get(url, headers: _headers);
+      final response = await _client
+          .get(url, headers: _headers)
+          .timeout(_requestTimeout);
       
       return _handleResponse(response);
+    } on TimeoutException {
+      throw ApiException('Request timeout. Please check your connection.');
     } catch (e) {
       throw ApiException('Network error: $e');
     }
@@ -47,13 +55,17 @@ class ApiClient {
   ) async {
     try {
       final url = Uri.parse('${AppConstants.apiBaseUrl}$endpoint');
-      final response = await _client.post(
-        url,
-        headers: _headers,
-        body: jsonEncode(body),
-      );
+      final response = await _client
+          .post(
+            url,
+            headers: _headers,
+            body: jsonEncode(body),
+          )
+          .timeout(_requestTimeout);
       
       return _handleResponse(response);
+    } on TimeoutException {
+      throw ApiException('Request timeout. Please check your connection.');
     } catch (e) {
       throw ApiException('Network error: $e');
     }
@@ -65,13 +77,17 @@ class ApiClient {
   ) async {
     try {
       final url = Uri.parse('${AppConstants.apiBaseUrl}$endpoint');
-      final response = await _client.put(
-        url,
-        headers: _headers,
-        body: jsonEncode(body),
-      );
+      final response = await _client
+          .put(
+            url,
+            headers: _headers,
+            body: jsonEncode(body),
+          )
+          .timeout(_requestTimeout);
       
       return _handleResponse(response);
+    } on TimeoutException {
+      throw ApiException('Request timeout. Please check your connection.');
     } catch (e) {
       throw ApiException('Network error: $e');
     }
@@ -80,9 +96,13 @@ class ApiClient {
   Future<Map<String, dynamic>> delete(String endpoint) async {
     try {
       final url = Uri.parse('${AppConstants.apiBaseUrl}$endpoint');
-      final response = await _client.delete(url, headers: _headers);
+      final response = await _client
+          .delete(url, headers: _headers)
+          .timeout(_requestTimeout);
       
       return _handleResponse(response);
+    } on TimeoutException {
+      throw ApiException('Request timeout. Please check your connection.');
     } catch (e) {
       throw ApiException('Network error: $e');
     }

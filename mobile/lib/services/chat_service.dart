@@ -11,22 +11,36 @@ class ChatService {
   io.Socket? _socket;
   
   void connectSocket(String userId) {
-    _socket = io.io(
-      'wss://fitola.vercel.app',
-      io.OptionBuilder()
-          .setTransports(['websocket'])
-          .setQuery({'userId': userId})
-          .build(),
-    );
-    
-    _socket?.connect();
-    _socket?.onConnect((_) {
-      print('Socket connected');
-    });
-    
-    _socket?.onDisconnect((_) {
-      print('Socket disconnected');
-    });
+    try {
+      _socket = io.io(
+        'wss://fitola.vercel.app',
+        io.OptionBuilder()
+            .setTransports(['websocket'])
+            .setQuery({'userId': userId})
+            .build(),
+      );
+      
+      _socket?.connect();
+      
+      _socket?.onConnect((_) {
+        print('Socket connected');
+      });
+      
+      _socket?.onDisconnect((_) {
+        print('Socket disconnected');
+      });
+      
+      _socket?.onConnectError((error) {
+        print('Socket connection error: $error');
+      });
+      
+      _socket?.onError((error) {
+        print('Socket error: $error');
+      });
+    } catch (e) {
+      print('Failed to initialize socket: $e');
+      throw ChatException('Socket connection failed: $e');
+    }
   }
   
   void disconnectSocket() {
@@ -50,10 +64,17 @@ class ChatService {
       final response = await _apiClient.get(
         '/chat/conversation/$userId/$otherUserId',
       );
+      
+      if (response['messages'] == null) {
+        return [];
+      }
+      
       final messages = (response['messages'] as List)
           .map((m) => ChatMessage.fromJson(m))
           .toList();
       return messages;
+    } on ApiException {
+      rethrow;
     } catch (e) {
       throw ChatException('Failed to load conversation: $e');
     }
@@ -104,7 +125,14 @@ class ChatService {
   Future<List<Map<String, dynamic>>> getConversationsList(String userId) async {
     try {
       final response = await _apiClient.get('/chat/conversations/$userId');
+      
+      if (response['conversations'] == null) {
+        return [];
+      }
+      
       return List<Map<String, dynamic>>.from(response['conversations']);
+    } on ApiException {
+      rethrow;
     } catch (e) {
       throw ChatException('Failed to load conversations: $e');
     }

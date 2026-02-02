@@ -103,8 +103,8 @@ class LocationService {
     }
   }
   
-  bool isLocationServiceEnabled() {
-    return Geolocator.isLocationServiceEnabled() as bool;
+  Future<bool> isLocationServiceEnabled() async {
+    return await Geolocator.isLocationServiceEnabled();
   }
 }
 
