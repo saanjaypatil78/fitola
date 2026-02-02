@@ -256,20 +256,13 @@ This document provides a comprehensive testing guide for the backend integration
 3. **AI Response Time**: May take 5-10 seconds for plan generation
 4. **First Load Slow**: Initial API calls may be slower (cold start)
 
-## Debug Mode
+## Debugging and Logs
 
-Enable debug logging by setting:
-```dart
-// In main.dart or constants.dart
-static const bool debugMode = true;
-```
+The app does not expose a dedicated `debugMode` flag for logging. To collect logs during testing, run the app in a debug build and use the standard Flutter and platform tools:
 
-This will log:
-- All API requests and responses
-- Retry attempts
-- Polling activities
-- Error details
-
+- Run the app with verbose logging:
+  ```bash
+  flutter run -v
 ## Success Criteria
 
 ✅ All authentication methods work
