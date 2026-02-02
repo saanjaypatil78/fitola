@@ -1,64 +1,182 @@
-# Fitola Widgets Library
+# Fitola Mobile Widgets Library
 
-This directory contains all reusable UI widgets for the Fitola mobile application.
+This directory contains reusable UI widgets for the Fitola mobile application. All widgets follow Material 3 design principles and integrate with the FitolaTheme.
 
-## Widget Categories
+## Widget Overview
 
-### Action Widgets
-- **ActionButton**: Reusable button with icon, loading state, and variants (elevated/outlined)
-- **IconActionButton**: Icon button with optional badge for notifications
-- **QuickActionCard**: Card-based quick action button with icon and label
+### Navigation & Actions
 
-### Card Widgets
-- **StatCard**: Statistics card with icon, value, title, and optional subtitle
-- **StatCardCentered**: Centered variant of stat card
-- **FitnessCard**: Card for fitness-related content
+#### LoadingButton
+A button that displays a loading indicator during async operations.
+```dart
+LoadingButton(
+  text: 'Submit',
+  icon: Icons.send,
+  isLoading: isProcessing,
+  onPressed: () => handleSubmit(),
+)
+```
 
-### Badge Widgets
-- **Badge**: Generic badge for displaying counts, status labels
-- **StatusBadge**: Circular status indicator for user availability
-- **FitolaChip**: Material chip with icon, delete action, and custom styling
+#### StatusTranslateFab
+Expandable floating action button for status management and chat translation.
+- Already implemented in previous phase
 
-### Chat Widgets
-- **ChatBubble**: Enhanced chat message bubble with:
-  - Timestamp display
-  - Translation indicator
-  - Read receipts (double checkmark)
-  - Proper alignment for sent/received messages
+### Data Display
 
-### Dialog Widgets
-- **InfoDialog**: Information dialog with icon and message
-- **ConfirmDialog**: Confirmation dialog with cancel/confirm actions
-- **InputDialog**: Input dialog for text entry with validation
-- **SafetyReminderDialog**: Location sharing safety reminder
+#### StatColumn
+Displays a statistic with value and label, commonly used for metrics.
+```dart
+StatColumn(
+  value: '156',
+  label: 'Workouts',
+  icon: Icons.fitness_center,
+  valueColor: Colors.purple,
+)
+```
+
+#### IconBadge
+Small badge widget for counts, status indicators, or labels.
+```dart
+IconBadge(
+  icon: Icons.arrow_upward,
+  text: '+5',
+  backgroundColor: Colors.green,
+)
+```
+
+### Cards & Containers
+
+#### SelectableCard
+Interactive card with selection state, perfect for choice grids.
+```dart
+SelectableCard(
+  title: 'Weight Loss',
+  icon: Icons.trending_down,
+  isSelected: selectedGoal == 'weight_loss',
+  onTap: () => selectGoal('weight_loss'),
+)
+```
+
+#### GradientHeader
+Eye-catching header with gradient background.
+```dart
+GradientHeader(
+  title: 'Nutrition Plan',
+  subtitle: '2,000 cal/day',
+  icon: Icons.restaurant,
+  gradientColors: [Colors.purple, Colors.deepPurple],
+)
+```
+
+#### InfoCard
+Contextual alert card with type-based styling.
+```dart
+InfoCard(
+  message: 'Your workout plan is ready!',
+  type: InfoCardType.success,
+)
+```
+
+#### ExpandableInfoCard
+Collapsible card for detailed information.
+```dart
+ExpandableInfoCard(
+  title: 'Push-ups',
+  subtitle: '3 sets × 12 reps',
+  leading: CircleAvatar(child: Icon(Icons.fitness_center)),
+  expandedContent: Column(
+    children: [
+      Text('Rest: 60 seconds'),
+      Text('Notes: Keep back straight'),
+    ],
+  ),
+)
+```
+
+#### FitnessCard
+Simple card for fitness activities with icon and description.
+- Already implemented in previous phase
+
+### Lists & Tiles
+
+#### StatusTile
+List tile with optional status badge and avatar.
+```dart
+StatusTile(
+  leading: CircleAvatar(backgroundImage: NetworkImage(userImage)),
+  title: 'John Doe',
+  subtitle: 'Last seen 5m ago',
+  statusBadge: IconBadge(text: '3', backgroundColor: Colors.red),
+  trailing: Icon(Icons.chevron_right),
+  onTap: () => openChat(),
+)
+```
+
+### Selection & Input
+
+#### StyledChoiceChip
+Themed choice chip for filters and selections.
+```dart
+StyledChoiceChip(
+  label: 'Beginner',
+  icon: Icons.star,
+  isSelected: difficulty == 'beginner',
+  onSelected: (selected) => setDifficulty('beginner'),
+)
+```
 
 ### Empty States
-- **EmptyState**: Generic empty state with icon, title, message, and optional action
 
-### List Widgets
-- **UserListTile**: User list item with avatar, name, status indicator
-- **SectionHeader**: Section header with title and optional action button
-- **TextDivider**: Divider with centered text label
+#### EmptyStateWidget
+Friendly empty state with optional call-to-action.
+```dart
+EmptyStateWidget(
+  icon: Icons.chat_bubble_outline,
+  title: 'No Chats Yet',
+  description: 'Start a conversation with a FitBuddy!',
+  buttonText: 'Find FitBuddies',
+  onButtonPressed: () => navigateToMap(),
+)
+```
 
-### Loading States
-- **LoadingCard**: Skeleton loading card with shimmer effect
-- **LoadingListItem**: Skeleton loading list item
-- **LoadingStatCard**: Skeleton loading for stat cards
+### Communication
 
-### Map Widgets
-- **CustomMarkers**: Various map marker types:
-  - `buildMarker`: Basic user marker with gender color
-  - `buildStatusMarker`: Marker with status-based color and icon
-  - `buildInitialsMarker`: Marker with user initials
-  - `buildCurrentUserMarker`: Current user location marker
-  - `buildWorkoutMarker`: Workout location marker
+#### ChatBubble
+Message bubble for chat interfaces.
+- Already implemented in previous phase
 
-### Progress Widgets
-- **ProgressIndicatorWidget**: Linear progress bar with label and percentage
-- **CircularProgressWidget**: Circular progress indicator with percentage text
+### Dialogs
 
-### FAB Widgets
-- **StatusTranslateFab**: Multi-action FAB for status and translation controls
+#### SafetyReminderDialog
+Safety confirmation dialog for location sharing.
+- Already implemented in previous phase
+
+### Map Components
+
+#### CustomMarkers
+Map markers for FitBuddy locations.
+- Already implemented in previous phase
+
+## Design Principles
+
+### Theme Integration
+All widgets respect the FitolaTheme and support both light and dark modes:
+- Primary color: `#6C63FF` (Purple)
+- Secondary color: `#4CAF50` (Green)
+- Border radius: `12px` for most components (cards, buttons, chips); `16px` for chat bubbles; `20px` for FAB elements
+- Material 3 design system
+
+### Accessibility
+- Semantic text styles from theme
+- Proper contrast ratios
+- Touch-friendly minimum sizes
+
+### Customization
+Each widget supports:
+- Color overrides for brand variations
+- Optional icons and badges
+- Flexible padding and sizing
+- Custom child content where appropriate
 
 ## Usage
 
@@ -67,111 +185,22 @@ This directory contains all reusable UI widgets for the Fitola mobile applicatio
 import 'package:fitola/widgets/widgets.dart';
 ```
 
-### Import Individual Widgets
+### Import Individual Widget
 ```dart
-import 'package:fitola/widgets/stat_card.dart';
-import 'package:fitola/widgets/action_button.dart';
+import 'package:fitola/widgets/loading_button.dart';
 ```
-
-## Examples
-
-### StatCard
-```dart
-StatCard(
-  title: 'Workouts',
-  value: '24',
-  icon: Icons.fitness_center,
-  color: Colors.blue,
-  subtitle: '+3 this week',
-  onTap: () => print('Tapped'),
-)
-```
-
-### ActionButton
-```dart
-ActionButton(
-  label: 'Save',
-  icon: Icons.save,
-  onPressed: () => print('Save'),
-  isLoading: false,
-)
-```
-
-### ChatBubble
-```dart
-ChatBubble(
-  message: 'Hello, how are you?',
-  isSent: true,
-  timestamp: DateTime.now(),
-  isTranslated: false,
-  isRead: true,
-)
-```
-
-### InfoDialog
-```dart
-// Using static method
-await InfoDialog.show(
-  context,
-  title: 'Success',
-  message: 'Your profile has been updated!',
-  icon: Icons.check_circle,
-  iconColor: Colors.green,
-);
-```
-
-### EmptyState
-```dart
-EmptyState(
-  icon: Icons.inbox,
-  title: 'No Messages',
-  message: 'You don\'t have any messages yet. Start a conversation!',
-  actionLabel: 'Find FitBuddies',
-  onAction: () => Navigator.pushNamed(context, '/map'),
-)
-```
-
-### CustomMarkers
-```dart
-// Status-based marker
-CustomMarkers.buildStatusMarker(
-  name: 'John Doe',
-  gender: 'male',
-  status: UserStatus.available,
-  size: 40,
-)
-
-// Initials marker
-CustomMarkers.buildInitialsMarker(
-  name: 'Jane Smith',
-  gender: 'female',
-  status: UserStatus.busy,
-)
-```
-
-## Design Principles
-
-1. **Consistency**: All widgets follow the Fitola theme and design patterns
-2. **Reusability**: Widgets are generic and configurable via parameters
-3. **Accessibility**: Proper semantics and labels where applicable
-4. **Performance**: Optimized for smooth rendering and minimal rebuilds
-5. **Type Safety**: Strong typing with optional parameters for flexibility
-
-## Widget Guidelines
-
-- Always use the theme colors from `FitolaTheme`
-- Follow Material Design 3 principles
-- Include proper documentation for each widget
-- Add optional parameters for customization
-- Use `const` constructors where possible
-- Provide sensible default values
 
 ## Contributing
 
 When adding new widgets:
+1. Follow Material 3 design principles
+2. Support both light and dark themes
+3. Use consistent 12px border radius
+4. Include comprehensive documentation
+5. Add example usage in comments
+6. Export in `widgets.dart`
 
-1. Place them in the appropriate category file or create a new one
-2. Export them in `widgets.dart`
-3. Document usage with examples
-4. Ensure they align with existing design patterns
-5. Test with different screen sizes and themes
+## Widget Count
+- **Total Widgets**: 15
+- **New in This Phase**: 10
+- **Previously Implemented**: 5

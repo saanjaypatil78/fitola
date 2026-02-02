@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 /// A button that shows a loading indicator when processing.
 /// Disables interaction during loading state.
-/// 
+///
 /// Used for:
 /// - Login/Register buttons
 /// - Form submissions
@@ -74,6 +74,7 @@ class LoadingButton extends StatelessWidget {
                   ),
                 ],
               ),
-      );
+      ),
+    );
   }
 }
