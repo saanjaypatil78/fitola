@@ -40,6 +40,7 @@ class GradientHeader extends StatelessWidget {
     
     return Container(
       height: height,
+      alignment: alignment,
       padding: padding ?? const EdgeInsets.all(24),
       decoration: BoxDecoration(
         gradient: LinearGradient(
