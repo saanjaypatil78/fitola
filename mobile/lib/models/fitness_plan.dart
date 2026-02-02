@@ -1,3 +1,5 @@
+import 'model_utils.dart';
+
 class FitnessPlan {
   final String id;
   final String userId;
@@ -46,8 +48,8 @@ class FitnessPlan {
           .map((e) => WorkoutDay.fromJson(e))
           .toList(),
       aiGenerated: json['ai_generated'] as String?,
-      createdAt: DateTime.parse(json['created_at']),
-      startDate: json['start_date'] != null ? DateTime.parse(json['start_date']) : null,
+      createdAt: parseDateTimeRequired(json['created_at']),
+      startDate: json['start_date'] != null ? parseDateTime(json['start_date']) : null,
       currentDay: json['current_day'] as int?,
     );
   }
@@ -72,6 +74,92 @@ class FitnessPlan {
   double get progressPercentage {
     if (currentDay == null || durationDays == 0) return 0.0;
     return (currentDay! / durationDays * 100).clamp(0.0, 100.0);
+  }
+  
+  FitnessPlan copyWith({
+    String? id,
+    String? userId,
+    String? title,
+    String? description,
+    PlanType? type,
+    DifficultyLevel? difficulty,
+    int? durationDays,
+    List<WorkoutDay>? workoutDays,
+    String? aiGenerated,
+    DateTime? createdAt,
+    DateTime? startDate,
+    int? currentDay,
+  }) {
+    return FitnessPlan(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      type: type ?? this.type,
+      difficulty: difficulty ?? this.difficulty,
+      durationDays: durationDays ?? this.durationDays,
+      workoutDays: workoutDays ?? this.workoutDays,
+      aiGenerated: aiGenerated ?? this.aiGenerated,
+      createdAt: createdAt ?? this.createdAt,
+      startDate: startDate ?? this.startDate,
+      currentDay: currentDay ?? this.currentDay,
+    );
+  }
+  
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    
+    return other is FitnessPlan &&
+        other.id == id &&
+        other.userId == userId &&
+        other.title == title &&
+        other.description == description &&
+        other.type == type &&
+        other.difficulty == difficulty &&
+        other.durationDays == durationDays &&
+        listEquals(other.workoutDays, workoutDays) &&
+        other.aiGenerated == aiGenerated &&
+        other.createdAt == createdAt &&
+        other.startDate == startDate &&
+        other.currentDay == currentDay;
+  }
+  
+  @override
+  int get hashCode {
+    return Object.hash(
+      id,
+      userId,
+      title,
+      description,
+      type,
+      difficulty,
+      durationDays,
+      Object.hashAll(workoutDays),
+      aiGenerated,
+      createdAt,
+      startDate,
+      currentDay,
+    );
+  }
+  
+  @override
+  String toString() {
+    return 'FitnessPlan(id: $id, title: $title, type: $type, difficulty: $difficulty)';
+  }
+  
+  // Validation helpers
+  bool get isActive {
+    return startDate != null && currentDay != null && currentDay! < durationDays;
+  }
+  
+  bool get isCompleted {
+    return currentDay != null && currentDay! >= durationDays;
+  }
+  
+  int get remainingDays {
+    if (currentDay == null) return durationDays;
+    return (durationDays - currentDay!).clamp(0, durationDays);
   }
 }
 
@@ -110,6 +198,50 @@ class WorkoutDay {
       'estimated_duration': estimatedDuration,
       'is_rest_day': isRestDay,
     };
+  }
+  
+  WorkoutDay copyWith({
+    int? dayNumber,
+    String? title,
+    List<Exercise>? exercises,
+    int? estimatedDuration,
+    bool? isRestDay,
+  }) {
+    return WorkoutDay(
+      dayNumber: dayNumber ?? this.dayNumber,
+      title: title ?? this.title,
+      exercises: exercises ?? this.exercises,
+      estimatedDuration: estimatedDuration ?? this.estimatedDuration,
+      isRestDay: isRestDay ?? this.isRestDay,
+    );
+  }
+  
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    
+    return other is WorkoutDay &&
+        other.dayNumber == dayNumber &&
+        other.title == title &&
+        listEquals(other.exercises, exercises) &&
+        other.estimatedDuration == estimatedDuration &&
+        other.isRestDay == isRestDay;
+  }
+  
+  @override
+  int get hashCode {
+    return Object.hash(
+      dayNumber,
+      title,
+      Object.hashAll(exercises),
+      estimatedDuration,
+      isRestDay,
+    );
+  }
+  
+  @override
+  String toString() {
+    return 'WorkoutDay(day: $dayNumber, title: $title, exercises: ${exercises.length})';
   }
 }
 
@@ -150,6 +282,63 @@ class Exercise {
       'duration': duration,
       'video_url': videoUrl,
     };
+  }
+  
+  Exercise copyWith({
+    String? name,
+    String? description,
+    int? sets,
+    int? reps,
+    int? duration,
+    String? videoUrl,
+  }) {
+    return Exercise(
+      name: name ?? this.name,
+      description: description ?? this.description,
+      sets: sets ?? this.sets,
+      reps: reps ?? this.reps,
+      duration: duration ?? this.duration,
+      videoUrl: videoUrl ?? this.videoUrl,
+    );
+  }
+  
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    
+    return other is Exercise &&
+        other.name == name &&
+        other.description == description &&
+        other.sets == sets &&
+        other.reps == reps &&
+        other.duration == duration &&
+        other.videoUrl == videoUrl;
+  }
+  
+  @override
+  int get hashCode {
+    return Object.hash(
+      name,
+      description,
+      sets,
+      reps,
+      duration,
+      videoUrl,
+    );
+  }
+  
+  @override
+  String toString() {
+    return 'Exercise(name: $name, sets: $sets, reps: $reps)';
+  }
+  
+  // Validation helpers
+  bool get isValid {
+    return name.isNotEmpty && sets > 0 && (reps > 0 || (duration != null && duration! > 0));
+  }
+  
+  int get totalReps {
+    return sets * reps;
   }
 }
 

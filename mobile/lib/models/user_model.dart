@@ -1,3 +1,5 @@
+import 'model_utils.dart';
+
 class UserModel {
   final String id;
   final String name;
@@ -48,8 +50,8 @@ class UserModel {
       interestedInCompetition: json['interested_in_competition'] as bool?,
       gender: json['gender'] as String?,
       allergies: json['allergies'] != null ? List<String>.from(json['allergies']) : null,
-      createdAt: json['created_at'] != null ? DateTime.parse(json['created_at']) : null,
-      updatedAt: json['updated_at'] != null ? DateTime.parse(json['updated_at']) : null,
+      createdAt: json['created_at'] != null ? parseDateTime(json['created_at']) : null,
+      updatedAt: json['updated_at'] != null ? parseDateTime(json['updated_at']) : null,
     );
   }
   
@@ -122,5 +124,79 @@ class UserModel {
     if (bmiValue < 25.0) return 'Normal';
     if (bmiValue < 30.0) return 'Overweight';
     return 'Obese';
+  }
+  
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    
+    return other is UserModel &&
+        other.id == id &&
+        other.name == name &&
+        other.email == email &&
+        other.photoUrl == photoUrl &&
+        other.ageGroup == ageGroup &&
+        other.weight == weight &&
+        other.height == height &&
+        other.city == city &&
+        other.bodyType == bodyType &&
+        listEquals(other.goals, goals) &&
+        other.interestedInCompetition == interestedInCompetition &&
+        other.gender == gender &&
+        listEquals(other.allergies, allergies) &&
+        other.createdAt == createdAt &&
+        other.updatedAt == updatedAt;
+  }
+  
+  @override
+  int get hashCode {
+    return Object.hash(
+      id,
+      name,
+      email,
+      photoUrl,
+      ageGroup,
+      weight,
+      height,
+      city,
+      bodyType,
+      Object.hashAll(goals ?? []),
+      interestedInCompetition,
+      gender,
+      Object.hashAll(allergies ?? []),
+      createdAt,
+      updatedAt,
+    );
+  }
+  
+  @override
+  String toString() {
+    return 'UserModel(id: $id, name: $name, email: $email)';
+  }
+  
+  // Validation helpers
+  bool get isProfileComplete {
+    return name.isNotEmpty &&
+        email.isNotEmpty &&
+        ageGroup != null &&
+        weight != null &&
+        height != null &&
+        bodyType != null &&
+        goals != null && goals!.isNotEmpty;
+  }
+  
+  bool get hasValidMeasurements {
+    if (weight == null || height == null) return false;
+    return weight! > 0 && weight! <= 500 && height! > 0 && height! <= 300;
+  }
+  
+  String? validateEmail() {
+    if (email.isEmpty) return 'Email is required';
+    // More robust email validation pattern
+    final emailRegex = RegExp(
+      r'^[a-zA-Z0-9][a-zA-Z0-9._-]*[a-zA-Z0-9]@[a-zA-Z0-9][a-zA-Z0-9.-]*[a-zA-Z0-9]\.[a-zA-Z]{2,}$'
+    );
+    if (!emailRegex.hasMatch(email)) return 'Invalid email format';
+    return null;
   }
 }

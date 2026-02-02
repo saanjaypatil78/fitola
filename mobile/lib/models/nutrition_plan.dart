@@ -1,3 +1,5 @@
+import 'model_utils.dart';
+
 class NutritionPlan {
   final String id;
   final String userId;
@@ -38,7 +40,7 @@ class NutritionPlan {
           ? List<String>.from(json['dietary_restrictions'])
           : null,
       aiGenerated: json['ai_generated'] as String?,
-      createdAt: DateTime.parse(json['created_at']),
+      createdAt: parseDateTimeRequired(json['created_at']),
       durationDays: json['duration_days'] as int? ?? 7,
     );
   }
@@ -58,9 +60,98 @@ class NutritionPlan {
       'duration_days': durationDays,
     };
   }
+  
+  NutritionPlan copyWith({
+    String? id,
+    String? userId,
+    String? title,
+    String? description,
+    int? dailyCalories,
+    Map<String, double>? macros,
+    List<Meal>? meals,
+    List<String>? dietaryRestrictions,
+    String? aiGenerated,
+    DateTime? createdAt,
+    int? durationDays,
+  }) {
+    return NutritionPlan(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      dailyCalories: dailyCalories ?? this.dailyCalories,
+      macros: macros ?? this.macros,
+      meals: meals ?? this.meals,
+      dietaryRestrictions: dietaryRestrictions ?? this.dietaryRestrictions,
+      aiGenerated: aiGenerated ?? this.aiGenerated,
+      createdAt: createdAt ?? this.createdAt,
+      durationDays: durationDays ?? this.durationDays,
+    );
+  }
+  
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    
+    return other is NutritionPlan &&
+        other.id == id &&
+        other.userId == userId &&
+        other.title == title &&
+        other.description == description &&
+        other.dailyCalories == dailyCalories &&
+        mapEquals(other.macros, macros) &&
+        listEquals(other.meals, meals) &&
+        listEquals(other.dietaryRestrictions, dietaryRestrictions) &&
+        other.aiGenerated == aiGenerated &&
+        other.createdAt == createdAt &&
+        other.durationDays == durationDays;
+  }
+  
+  @override
+  int get hashCode {
+    return Object.hash(
+      id,
+      userId,
+      title,
+      description,
+      dailyCalories,
+      Object.hashAll(macros.entries.map((e) => Object.hash(e.key, e.value))),
+      Object.hashAll(meals),
+      Object.hashAll(dietaryRestrictions ?? []),
+      aiGenerated,
+      createdAt,
+      durationDays,
+    );
+  }
+  
+  @override
+  String toString() {
+    return 'NutritionPlan(id: $id, title: $title, dailyCalories: $dailyCalories)';
+  }
+  
+  // Validation helpers
+  bool get hasValidMacros {
+    return macros.containsKey('protein') &&
+        macros.containsKey('carbs') &&
+        macros.containsKey('fats');
+  }
+  
+  double get totalMacros {
+    return (macros['protein'] ?? 0) + (macros['carbs'] ?? 0) + (macros['fats'] ?? 0);
+  }
+  
+  int get calculatedCalories {
+    // Protein: 4 cal/g, Carbs: 4 cal/g, Fats: 9 cal/g
+    final protein = (macros['protein'] ?? 0) * 4;
+    final carbs = (macros['carbs'] ?? 0) * 4;
+    final fats = (macros['fats'] ?? 0) * 9;
+    return (protein + carbs + fats).round();
+  }
 }
 
 class Meal {
+  static const int calorieMarginTolerance = 10;
+  
   final String name;
   final MealType type;
   final List<FoodItem> foods;
@@ -105,6 +196,67 @@ class Meal {
       'image_url': imageUrl,
     };
   }
+  
+  Meal copyWith({
+    String? name,
+    MealType? type,
+    List<FoodItem>? foods,
+    int? calories,
+    Map<String, double>? macros,
+    String? instructions,
+    String? imageUrl,
+  }) {
+    return Meal(
+      name: name ?? this.name,
+      type: type ?? this.type,
+      foods: foods ?? this.foods,
+      calories: calories ?? this.calories,
+      macros: macros ?? this.macros,
+      instructions: instructions ?? this.instructions,
+      imageUrl: imageUrl ?? this.imageUrl,
+    );
+  }
+  
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    
+    return other is Meal &&
+        other.name == name &&
+        other.type == type &&
+        listEquals(other.foods, foods) &&
+        other.calories == calories &&
+        mapEquals(other.macros, macros) &&
+        other.instructions == instructions &&
+        other.imageUrl == imageUrl;
+  }
+  
+  @override
+  int get hashCode {
+    return Object.hash(
+      name,
+      type,
+      Object.hashAll(foods),
+      calories,
+      Object.hashAll(macros.entries.map((e) => Object.hash(e.key, e.value))),
+      instructions,
+      imageUrl,
+    );
+  }
+  
+  @override
+  String toString() {
+    return 'Meal(name: $name, type: $type, calories: $calories)';
+  }
+  
+  // Validation helpers
+  int get calculatedCalories {
+    return foods.fold(0, (sum, food) => sum + food.calories);
+  }
+  
+  bool get hasValidCalories {
+    return (calculatedCalories - calories).abs() <= calorieMarginTolerance;
+  }
 }
 
 class FoodItem {
@@ -136,6 +288,46 @@ class FoodItem {
       'unit': unit,
       'calories': calories,
     };
+  }
+  
+  FoodItem copyWith({
+    String? name,
+    double? quantity,
+    String? unit,
+    int? calories,
+  }) {
+    return FoodItem(
+      name: name ?? this.name,
+      quantity: quantity ?? this.quantity,
+      unit: unit ?? this.unit,
+      calories: calories ?? this.calories,
+    );
+  }
+  
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    
+    return other is FoodItem &&
+        other.name == name &&
+        other.quantity == quantity &&
+        other.unit == unit &&
+        other.calories == calories;
+  }
+  
+  @override
+  int get hashCode {
+    return Object.hash(
+      name,
+      quantity,
+      unit,
+      calories,
+    );
+  }
+  
+  @override
+  String toString() {
+    return 'FoodItem(name: $name, quantity: $quantity $unit, calories: $calories)';
   }
 }
 
