@@ -36,9 +36,12 @@ class IconBadge extends StatelessWidget {
     final theme = Theme.of(context);
     final effectiveBgColor = backgroundColor ?? theme.colorScheme.primary;
     final effectiveFgColor = foregroundColor ?? Colors.white;
-    
+    final bool hasText = text != null && text!.isNotEmpty;
+    final bool hasIcon = icon != null;
+    final IconData? effectiveIcon = hasIcon ? icon : (hasText ? null : Icons.circle);
+
     // Use min constraints instead of fixed size to allow badges to grow for longer text
-    final bool isTextOnly = text != null && icon == null;
+    final bool isTextOnly = hasText && effectiveIcon == null;
     final BoxConstraints? constraints;
     if (size != null) {
       // Respect provided size as minimum square dimension, but allow growth
@@ -55,13 +58,13 @@ class IconBadge extends StatelessWidget {
     } else {
       constraints = null;
     }
-    
+
     return Container(
       constraints: constraints,
       padding: padding ?? const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
       decoration: BoxDecoration(
         color: effectiveBgColor,
-        borderRadius: isCircular 
+        borderRadius: isCircular
             ? BorderRadius.circular(100)
             : BorderRadius.circular(8),
         boxShadow: [
@@ -76,15 +79,15 @@ class IconBadge extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          if (icon != null)
+          if (effectiveIcon != null)
             Icon(
-              icon,
+              effectiveIcon,
               size: 16,
               color: effectiveFgColor,
             ),
-          if (icon != null && text != null)
+          if (effectiveIcon != null && hasText)
             const SizedBox(width: 4),
-          if (text != null)
+          if (hasText)
             Text(
               text!,
               style: theme.textTheme.bodySmall?.copyWith(
