@@ -44,8 +44,8 @@ class LoadingButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
         ),
       ),
-      child: SizedBox(
-        height: 24,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(minHeight: 24),
         child: isLoading
             ? const Center(
                 child: SizedBox(
