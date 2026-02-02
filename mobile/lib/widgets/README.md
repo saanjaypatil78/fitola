@@ -163,7 +163,7 @@ Map markers for FitBuddy locations.
 All widgets respect the FitolaTheme and support both light and dark modes:
 - Primary color: `#6C63FF` (Purple)
 - Secondary color: `#4CAF50` (Green)
-- Border radius: `12px` consistently applied
+- Border radius: `12px` for most components (cards, buttons, chips); `16px` for chat bubbles; `20px` for FAB elements
 - Material 3 design system
 
 ### Accessibility

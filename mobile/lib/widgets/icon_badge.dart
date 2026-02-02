@@ -37,12 +37,27 @@ class IconBadge extends StatelessWidget {
     final effectiveBgColor = backgroundColor ?? theme.colorScheme.primary;
     final effectiveFgColor = foregroundColor ?? Colors.white;
     
-    // If only text, make it circular with min size
-    final effectiveSize = size ?? (text != null && icon == null ? 20 : null);
+    // Use min constraints instead of fixed size to allow badges to grow for longer text
+    final bool isTextOnly = text != null && icon == null;
+    final BoxConstraints? constraints;
+    if (size != null) {
+      // Respect provided size as minimum square dimension, but allow growth
+      constraints = BoxConstraints(
+        minWidth: size!,
+        minHeight: size!,
+      );
+    } else if (isTextOnly) {
+      // Default minimum size for text-only badges; can expand for multi-character text
+      constraints = const BoxConstraints(
+        minWidth: 20,
+        minHeight: 20,
+      );
+    } else {
+      constraints = null;
+    }
     
     return Container(
-      height: effectiveSize,
-      width: effectiveSize,
+      constraints: constraints,
       padding: padding ?? const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
       decoration: BoxDecoration(
         color: effectiveBgColor,
