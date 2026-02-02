@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 /// A list tile widget with status badge and leading widget.
 /// Provides consistent styling for list items across the app.
-/// 
+///
 /// Used in:
 /// - Chat list with online status
 /// - Profile action items
@@ -32,7 +32,7 @@ class StatusTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Card(
       clipBehavior: Clip.antiAlias,
       shape: RoundedRectangleBorder(
@@ -65,8 +65,8 @@ class StatusTile extends StatelessWidget {
                     Text(
                       title,
                       style: theme.textTheme.titleMedium?.copyWith(
-                        color: isDestructive 
-                            ? theme.colorScheme.error 
+                        color: isDestructive
+                            ? theme.colorScheme.error
                             : theme.colorScheme.onSurface,
                       ),
                     ),
