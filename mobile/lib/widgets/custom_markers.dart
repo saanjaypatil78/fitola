@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fitola/config/theme.dart';
+import 'package:fitola/models/fitbuddy.dart';
 
 /// Static utility class for building custom map markers with Material 3 theming.
 /// Used in map and location-based features.

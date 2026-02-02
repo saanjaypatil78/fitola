@@ -39,7 +39,7 @@ class MapProvider with ChangeNotifier {
     }
   }
   
-  Future<void> loadNearbyFitBuddies({UserStatus? statusFilter}) async {
+  Future<void> loadNearbyFitBuddies({UserStatus? statusFilter, bool retry = true}) async {
     if (_currentLocation == null) {
       await updateCurrentLocation();
     }
@@ -69,6 +69,16 @@ class MapProvider with ChangeNotifier {
       
       _isLoading = false;
       notifyListeners();
+    } on ApiException catch (e) {
+      _error = e.message;
+      _isLoading = false;
+      notifyListeners();
+      
+      // Auto-retry on network errors
+      if (retry && e.isNetworkError) {
+        await Future.delayed(const Duration(seconds: 2));
+        await loadNearbyFitBuddies(statusFilter: statusFilter, retry: false);
+      }
     } catch (e) {
       _error = e.toString();
       _isLoading = false;

@@ -1,6 +1,5 @@
 import 'package:fitola/models/chat_message.dart';
 import 'package:fitola/services/api_client.dart';
-import 'package:socket_io_client/socket_io_client.dart' as io;
 
 class ChatService {
   static final ChatService _instance = ChatService._internal();
@@ -8,39 +7,6 @@ class ChatService {
   ChatService._internal();
   
   final _apiClient = ApiClient();
-  io.Socket? _socket;
-  
-  void connectSocket(String userId) {
-    _socket = io.io(
-      'wss://fitola.vercel.app',
-      io.OptionBuilder()
-          .setTransports(['websocket'])
-          .setQuery({'userId': userId})
-          .build(),
-    );
-    
-    _socket?.connect();
-    _socket?.onConnect((_) {
-      print('Socket connected');
-    });
-    
-    _socket?.onDisconnect((_) {
-      print('Socket disconnected');
-    });
-  }
-  
-  void disconnectSocket() {
-    _socket?.disconnect();
-    _socket?.dispose();
-    _socket = null;
-  }
-  
-  void onNewMessage(Function(ChatMessage) callback) {
-    _socket?.on('new_message', (data) {
-      final message = ChatMessage.fromJson(data);
-      callback(message);
-    });
-  }
   
   Future<List<ChatMessage>> getConversation(
     String userId,
@@ -62,7 +28,6 @@ class ChatService {
   Future<ChatMessage> sendMessage(ChatMessage message) async {
     try {
       final response = await _apiClient.post('/chat/message', message.toJson());
-      _socket?.emit('send_message', response);
       return ChatMessage.fromJson(response);
     } catch (e) {
       throw ChatException('Failed to send message: $e');
