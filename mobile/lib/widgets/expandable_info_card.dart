@@ -14,7 +14,6 @@ class ExpandableInfoCard extends StatelessWidget {
   final Widget expandedContent;
   final bool initiallyExpanded;
   final Color? backgroundColor;
-  final IconData? trailingIcon;
 
   const ExpandableInfoCard({
     Key? key,
@@ -24,7 +23,6 @@ class ExpandableInfoCard extends StatelessWidget {
     required this.expandedContent,
     this.initiallyExpanded = false,
     this.backgroundColor,
-    this.trailingIcon,
   }) : super(key: key);
 
   @override
@@ -47,10 +45,8 @@ class ExpandableInfoCard extends StatelessWidget {
                   style: theme.textTheme.bodySmall,
                 )
               : null,
-          trailing: Icon(
-            trailingIcon ?? Icons.expand_more,
-            color: theme.colorScheme.primary,
-          ),
+          iconColor: theme.colorScheme.primary,
+          collapsedIconColor: theme.colorScheme.primary,
           initiallyExpanded: initiallyExpanded,
           children: [
             Padding(

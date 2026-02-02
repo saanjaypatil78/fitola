@@ -32,12 +32,13 @@ class LoadingButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final effectiveForegroundColor = foregroundColor ?? theme.colorScheme.onPrimary;
     
     return ElevatedButton(
       onPressed: isLoading ? null : onPressed,
       style: ElevatedButton.styleFrom(
         backgroundColor: backgroundColor ?? theme.colorScheme.primary,
-        foregroundColor: foregroundColor ?? Colors.white,
+        foregroundColor: effectiveForegroundColor,
         padding: padding ?? const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
         elevation: elevation ?? 2,
         shape: RoundedRectangleBorder(
@@ -47,13 +48,13 @@ class LoadingButton extends StatelessWidget {
       child: ConstrainedBox(
         constraints: const BoxConstraints(minHeight: 24),
         child: isLoading
-            ? const Center(
+            ? Center(
                 child: SizedBox(
                   height: 20,
                   width: 20,
                   child: CircularProgressIndicator(
                     strokeWidth: 2,
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                    valueColor: AlwaysStoppedAnimation<Color>(effectiveForegroundColor),
                   ),
                 ),
               )

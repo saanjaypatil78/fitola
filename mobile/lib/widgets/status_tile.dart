@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// A list tile widget with optional status badge and avatar.
+/// A list tile widget with status badge and leading widget.
 /// Provides consistent styling for list items across the app.
 /// 
 /// Used in:
@@ -34,6 +34,7 @@ class StatusTile extends StatelessWidget {
     final theme = Theme.of(context);
     
     return Card(
+      clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(12),

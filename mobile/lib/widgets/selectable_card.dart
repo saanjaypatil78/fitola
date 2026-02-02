@@ -34,6 +34,7 @@ class SelectableCard extends StatelessWidget {
     
     return Card(
       elevation: isSelected ? 4 : 2,
+      clipBehavior: Clip.antiAlias,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
         side: BorderSide(

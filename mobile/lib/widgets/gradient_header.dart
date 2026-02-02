@@ -48,8 +48,8 @@ class GradientHeader extends StatelessWidget {
           end: Alignment.bottomRight,
         ),
         borderRadius: const BorderRadius.only(
-          bottomLeft: Radius.circular(24),
-          bottomRight: Radius.circular(24),
+          bottomLeft: Radius.circular(12),
+          bottomRight: Radius.circular(12),
         ),
       ),
       child: child ?? _buildDefaultContent(context),
@@ -59,11 +59,13 @@ class GradientHeader extends StatelessWidget {
   Widget _buildDefaultContent(BuildContext context) {
     final theme = Theme.of(context);
     
+    // Determine text alignment based on provided alignment
+    final textAlign = _getTextAlign(alignment);
+    final crossAxisAlign = _getCrossAxisAlignment(alignment);
+    
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: alignment != null 
-          ? (alignment == Alignment.center ? CrossAxisAlignment.center : CrossAxisAlignment.start)
-          : CrossAxisAlignment.center,
+      crossAxisAlignment: crossAxisAlign,
       children: [
         if (icon != null) ...[
           Icon(
@@ -80,9 +82,7 @@ class GradientHeader extends StatelessWidget {
               color: Colors.white,
               fontWeight: FontWeight.bold,
             ),
-            textAlign: alignment == Alignment.centerLeft 
-                ? TextAlign.left 
-                : TextAlign.center,
+            textAlign: textAlign,
           ),
         if (subtitle != null) ...[
           const SizedBox(height: 8),
@@ -91,12 +91,32 @@ class GradientHeader extends StatelessWidget {
             style: theme.textTheme.bodyLarge?.copyWith(
               color: Colors.white.withOpacity(0.9),
             ),
-            textAlign: alignment == Alignment.centerLeft 
-                ? TextAlign.left 
-                : TextAlign.center,
+            textAlign: textAlign,
           ),
         ],
       ],
     );
+  }
+  
+  CrossAxisAlignment _getCrossAxisAlignment(AlignmentGeometry? align) {
+    if (align == null) return CrossAxisAlignment.center;
+    if (align == Alignment.centerLeft || align == Alignment.topLeft || align == Alignment.bottomLeft) {
+      return CrossAxisAlignment.start;
+    }
+    if (align == Alignment.centerRight || align == Alignment.topRight || align == Alignment.bottomRight) {
+      return CrossAxisAlignment.end;
+    }
+    return CrossAxisAlignment.center;
+  }
+  
+  TextAlign _getTextAlign(AlignmentGeometry? align) {
+    if (align == null) return TextAlign.center;
+    if (align == Alignment.centerLeft || align == Alignment.topLeft || align == Alignment.bottomLeft) {
+      return TextAlign.left;
+    }
+    if (align == Alignment.centerRight || align == Alignment.topRight || align == Alignment.bottomRight) {
+      return TextAlign.right;
+    }
+    return TextAlign.center;
   }
 }
