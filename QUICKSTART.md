@@ -51,7 +51,7 @@ cp .env.example .env
 # CLICKHOUSE_HOST=your_clickhouse_host_here
 # CLICKHOUSE_PORT=8443
 # CLICKHOUSE_USER=default
-# CLICKHOUSE_PASSWORD=
+# CLICKHOUSE_PASSWORD=your_clickhouse_password_here
 ```
 
 ### 2.4 Start Backend Server

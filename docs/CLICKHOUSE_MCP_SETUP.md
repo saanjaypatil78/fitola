@@ -54,8 +54,8 @@ Use the following variables for the ClickHouse connection:
 - `CLICKHOUSE_PORT`
 - `CLICKHOUSE_USER`
 - `CLICKHOUSE_PASSWORD` (replace the placeholder, or remove it from `mcp.json` and export it from your shell/secret manager)
-- `CLICKHOUSE_SECURE` (`true`/`false`)
-- `CLICKHOUSE_VERIFY` (`true`/`false`)
+- `CLICKHOUSE_SECURE` (use lowercase `true`/`false` strings)
+- `CLICKHOUSE_VERIFY` (lowercase `true`/`false` to enable TLS certificate verification)
 - `CLICKHOUSE_CONNECT_TIMEOUT`
 - `CLICKHOUSE_SEND_RECEIVE_TIMEOUT`
 
