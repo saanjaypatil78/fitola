@@ -80,4 +80,3 @@ When running with HTTP/SSE transport, the health check endpoint is available at:
 ```bash
 curl http://localhost:8000/health
 ```
-
