@@ -33,7 +33,7 @@ Add the ClickHouse MCP server entry to the root `mcp.json` (already included in 
         "CLICKHOUSE_HOST": "YOUR_CLICKHOUSE_HOST_HERE",
         "CLICKHOUSE_PORT": "8443",
         "CLICKHOUSE_USER": "default",
-        "CLICKHOUSE_PASSWORD": "SET_IN_ENV",
+        "CLICKHOUSE_PASSWORD": "YOUR_CLICKHOUSE_PASSWORD_HERE",
         "CLICKHOUSE_SECURE": "true",
         "CLICKHOUSE_VERIFY": "true",
         "CLICKHOUSE_CONNECT_TIMEOUT": "30",
@@ -53,7 +53,7 @@ Use the following variables for the ClickHouse connection:
 - `CLICKHOUSE_HOST`
 - `CLICKHOUSE_PORT`
 - `CLICKHOUSE_USER`
-- `CLICKHOUSE_PASSWORD` (set this in your shell or secret manager; keep the `SET_IN_ENV` placeholder in `mcp.json`)
+- `CLICKHOUSE_PASSWORD` (replace the placeholder, or remove it from `mcp.json` and export it from your shell/secret manager)
 - `CLICKHOUSE_SECURE` (`true`/`false`)
 - `CLICKHOUSE_VERIFY` (`true`/`false`)
 - `CLICKHOUSE_CONNECT_TIMEOUT`
@@ -75,7 +75,7 @@ export CLICKHOUSE_MCP_AUTH_DISABLED=true
 
 ## 4. Verify
 
-When running with HTTP/SSE transport, the health check endpoint is available at:
+When running with HTTP/SSE transport, the MCP server exposes a health check endpoint (default `http://localhost:8000/health` unless you override the MCP server port):
 
 ```bash
 curl http://localhost:8000/health
