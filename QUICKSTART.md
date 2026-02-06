@@ -48,6 +48,10 @@ cp .env.example .env
 # SUPABASE_KEY=your_supabase_key_here
 # STITCH_PROJECT_ID=your_google_cloud_project_id
 # STITCH_USE_SYSTEM_GCLOUD=1
+# CLICKHOUSE_HOST=your_clickhouse_host_here
+# CLICKHOUSE_PORT=8443
+# CLICKHOUSE_USER=default
+# CLICKHOUSE_PASSWORD=
 ```
 
 ### 2.4 Start Backend Server

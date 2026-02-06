@@ -234,6 +234,9 @@ See `/backend/.env.example` for backend configuration.
 ### Stitch MCP
 For UI generation workflows using Stitch, follow the setup guide in `docs/STITCH_MCP_SETUP.md` and ensure `STITCH_PROJECT_ID` (and optionally `STITCH_USE_SYSTEM_GCLOUD`) are configured.
 
+### ClickHouse MCP
+For workflow management and database orchestration with ClickHouse MCP, follow the setup guide in `docs/CLICKHOUSE_MCP_SETUP.md` and configure the `CLICKHOUSE_*` environment variables.
+
 ## Error Handling Strategy
 
 ### API Client Level

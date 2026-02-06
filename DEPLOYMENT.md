@@ -52,6 +52,15 @@ Fitola is pre-configured for Vercel using `vercel.json`.
       - `RUBE_MCP_TIMEOUT` (optional): HTTP timeout in seconds (defaults to `10`).
       - `STITCH_PROJECT_ID`: Google Cloud project ID for Stitch MCP (required for Stitch MCP).
       - `STITCH_USE_SYSTEM_GCLOUD` (optional): Set to `1` to reuse your system gcloud credentials.
+      - `CLICKHOUSE_HOST`: ClickHouse host for the ClickHouse MCP server.
+      - `CLICKHOUSE_PORT`: ClickHouse port (for example, `8443` for secure HTTPS).
+      - `CLICKHOUSE_USER`: ClickHouse user.
+      - `CLICKHOUSE_PASSWORD`: ClickHouse password.
+      - `CLICKHOUSE_SECURE` (optional): Set to `true` for HTTPS connections.
+      - `CLICKHOUSE_VERIFY` (optional): Set to `true` to verify TLS certificates.
+      - `CLICKHOUSE_CONNECT_TIMEOUT` (optional): Connection timeout in seconds.
+      - `CLICKHOUSE_SEND_RECEIVE_TIMEOUT` (optional): Request timeout in seconds.
+      - `CLICKHOUSE_MCP_AUTH_TOKEN` (optional): Auth token when exposing ClickHouse MCP over HTTP/SSE.
       - `SUPABASE_URL`: Your Supabase Project URL.
       - `SUPABASE_KEY`: Your Supabase API Key.
 
