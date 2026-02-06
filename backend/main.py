@@ -27,7 +27,7 @@ load_dotenv()
 app = FastAPI(
     title="Fitola Backend API",
     description="AI-Powered Personal Fitness & Social Wellness Platform",
-    version="1.0.0"
+    version="1.0.0",
 )
 
 # CORS Configuration
@@ -48,23 +48,31 @@ RUBE_MCP_VALIDATED_BASE_URL: Optional[str] = None
 RUBE_HTTP_CLIENT: Optional[httpx.AsyncClient] = None
 RUBE_HTTP_TIMEOUT: Optional[float] = None
 
+
 def parse_rube_timeout() -> float:
     raw_timeout = os.getenv("RUBE_MCP_TIMEOUT", "10")
     try:
         timeout = float(raw_timeout)
     except ValueError:
-        raise ValueError(f"RUBE_MCP_TIMEOUT must be a valid number (got '{raw_timeout}').")
+        raise ValueError(
+            f"RUBE_MCP_TIMEOUT must be a valid number (got '{raw_timeout}')."
+        )
     if timeout <= 0:
-        raise ValueError(f"RUBE_MCP_TIMEOUT must be a positive number (got '{raw_timeout}').")
+        raise ValueError(
+            f"RUBE_MCP_TIMEOUT must be a positive number (got '{raw_timeout}')."
+        )
     return timeout
+
 
 # =============================================================================
 # Request/Response Models
 # =============================================================================
 
+
 class ChatRequest(BaseModel):
     message: str
     language: Optional[str] = None
+
 
 class PlanRequest(BaseModel):
     age: int = Field(ge=1, le=120)
@@ -76,32 +84,36 @@ class PlanRequest(BaseModel):
     preferences: Optional[str] = None
     language: Optional[str] = None
 
+
 class TranslationRequest(BaseModel):
     text: str
     source_language: str
     target_language: str
 
+
 def require_gemini() -> genai.Client:
     if not GEMINI_API_KEY:
         raise HTTPException(
             status_code=500,
-            detail="GEMINI_API_KEY is not configured. Please set GEMINI_API_KEY."
+            detail="GEMINI_API_KEY is not configured. Please set GEMINI_API_KEY.",
         )
     if client is None:
         raise HTTPException(
             status_code=500,
-            detail="Gemini client failed to initialize. Verify GEMINI_API_KEY."
+            detail="Gemini client failed to initialize. Verify GEMINI_API_KEY.",
         )
     return client
+
 
 def require_rube_token() -> str:
     token = os.getenv("RUBE_MCP_JWT")
     if not token:
         raise HTTPException(
             status_code=500,
-            detail="RUBE_MCP_JWT is not configured. Please set RUBE_MCP_JWT."
+            detail="RUBE_MCP_JWT is not configured. Please set RUBE_MCP_JWT.",
         )
     return token
+
 
 def validate_rube_base_url() -> str:
     url = RUBE_MCP_BASE_URL.strip()
@@ -112,6 +124,7 @@ def validate_rube_base_url() -> str:
         raise ValueError("RUBE_MCP_BASE_URL must be a valid https URL.")
     return url.rstrip("/")
 
+
 async def get_rube_http_client() -> httpx.AsyncClient:
     global RUBE_HTTP_CLIENT
     if RUBE_HTTP_TIMEOUT is None:
@@ -119,6 +132,7 @@ async def get_rube_http_client() -> httpx.AsyncClient:
     if RUBE_HTTP_CLIENT is None:
         RUBE_HTTP_CLIENT = httpx.AsyncClient(timeout=RUBE_HTTP_TIMEOUT)
     return RUBE_HTTP_CLIENT
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -135,28 +149,33 @@ async def lifespan(app: FastAPI):
     finally:
         await close_rube_http_client()
 
+
 async def close_rube_http_client() -> None:
     global RUBE_HTTP_CLIENT
     if RUBE_HTTP_CLIENT is not None:
         await RUBE_HTTP_CLIENT.aclose()
         RUBE_HTTP_CLIENT = None
 
+
 app = FastAPI(title="Fitola Backend", version="1.0.0", lifespan=lifespan)
 
-async def fetch_rube_json(url: str, token: str, params: Optional[Dict[str, Any]] = None) -> dict:
+
+async def fetch_rube_json(
+    url: str, token: str, params: Optional[Dict[str, Any]] = None
+) -> dict:
     """Fetch JSON payloads from the Rube MCP API with Bearer auth."""
     try:
         http_client = await get_rube_http_client()
         response = await http_client.get(
             url,
             params=params,
-            headers={"Authorization": f"Bearer {token}", "Accept": "application/json"}
+            headers={"Authorization": f"Bearer {token}", "Accept": "application/json"},
         )
         response.raise_for_status()
     except httpx.HTTPStatusError as exc:
         raise HTTPException(
             status_code=exc.response.status_code,
-            detail=f"Rube MCP request failed with status {exc.response.status_code}."
+            detail=f"Rube MCP request failed with status {exc.response.status_code}.",
         )
     except httpx.RequestError as exc:
         raise HTTPException(status_code=502, detail=f"Rube MCP request failed: {exc}")
@@ -164,12 +183,16 @@ async def fetch_rube_json(url: str, token: str, params: Optional[Dict[str, Any]]
     try:
         return response.json()
     except json.JSONDecodeError:
-        raise HTTPException(status_code=502, detail="Invalid JSON returned from Rube MCP.")
+        raise HTTPException(
+            status_code=502, detail="Invalid JSON returned from Rube MCP."
+        )
+
 
 def get_language_instruction(language: Optional[str]) -> str:
     if not language:
         return ""
     return f"Respond in {language}."
+
 
 def parse_json_response(text: str) -> Optional[dict]:
     cleaned = text.strip()
@@ -179,8 +202,11 @@ def parse_json_response(text: str) -> Optional[dict]:
     try:
         return json.loads(cleaned)
     except json.JSONDecodeError:
-        logger.warning("Failed to parse Gemini JSON response (length=%s).", len(cleaned))
+        logger.warning(
+            "Failed to parse Gemini JSON response (length=%s).", len(cleaned)
+        )
         return None
+
 
 def sanitize_prompt_value(value: Optional[str], max_length: int = 200) -> str:
     if not value:
@@ -191,16 +217,19 @@ def sanitize_prompt_value(value: Optional[str], max_length: int = 200) -> str:
     truncated_length = max(max_length - 3, 0)
     return f"{cleaned[:truncated_length].rstrip()}..."
 
+
 def sanitize_language_identifier(value: str, max_length: int = 40) -> str:
     cleaned = sanitize_prompt_value(value, max_length=max_length)
     cleaned = re.sub(r"[^a-zA-Z0-9\-_]", "", cleaned).strip()
     return cleaned or "unknown"
     context: Optional[str] = None
 
+
 class UserRegister(BaseModel):
     id: str
     email: EmailStr
     name: str
+
 
 class UserProfile(BaseModel):
     name: Optional[str] = None
@@ -212,9 +241,11 @@ class UserProfile(BaseModel):
     city: Optional[str] = None
     allergies: Optional[List[str]] = None
 
+
 class BMIRequest(BaseModel):
     weight: float
     height: float
+
 
 class FitnessRequest(BaseModel):
     user_id: str
@@ -224,6 +255,7 @@ class FitnessRequest(BaseModel):
     body_type: str
     goals: List[str]
     duration_days: int = 30
+
 
 class NutritionRequest(BaseModel):
     user_id: str
@@ -236,9 +268,11 @@ class NutritionRequest(BaseModel):
     allergies: Optional[List[str]] = None
     duration_days: int = 7
 
+
 class TranslateRequest(BaseModel):
     message: str
     target_language: str
+
 
 class LocationUpdate(BaseModel):
     user_id: str
@@ -246,10 +280,12 @@ class LocationUpdate(BaseModel):
     longitude: float
     timestamp: str
 
+
 class LocationShare(BaseModel):
     user_id: str
     target_user_id: str
     duration_seconds: int
+
 
 class ChatMessageRequest(BaseModel):
     sender_id: str
@@ -258,25 +294,26 @@ class ChatMessageRequest(BaseModel):
     type: str = "text"
     file_url: Optional[str] = None
 
+
 # =============================================================================
 # Health Check
 # =============================================================================
 
+
 @app.get("/")
 async def root():
-    return {
-        "message": "Fitola API is running",
-        "version": "1.0.0",
-        "status": "healthy"
-    }
+    return {"message": "Fitola API is running", "version": "1.0.0", "status": "healthy"}
+
 
 @app.get("/health")
 async def health_check():
     return {"status": "healthy", "service": "fitola-backend"}
 
+
 # =============================================================================
 # Authentication Endpoints
 # =============================================================================
+
 
 @app.post("/api/v1/auth/register")
 async def register_user(user: UserRegister):
@@ -286,27 +323,26 @@ async def register_user(user: UserRegister):
             "id": user.id,
             "email": user.email,
             "name": user.name,
-            "created_at": "2026-02-01T12:00:00Z"
+            "created_at": "2026-02-01T12:00:00Z",
         },
-        "message": "User registered successfully"
+        "message": "User registered successfully",
     }
+
 
 @app.post("/api/v1/auth/login")
 async def login_user(email: EmailStr, password: str):
     """Login user with email and password."""
     return {
-        "user": {
-            "id": "sample-user-id",
-            "email": email,
-            "name": "Sample User"
-        },
+        "user": {"id": "sample-user-id", "email": email, "name": "Sample User"},
         "token": "sample-jwt-token",
-        "message": "Login successful"
+        "message": "Login successful",
     }
+
 
 # =============================================================================
 # User Profile Endpoints
 # =============================================================================
+
 
 @app.get("/api/v1/user/profile/{user_id}")
 async def get_user_profile(user_id: str):
@@ -320,22 +356,24 @@ async def get_user_profile(user_id: str):
         "height": 180.0,
         "body_type": "Mesomorph",
         "goals": ["Weight Loss", "Muscle Gain"],
-        "city": "New York"
+        "city": "New York",
     }
+
 
 @app.put("/api/v1/user/profile")
 async def update_user_profile(profile: UserProfile):
     """Update user profile."""
     return {
         "message": "Profile updated successfully",
-        "profile": profile.dict(exclude_none=True)
+        "profile": profile.dict(exclude_none=True),
     }
+
 
 @app.post("/api/v1/user/bmi")
 async def calculate_bmi(request: BMIRequest):
     """Calculate BMI and return category."""
     bmi = request.weight / ((request.height / 100) ** 2)
-    
+
     if bmi < 18.5:
         category = "Underweight"
     elif bmi < 25.0:
@@ -344,7 +382,7 @@ async def calculate_bmi(request: BMIRequest):
         category = "Overweight"
     else:
         category = "Obese"
-    
+
     return {
         "bmi": round(bmi, 1),
         "category": category,
@@ -352,13 +390,15 @@ async def calculate_bmi(request: BMIRequest):
             "min": 18.5,
             "max": 24.9,
             "min_weight": round(18.5 * ((request.height / 100) ** 2), 1),
-            "max_weight": round(24.9 * ((request.height / 100) ** 2), 1)
-        }
+            "max_weight": round(24.9 * ((request.height / 100) ** 2), 1),
+        },
     }
+
 
 # =============================================================================
 # AI & Chat Endpoints
 # =============================================================================
+
 
 @app.post("/api/v1/chat")
 async def chat_with_ai(request: ChatRequest):
@@ -370,19 +410,12 @@ async def chat_with_ai(request: ChatRequest):
         if language_instruction:
             message = f"{language_instruction}\n\n{request.message}"
         response = gemini_client.models.generate_content(
-            model=GEMINI_MODEL,
-            contents=message
-        prompt = request.message
-        if request.context:
-            prompt = f"Context: {request.context}\n\nUser: {request.message}"
-        
-        response = client.models.generate_content(
-            model="gemini-2.0-flash",
-            contents=prompt
+            model=GEMINI_MODEL, contents=message
         )
         return {"response": response.text}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
 
 @app.post("/api/v1/plans/ai/fitness")
 async def generate_fitness_plan(request: FitnessRequest):
@@ -397,12 +430,11 @@ async def generate_fitness_plan(request: FitnessRequest):
         
         Provide a structured workout plan with exercises, sets, reps, and rest days.
         """
-        
+
         response = client.models.generate_content(
-            model="gemini-2.0-flash",
-            contents=prompt
+            model="gemini-2.0-flash", contents=prompt
         )
-        
+
         return {
             "id": f"plan-{request.user_id}",
             "user_id": request.user_id,
@@ -413,17 +445,20 @@ async def generate_fitness_plan(request: FitnessRequest):
             "duration_days": request.duration_days,
             "ai_generated": True,
             "plan_details": response.text,
-            "created_at": "2026-02-01T12:00:00Z"
+            "created_at": "2026-02-01T12:00:00Z",
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
 
 @app.post("/api/v1/plans/ai/nutrition")
 async def generate_nutrition_plan(request: NutritionRequest):
     """Generate personalized nutrition plan using AI."""
     try:
-        allergies_str = f"Allergies: {', '.join(request.allergies)}" if request.allergies else ""
-        
+        allergies_str = (
+            f"Allergies: {', '.join(request.allergies)}" if request.allergies else ""
+        )
+
         prompt = f"""
         Create a personalized {request.duration_days}-day nutrition plan for:
         - Age Group: {request.age_group}
@@ -436,38 +471,35 @@ async def generate_nutrition_plan(request: NutritionRequest):
         Provide meal plans with breakfast, lunch, dinner, and snacks.
         Include calorie counts and macronutrient breakdown.
         """
-        
+
         response = client.models.generate_content(
-            model="gemini-2.0-flash",
-            contents=prompt
+            model="gemini-2.0-flash", contents=prompt
         )
-        
+
         # Calculate daily calories based on goals
         bmr = 10 * request.weight + 6.25 * request.height - 5 * 30  # Simplified
         daily_calories = int(bmr * 1.5)  # Activity factor
-        
+
         return {
             "id": f"nutrition-{request.user_id}",
             "user_id": request.user_id,
             "title": f"{request.duration_days}-Day Nutrition Plan",
             "description": "AI-generated personalized nutrition plan",
             "daily_calories": daily_calories,
-            "macros": {
-                "protein": 150,
-                "carbs": 200,
-                "fats": 60
-            },
+            "macros": {"protein": 150, "carbs": 200, "fats": 60},
             "duration_days": request.duration_days,
             "ai_generated": True,
             "plan_details": response.text,
-            "created_at": "2026-02-01T12:00:00Z"
+            "created_at": "2026-02-01T12:00:00Z",
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+
 # =============================================================================
 # Chat Endpoints
 # =============================================================================
+
 
 @app.post("/api/v1/chat/message")
 async def send_message(message: ChatMessageRequest):
@@ -479,8 +511,9 @@ async def send_message(message: ChatMessageRequest):
         "message": message.message,
         "type": message.type,
         "timestamp": "2026-02-01T12:00:00Z",
-        "is_read": False
+        "is_read": False,
     }
+
 
 @app.get("/api/v1/chat/conversation/{user_id}/{other_user_id}")
 async def get_conversation(user_id: str, other_user_id: str):
@@ -494,7 +527,7 @@ async def get_conversation(user_id: str, other_user_id: str):
                 "message": "Hello!",
                 "type": "text",
                 "timestamp": "2026-02-01T12:00:00Z",
-                "is_read": True
+                "is_read": True,
             },
             {
                 "id": "msg-2",
@@ -503,10 +536,11 @@ async def get_conversation(user_id: str, other_user_id: str):
                 "message": "Hi there!",
                 "type": "text",
                 "timestamp": "2026-02-01T12:01:00Z",
-                "is_read": False
-            }
+                "is_read": False,
+            },
         ]
     }
+
 
 @app.get("/api/v1/chat/conversations/{user_id}")
 async def get_conversations(user_id: str):
@@ -515,17 +549,14 @@ async def get_conversations(user_id: str):
         "conversations": [
             {
                 "id": "conv-1",
-                "other_user": {
-                    "id": "user-2",
-                    "name": "Jane Doe",
-                    "photo_url": None
-                },
+                "other_user": {"id": "user-2", "name": "Jane Doe", "photo_url": None},
                 "last_message": "Hello!",
                 "last_message_time": "2026-02-01T12:00:00Z",
-                "unread_count": 2
+                "unread_count": 2,
             }
         ]
     }
+
 
 @app.post("/api/v1/chat/translate")
 async def translate_message(request: TranslateRequest):
@@ -533,8 +564,9 @@ async def translate_message(request: TranslateRequest):
     return {
         "original_message": request.message,
         "translated_message": f"[{request.target_language}] {request.message}",
-        "target_language": request.target_language
+        "target_language": request.target_language,
     }
+
 
 @app.post("/api/v1/chat/request")
 async def send_chat_request(from_user_id: str, to_user_id: str):
@@ -544,8 +576,9 @@ async def send_chat_request(from_user_id: str, to_user_id: str):
         "from_user_id": from_user_id,
         "to_user_id": to_user_id,
         "status": "pending",
-        "created_at": "2026-02-01T12:00:00Z"
+        "created_at": "2026-02-01T12:00:00Z",
     }
+
 
 @app.put("/api/v1/chat/request/{request_id}/accept")
 async def accept_chat_request(request_id: str):
@@ -553,19 +586,21 @@ async def accept_chat_request(request_id: str):
     return {
         "request_id": request_id,
         "status": "accepted",
-        "message": "Chat request accepted"
+        "message": "Chat request accepted",
     }
+
 
 # =============================================================================
 # Map & Location Endpoints
 # =============================================================================
+
 
 @app.get("/api/v1/map/nearby")
 async def get_nearby_fitbuddies(
     latitude: float = Query(...),
     longitude: float = Query(...),
     radius: int = Query(5, description="Radius in kilometers"),
-    status: Optional[str] = Query(None)
+    status: Optional[str] = Query(None),
 ):
     """Get nearby FitBuddies."""
     # Mock data for demonstration
@@ -579,7 +614,7 @@ async def get_nearby_fitbuddies(
             "distance": 1.2,
             "status": "available",
             "photo_url": None,
-            "bio": "Love yoga and running!"
+            "bio": "Love yoga and running!",
         },
         {
             "id": "user-3",
@@ -590,14 +625,15 @@ async def get_nearby_fitbuddies(
             "distance": 2.5,
             "status": "available",
             "photo_url": None,
-            "bio": "Gym enthusiast"
-        }
+            "bio": "Gym enthusiast",
+        },
     ]
-    
+
     if status:
         users = [u for u in users if u["status"] == status]
-    
+
     return {"users": users, "total": len(users)}
+
 
 @app.post("/api/v1/location/update")
 async def update_location(location: LocationUpdate):
@@ -607,8 +643,9 @@ async def update_location(location: LocationUpdate):
         "latitude": location.latitude,
         "longitude": location.longitude,
         "updated_at": location.timestamp,
-        "message": "Location updated successfully"
+        "message": "Location updated successfully",
     }
+
 
 @app.post("/api/v1/location/share")
 async def share_location(share: LocationShare):
@@ -618,8 +655,9 @@ async def share_location(share: LocationShare):
         "target_user_id": share.target_user_id,
         "duration_seconds": share.duration_seconds,
         "expires_at": "2026-02-01T13:00:00Z",
-        "message": "Location sharing started"
+        "message": "Location sharing started",
     }
+
 
 @app.delete("/api/v1/location/share/{user_id}/{target_user_id}")
 async def stop_location_sharing(user_id: str, target_user_id: str):
@@ -627,17 +665,18 @@ async def stop_location_sharing(user_id: str, target_user_id: str):
     return {
         "message": "Location sharing stopped",
         "user_id": user_id,
-        "target_user_id": target_user_id
+        "target_user_id": target_user_id,
     }
+
 
 # =============================================================================
 # Leaderboard Endpoints
 # =============================================================================
 
+
 @app.get("/api/v1/leaderboard/global")
 async def get_global_leaderboard(
-    limit: int = Query(100, le=100),
-    offset: int = Query(0)
+    limit: int = Query(100, le=100), offset: int = Query(0)
 ):
     """Get global leaderboard."""
     leaderboard = [
@@ -647,11 +686,12 @@ async def get_global_leaderboard(
             "name": f"User {i}",
             "score": 1500 - (i * 10),
             "streak_days": 30 - i,
-            "country": "USA"
+            "country": "USA",
         }
         for i in range(limit)
     ]
     return {"leaderboard": leaderboard, "total": 1000}
+
 
 @app.get("/api/v1/leaderboard/national/{country}")
 async def get_national_leaderboard(country: str):
@@ -663,11 +703,12 @@ async def get_national_leaderboard(country: str):
             "name": f"User {i}",
             "score": 1500 - (i * 10),
             "streak_days": 30 - i,
-            "country": country
+            "country": country,
         }
         for i in range(10)
     ]
     return {"leaderboard": leaderboard, "country": country, "total": 100}
+
 
 @app.get("/api/v1/leaderboard/friends/{user_id}")
 async def get_friends_leaderboard(user_id: str):
@@ -678,17 +719,18 @@ async def get_friends_leaderboard(user_id: str):
             "user_id": user_id,
             "name": "You",
             "score": 1200,
-            "streak_days": 25
+            "streak_days": 25,
         },
         {
             "rank": 2,
             "user_id": "friend-1",
             "name": "Friend 1",
             "score": 1100,
-            "streak_days": 20
-        }
+            "streak_days": 20,
+        },
     ]
     return {"leaderboard": leaderboard, "total": 2}
+
 
 @app.post("/api/v1/plans/ai")
 async def ai_plans_generate(request: PlanRequest):
@@ -712,17 +754,17 @@ async def ai_plans_generate(request: PlanRequest):
             f"{language_note}"
         )
         response = gemini_client.models.generate_content(
-            model=GEMINI_MODEL,
-            contents=prompt
+            model=GEMINI_MODEL, contents=prompt
         )
         parsed_plan = parse_json_response(response.text)
         return {
             "plan_json": parsed_plan,
             "plan_text": response.text,
-            "plan_format": "json" if parsed_plan else "text"
+            "plan_format": "json" if parsed_plan else "text",
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
 
 @app.post("/api/v1/translate")
 async def translate_text(request: TranslationRequest):
@@ -737,12 +779,12 @@ async def translate_text(request: TranslationRequest):
             f"{request.text}"
         )
         response = gemini_client.models.generate_content(
-            model=GEMINI_MODEL,
-            contents=prompt
+            model=GEMINI_MODEL, contents=prompt
         )
         return {"translation": response.text}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
 
 @app.get("/api/v1/rube/recipe-hub/discover")
 async def rube_recipe_discover(request: Request):
@@ -751,6 +793,8 @@ async def rube_recipe_discover(request: Request):
     url = f"{RUBE_MCP_VALIDATED_BASE_URL}/recipe-hub/discover"
     return await fetch_rube_json(url, token, params=params)
 
+
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run(app, host="0.0.0.0", port=8000)
