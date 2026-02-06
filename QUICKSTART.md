@@ -97,6 +97,13 @@ flutter run -d ios
 flutter run -d chrome
 ```
 
+### 3.5 Live Preview (Open Source, No Subscription)
+For a lightweight live preview in any browser, use Flutter's built-in web server:
+```bash
+flutter run -d web-server --web-hostname 0.0.0.0 --web-port 8080
+```
+Open the printed URL in your browser to view the live preview.
+
 ## Step 4: Get API Keys (Optional for Full Features)
 
 ### 4.1 Get Gemini API Key
