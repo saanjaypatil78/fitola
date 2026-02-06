@@ -222,7 +222,6 @@ def sanitize_language_identifier(value: str, max_length: int = 40) -> str:
     cleaned = sanitize_prompt_value(value, max_length=max_length)
     cleaned = re.sub(r"[^a-zA-Z0-9\-_]", "", cleaned).strip()
     return cleaned or "unknown"
-    context: Optional[str] = None
 
 
 class UserRegister(BaseModel):
