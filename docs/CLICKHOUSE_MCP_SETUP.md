@@ -30,10 +30,9 @@ Add the ClickHouse MCP server entry to the root `mcp.json` (already included in 
         "mcp-clickhouse"
       ],
       "env": {
-        "CLICKHOUSE_HOST": "your_clickhouse_host",
+        "CLICKHOUSE_HOST": "YOUR_CLICKHOUSE_HOST_HERE",
         "CLICKHOUSE_PORT": "8443",
         "CLICKHOUSE_USER": "default",
-        "CLICKHOUSE_PASSWORD": "",
         "CLICKHOUSE_SECURE": "true",
         "CLICKHOUSE_VERIFY": "true",
         "CLICKHOUSE_CONNECT_TIMEOUT": "30",
@@ -53,7 +52,7 @@ Use the following variables for the ClickHouse connection:
 - `CLICKHOUSE_HOST`
 - `CLICKHOUSE_PORT`
 - `CLICKHOUSE_USER`
-- `CLICKHOUSE_PASSWORD`
+- `CLICKHOUSE_PASSWORD` (set this in your shell or secret manager instead of committing it to `mcp.json`)
 - `CLICKHOUSE_SECURE` (`true`/`false`)
 - `CLICKHOUSE_VERIFY` (`true`/`false`)
 - `CLICKHOUSE_CONNECT_TIMEOUT`

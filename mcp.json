@@ -28,10 +28,9 @@
         "mcp-clickhouse"
       ],
       "env": {
-        "CLICKHOUSE_HOST": "your_clickhouse_host",
+        "CLICKHOUSE_HOST": "YOUR_CLICKHOUSE_HOST_HERE",
         "CLICKHOUSE_PORT": "8443",
         "CLICKHOUSE_USER": "default",
-        "CLICKHOUSE_PASSWORD": "",
         "CLICKHOUSE_SECURE": "true",
         "CLICKHOUSE_VERIFY": "true",
         "CLICKHOUSE_CONNECT_TIMEOUT": "30",
