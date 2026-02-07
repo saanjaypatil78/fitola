@@ -436,7 +436,9 @@ async def generate_nutrition_plan(request: NutritionRequest):
         )
         
         # Calculate daily calories based on goals
-        bmr = 10 * request.weight + 6.25 * request.height - 5 * 30  # Simplified
+        # Note: Using simplified age estimate. For production, extract actual age from request
+        estimated_age = 30  # Default age for BMR calculation
+        bmr = 10 * request.weight + 6.25 * request.height - 5 * estimated_age  # Simplified
         daily_calories = int(bmr * 1.5)  # Activity factor
         
         return {

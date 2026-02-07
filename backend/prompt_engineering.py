@@ -146,7 +146,9 @@ Remember: Safety and gradual progression are paramount. Include proper form cues
         history_context = self._build_history_context(history)
         
         # Calculate BMR and recommended calories
-        bmr = 10 * weight + 6.25 * height - 5 * age + 5  # Mifflin-St Jeor for male
+        # Note: Using Mifflin-St Jeor formula for males. For females, subtract 161 instead of +5.
+        # In production, add gender parameter for accurate calculations.
+        bmr = 10 * weight + 6.25 * height - 5 * age + 5  # Mifflin-St Jeor for male (approx)
         tdee = int(bmr * 1.5)  # Moderate activity
         
         prompt = f"""{self.system_role}

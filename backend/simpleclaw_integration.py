@@ -26,7 +26,7 @@ class WorkflowType(str, Enum):
     MOTIVATION = "motivation"
 
 
-class SimpleCLawAgent:
+class SimpleClawAgent:
     """
     Simplified AI Agent inspired by SimpleClaw philosophy:
     - Easy to use, no complex setup
@@ -271,7 +271,7 @@ class SimpleClawOrchestrator:
     """
     
     def __init__(self, gemini_client=None):
-        self.agent = SimpleCLawAgent(gemini_client)
+        self.agent = SimpleClawAgent(gemini_client)
         self.active_sessions: Dict[str, Dict[str, Any]] = {}
     
     async def start_workflow(
