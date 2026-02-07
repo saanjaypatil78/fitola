@@ -5,6 +5,7 @@ import re
 from contextlib import asynccontextmanager
 from typing import Any, Dict, Optional
 from urllib.parse import urlparse
+from datetime import datetime
 
 from fastapi import FastAPI, HTTPException, Request
 from pydantic import BaseModel, Field
@@ -975,6 +976,239 @@ async def generate_nutrition_plan_simpleclaw(request: NutritionRequest):
         
     except Exception as e:
         logger.error(f"Nutrition plan generation error: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+# =============================================================================
+# MemuBot Self-Improving AI Endpoints
+# 24/7 proactive memory with continuous learning
+# =============================================================================
+
+class MemuBotWorkflowRequest(BaseModel):
+    """Request model for MemuBot-enhanced workflows"""
+    user_id: str
+    workflow_type: str = Field(
+        description="Workflow: learning_fitness_plan, predictive_workout, proactive_motivation, adaptive_nutrition, smart_goal_tracking"
+    )
+    user_data: Dict[str, Any] = Field(default_factory=dict)
+    parameters: Optional[Dict[str, Any]] = None
+
+class FeedbackRequest(BaseModel):
+    """Feedback for continuous improvement"""
+    user_id: str
+    workflow_id: str
+    helpful: bool
+    what_worked: Optional[str] = None
+    what_to_avoid: Optional[str] = None
+
+@app.post("/api/v1/memubot/workflow")
+async def execute_memubot_workflow(request: MemuBotWorkflowRequest):
+    """
+    Execute self-improving AI workflow with MemuBot
+    
+    Features:
+    - Learns from every interaction
+    - Adapts to user patterns
+    - Improves over time
+    - Provides proactive suggestions
+    
+    Available workflows:
+    - learning_fitness_plan: Adaptive fitness plans based on history
+    - predictive_workout: Predicts optimal workout for context
+    - proactive_motivation: Sends motivation when needed
+    - adaptive_nutrition: Nutrition plans adapted to compliance
+    - smart_goal_tracking: Intelligent goal progress tracking
+    """
+    try:
+        from memubot_integration import get_memubot_manager
+        from adaptive_workflows import get_adaptive_engine
+        from self_improving_orchestrator import get_self_improving_orchestrator
+        from simpleclaw_integration import get_simpleclaw_orchestrator
+        
+        # Initialize components
+        memubot = get_memubot_manager()
+        adaptive = get_adaptive_engine(memubot, client)
+        simpleclaw = get_simpleclaw_orchestrator(client)
+        orchestrator = get_self_improving_orchestrator(memubot, adaptive, simpleclaw)
+        
+        # Execute with learning
+        result = await orchestrator.execute_with_learning(
+            user_id=request.user_id,
+            workflow_type=request.workflow_type,
+            user_data=request.user_data,
+            parameters=request.parameters
+        )
+        
+        return result
+        
+    except Exception as e:
+        logger.error(f"MemuBot workflow error: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Workflow execution failed: {str(e)}")
+
+@app.get("/api/v1/memubot/proactive-insights/{user_id}")
+async def get_proactive_insights(user_id: str, context: Optional[str] = Query(None)):
+    """
+    Get proactive insights and suggestions
+    
+    The AI analyzes patterns and proactively suggests:
+    - Workout recommendations
+    - Motivation when needed
+    - Optimal timing for activities
+    - Goal adjustments
+    
+    This endpoint demonstrates true AI intelligence - anticipating needs before being asked.
+    """
+    try:
+        from memubot_integration import get_memubot_manager
+        from adaptive_workflows import get_adaptive_engine
+        from self_improving_orchestrator import get_self_improving_orchestrator
+        
+        memubot = get_memubot_manager()
+        adaptive = get_adaptive_engine(memubot, client)
+        orchestrator = get_self_improving_orchestrator(memubot, adaptive)
+        
+        current_context = {
+            "time": datetime.now().hour,
+            "day_of_week": datetime.now().strftime("%A"),
+            "context_note": context
+        }
+        
+        insights = await orchestrator.get_proactive_insights(
+            user_id=user_id,
+            current_context=current_context
+        )
+        
+        return insights
+        
+    except Exception as e:
+        logger.error(f"Proactive insights error: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/v1/memubot/feedback")
+async def submit_feedback(request: FeedbackRequest):
+    """
+    Submit feedback to improve AI recommendations
+    
+    This creates a feedback loop for continuous improvement.
+    The AI learns from what works and what doesn't.
+    """
+    try:
+        from memubot_integration import get_memubot_manager
+        from adaptive_workflows import get_adaptive_engine
+        from self_improving_orchestrator import get_self_improving_orchestrator
+        
+        memubot = get_memubot_manager()
+        adaptive = get_adaptive_engine(memubot, client)
+        orchestrator = get_self_improving_orchestrator(memubot, adaptive)
+        
+        feedback_data = {
+            "helpful": request.helpful,
+            "what_worked": request.what_worked,
+            "what_to_avoid": request.what_to_avoid
+        }
+        
+        result = await orchestrator.provide_feedback(
+            user_id=request.user_id,
+            workflow_id=request.workflow_id,
+            feedback=feedback_data
+        )
+        
+        return result
+        
+    except Exception as e:
+        logger.error(f"Feedback submission error: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/v1/memubot/learning-stats/{user_id}")
+async def get_learning_stats(user_id: str):
+    """
+    Get statistics on what the AI has learned about the user
+    
+    Transparency in AI learning:
+    - Total interactions analyzed
+    - Patterns identified
+    - Categories of learning
+    - Recent insights
+    """
+    try:
+        from memubot_integration import get_memubot_manager
+        from adaptive_workflows import get_adaptive_engine
+        from self_improving_orchestrator import get_self_improving_orchestrator
+        
+        memubot = get_memubot_manager()
+        adaptive = get_adaptive_engine(memubot, client)
+        orchestrator = get_self_improving_orchestrator(memubot, adaptive)
+        
+        stats = await orchestrator.get_learning_stats(user_id)
+        
+        return stats
+        
+    except Exception as e:
+        logger.error(f"Learning stats error: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/v1/memubot/memorize")
+async def memorize_interaction(
+    user_id: str,
+    interaction_type: str,
+    content: Dict[str, Any]
+):
+    """
+    Manually memorize an interaction
+    
+    Useful for:
+    - Logging workout completions
+    - Recording achievements
+    - Storing custom preferences
+    """
+    try:
+        from memubot_integration import get_memubot_manager, MemoryCategory
+        
+        memubot = get_memubot_manager()
+        
+        result = await memubot.memorize_interaction(
+            user_id=user_id,
+            interaction_type=interaction_type,
+            content=content,
+            category=MemoryCategory.USER_PROFILE
+        )
+        
+        return result
+        
+    except Exception as e:
+        logger.error(f"Memorization error: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/v1/memubot/memories/{user_id}")
+async def retrieve_memories(
+    user_id: str,
+    query: str = Query(..., description="Search query for relevant memories"),
+    limit: int = Query(5, ge=1, le=20)
+):
+    """
+    Retrieve relevant memories for a user
+    
+    Search through user's interaction history to find relevant context.
+    """
+    try:
+        from memubot_integration import get_memubot_manager
+        
+        memubot = get_memubot_manager()
+        
+        memories = await memubot.retrieve_memories(
+            user_id=user_id,
+            query=query,
+            limit=limit
+        )
+        
+        return {
+            "user_id": user_id,
+            "query": query,
+            "memories": memories,
+            "count": len(memories)
+        }
+        
+    except Exception as e:
+        logger.error(f"Memory retrieval error: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
 if __name__ == "__main__":
