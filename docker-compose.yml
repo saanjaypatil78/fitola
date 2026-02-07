@@ -1,0 +1,71 @@
+version: '3.8'
+
+services:
+  # Fitola Backend API
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fitola-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - GEMINI_MODEL=${GEMINI_MODEL:-gemini-2.5-flash}
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_KEY=${SUPABASE_KEY}
+      - RUBE_MCP_JWT=${RUBE_MCP_JWT}
+      - RUBE_MCP_BASE_URL=${RUBE_MCP_BASE_URL:-https://rube.app}
+      - MEMU_API_KEY=${MEMU_API_KEY:-}
+      - MEMU_API_BASE_URL=${MEMU_API_BASE_URL:-https://api.memu.so}
+    volumes:
+      - ./backend:/app/backend
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - fitola-network
+
+  # Redis for caching and leaderboards
+  redis:
+    image: redis:7-alpine
+    container_name: fitola-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - fitola-network
+
+  # Nginx reverse proxy (optional, for production)
+  nginx:
+    image: nginx:alpine
+    container_name: fitola-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - fitola-network
+
+volumes:
+  redis-data:
+
+networks:
+  fitola-network:
+    driver: bridge
