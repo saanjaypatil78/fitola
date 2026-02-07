@@ -751,6 +751,237 @@ async def rube_recipe_discover(request: Request):
     url = f"{RUBE_MCP_VALIDATED_BASE_URL}/recipe-hub/discover"
     return await fetch_rube_json(url, token, params=params)
 
+# =============================================================================
+# SimpleClaw Integration Endpoints
+# Zero-configuration AI workflow orchestration
+# =============================================================================
+
+class SimpleClawWorkflowRequest(BaseModel):
+    """Request model for SimpleClaw workflows"""
+    user_id: str
+    workflow_type: str = Field(
+        description="Workflow type: fitness_plan, nutrition_plan, chat_assistant, goal_tracking, motivation"
+    )
+    user_data: Dict[str, Any] = Field(default_factory=dict)
+    parameters: Optional[Dict[str, Any]] = None
+
+class SimpleClawChatRequest(BaseModel):
+    """Simplified chat request using SimpleClaw"""
+    user_id: str
+    message: str
+    user_data: Optional[Dict[str, Any]] = None
+
+@app.post("/api/v1/simpleclaw/workflow")
+async def execute_simpleclaw_workflow(request: SimpleClawWorkflowRequest):
+    """
+    Execute a SimpleClaw workflow - Zero configuration, instant execution
+    
+    Available workflows:
+    - fitness_plan: Generate personalized fitness plans
+    - nutrition_plan: Generate nutrition and meal plans  
+    - chat_assistant: Context-aware fitness coaching chat
+    - goal_tracking: Track and analyze fitness goals
+    - motivation: Provide personalized motivation
+    
+    This endpoint uses advanced prompt engineering for better AI responses.
+    """
+    try:
+        from .simpleclaw_integration import get_simpleclaw_orchestrator
+        
+        orchestrator = get_simpleclaw_orchestrator(client)
+        
+        result = await orchestrator.start_workflow(
+            user_id=request.user_id,
+            workflow_type=request.workflow_type,
+            user_data=request.user_data,
+            parameters=request.parameters
+        )
+        
+        return result
+        
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        logger.error(f"SimpleClaw workflow error: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Workflow execution failed: {str(e)}")
+
+@app.post("/api/v1/simpleclaw/chat")
+async def simpleclaw_chat(request: SimpleClawChatRequest):
+    """
+    Simplified chat endpoint using SimpleClaw workflow orchestration
+    Provides context-aware, personalized fitness coaching responses
+    """
+    try:
+        from .simpleclaw_integration import get_simpleclaw_orchestrator
+        
+        orchestrator = get_simpleclaw_orchestrator(client)
+        
+        result = await orchestrator.start_workflow(
+            user_id=request.user_id,
+            workflow_type="chat_assistant",
+            user_data=request.user_data or {},
+            parameters={"message": request.message}
+        )
+        
+        return {
+            "user_id": request.user_id,
+            "message": request.message,
+            "response": result["workflow_result"].get("response", ""),
+            "session_id": result["session_id"],
+            "timestamp": result["workflow_result"].get("timestamp")
+        }
+        
+    except Exception as e:
+        logger.error(f"SimpleClaw chat error: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Chat failed: {str(e)}")
+
+@app.get("/api/v1/simpleclaw/session/{session_id}")
+async def get_simpleclaw_session(session_id: str):
+    """Get information about a SimpleClaw session"""
+    try:
+        from .simpleclaw_integration import get_simpleclaw_orchestrator
+        
+        orchestrator = get_simpleclaw_orchestrator(client)
+        session_info = orchestrator.get_session_info(session_id)
+        
+        if not session_info:
+            raise HTTPException(status_code=404, detail="Session not found")
+        
+        return session_info
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Session retrieval error: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/v1/simpleclaw/memory/{user_id}")
+async def get_user_memory(user_id: str):
+    """
+    Get user's interaction history and context memory
+    SimpleClaw maintains persistent memory for personalized experiences
+    """
+    try:
+        from .simpleclaw_integration import get_simpleclaw_orchestrator
+        
+        orchestrator = get_simpleclaw_orchestrator(client)
+        memory = orchestrator.get_user_memory(user_id)
+        
+        return {
+            "user_id": user_id,
+            "interaction_count": len(memory),
+            "history": memory
+        }
+        
+    except Exception as e:
+        logger.error(f"Memory retrieval error: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/v1/simpleclaw/fitness-plan")
+async def generate_fitness_plan_simpleclaw(request: FitnessRequest):
+    """
+    Generate fitness plan using SimpleClaw with enhanced prompt engineering
+    Better results than the standard endpoint due to advanced prompting
+    """
+    try:
+        from .simpleclaw_integration import get_simpleclaw_orchestrator
+        
+        orchestrator = get_simpleclaw_orchestrator(client)
+        
+        result = await orchestrator.start_workflow(
+            user_id=request.user_id,
+            workflow_type="fitness_plan",
+            user_data={
+                "age_group": request.age_group,
+                "weight": request.weight,
+                "height": request.height,
+                "body_type": request.body_type,
+                "goals": request.goals
+            },
+            parameters={
+                "duration_days": request.duration_days,
+                "experience_level": "Intermediate",
+                "equipment": "Basic"
+            }
+        )
+        
+        workflow_result = result["workflow_result"]
+        
+        return {
+            "id": f"plan-{request.user_id}",
+            "user_id": request.user_id,
+            "title": f"{request.duration_days}-Day {request.goals[0]} Plan",
+            "description": "AI-generated plan with enhanced prompt engineering",
+            "type": request.goals[0].replace(" ", ""),
+            "difficulty": "Intermediate",
+            "duration_days": request.duration_days,
+            "ai_generated": True,
+            "plan_details": workflow_result.get("plan", ""),
+            "session_id": result["session_id"],
+            "created_at": workflow_result.get("timestamp")
+        }
+        
+    except Exception as e:
+        logger.error(f"Fitness plan generation error: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/v1/simpleclaw/nutrition-plan")
+async def generate_nutrition_plan_simpleclaw(request: NutritionRequest):
+    """
+    Generate nutrition plan using SimpleClaw with enhanced prompt engineering
+    Better meal plans with more detail than standard endpoint
+    """
+    try:
+        from .simpleclaw_integration import get_simpleclaw_orchestrator
+        
+        orchestrator = get_simpleclaw_orchestrator(client)
+        
+        result = await orchestrator.start_workflow(
+            user_id=request.user_id,
+            workflow_type="nutrition_plan",
+            user_data={
+                "age_group": request.age_group,
+                "weight": request.weight,
+                "height": request.height,
+                "body_type": request.body_type,
+                "goals": request.goals,
+                "city": request.city,
+                "allergies": request.allergies
+            },
+            parameters={
+                "duration_days": request.duration_days,
+                "dietary_preference": "No restrictions"
+            }
+        )
+        
+        workflow_result = result["workflow_result"]
+        
+        # Calculate daily calories
+        bmr = 10 * request.weight + 6.25 * request.height - 5 * 30
+        daily_calories = int(bmr * 1.5)
+        
+        return {
+            "id": f"nutrition-{request.user_id}",
+            "user_id": request.user_id,
+            "title": f"{request.duration_days}-Day Nutrition Plan",
+            "description": "Enhanced AI-generated nutrition plan",
+            "daily_calories": daily_calories,
+            "macros": {
+                "protein": 150,
+                "carbs": 200,
+                "fats": 60
+            },
+            "duration_days": request.duration_days,
+            "ai_generated": True,
+            "plan_details": workflow_result.get("plan", ""),
+            "session_id": result["session_id"],
+            "created_at": workflow_result.get("timestamp")
+        }
+        
+    except Exception as e:
+        logger.error(f"Nutrition plan generation error: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
