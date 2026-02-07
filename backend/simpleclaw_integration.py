@@ -101,7 +101,7 @@ class SimpleCLawAgent:
         """
         Generate fitness plan using prompt engineering best practices
         """
-        from .prompt_engineering import FitnessPromptEngine
+        from prompt_engineering import FitnessPromptEngine
         
         prompt_engine = FitnessPromptEngine()
         enhanced_prompt = prompt_engine.create_fitness_plan_prompt(
@@ -135,7 +135,7 @@ class SimpleCLawAgent:
         """
         Generate nutrition plan with enhanced prompting
         """
-        from .prompt_engineering import FitnessPromptEngine
+        from prompt_engineering import FitnessPromptEngine
         
         prompt_engine = FitnessPromptEngine()
         enhanced_prompt = prompt_engine.create_nutrition_plan_prompt(
@@ -169,7 +169,7 @@ class SimpleCLawAgent:
         """
         Handle fitness chat with context-aware responses
         """
-        from .prompt_engineering import FitnessPromptEngine
+        from prompt_engineering import FitnessPromptEngine
         
         prompt_engine = FitnessPromptEngine()
         enhanced_prompt = prompt_engine.create_chat_prompt(
@@ -203,7 +203,7 @@ class SimpleCLawAgent:
         """
         Track and provide feedback on fitness goals
         """
-        from .prompt_engineering import FitnessPromptEngine
+        from prompt_engineering import FitnessPromptEngine
         
         prompt_engine = FitnessPromptEngine()
         enhanced_prompt = prompt_engine.create_goal_tracking_prompt(
@@ -237,7 +237,7 @@ class SimpleCLawAgent:
         """
         Provide motivational support and encouragement
         """
-        from .prompt_engineering import FitnessPromptEngine
+        from prompt_engineering import FitnessPromptEngine
         
         prompt_engine = FitnessPromptEngine()
         enhanced_prompt = prompt_engine.create_motivation_prompt(

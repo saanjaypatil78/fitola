@@ -372,13 +372,6 @@ async def chat_with_ai(request: ChatRequest):
         response = gemini_client.models.generate_content(
             model=GEMINI_MODEL,
             contents=message
-        prompt = request.message
-        if request.context:
-            prompt = f"Context: {request.context}\n\nUser: {request.message}"
-        
-        response = client.models.generate_content(
-            model="gemini-2.0-flash",
-            contents=prompt
         )
         return {"response": response.text}
     except Exception as e:
@@ -786,7 +779,7 @@ async def execute_simpleclaw_workflow(request: SimpleClawWorkflowRequest):
     This endpoint uses advanced prompt engineering for better AI responses.
     """
     try:
-        from .simpleclaw_integration import get_simpleclaw_orchestrator
+        from simpleclaw_integration import get_simpleclaw_orchestrator
         
         orchestrator = get_simpleclaw_orchestrator(client)
         
@@ -812,7 +805,7 @@ async def simpleclaw_chat(request: SimpleClawChatRequest):
     Provides context-aware, personalized fitness coaching responses
     """
     try:
-        from .simpleclaw_integration import get_simpleclaw_orchestrator
+        from simpleclaw_integration import get_simpleclaw_orchestrator
         
         orchestrator = get_simpleclaw_orchestrator(client)
         
@@ -839,7 +832,7 @@ async def simpleclaw_chat(request: SimpleClawChatRequest):
 async def get_simpleclaw_session(session_id: str):
     """Get information about a SimpleClaw session"""
     try:
-        from .simpleclaw_integration import get_simpleclaw_orchestrator
+        from simpleclaw_integration import get_simpleclaw_orchestrator
         
         orchestrator = get_simpleclaw_orchestrator(client)
         session_info = orchestrator.get_session_info(session_id)
@@ -862,7 +855,7 @@ async def get_user_memory(user_id: str):
     SimpleClaw maintains persistent memory for personalized experiences
     """
     try:
-        from .simpleclaw_integration import get_simpleclaw_orchestrator
+        from simpleclaw_integration import get_simpleclaw_orchestrator
         
         orchestrator = get_simpleclaw_orchestrator(client)
         memory = orchestrator.get_user_memory(user_id)
@@ -884,7 +877,7 @@ async def generate_fitness_plan_simpleclaw(request: FitnessRequest):
     Better results than the standard endpoint due to advanced prompting
     """
     try:
-        from .simpleclaw_integration import get_simpleclaw_orchestrator
+        from simpleclaw_integration import get_simpleclaw_orchestrator
         
         orchestrator = get_simpleclaw_orchestrator(client)
         
@@ -932,7 +925,7 @@ async def generate_nutrition_plan_simpleclaw(request: NutritionRequest):
     Better meal plans with more detail than standard endpoint
     """
     try:
-        from .simpleclaw_integration import get_simpleclaw_orchestrator
+        from simpleclaw_integration import get_simpleclaw_orchestrator
         
         orchestrator = get_simpleclaw_orchestrator(client)
         
