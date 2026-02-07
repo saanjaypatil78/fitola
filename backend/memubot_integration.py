@@ -304,11 +304,18 @@ class MemuBotManager:
         
         # Pattern-based suggestions
         for pattern in patterns:
-            if "workout" in pattern.get("content", "").lower():
+            content = pattern.get("content", "")
+            # Handle both string and dict content
+            if isinstance(content, dict):
+                content_str = str(content)
+            else:
+                content_str = str(content)
+            
+            if "workout" in content_str.lower():
                 suggestions.append({
                     "type": "insight",
                     "title": "Detected Pattern",
-                    "reason": pattern.get("content", ""),
+                    "reason": content_str[:100],  # Limit length
                     "confidence": pattern.get("relevance", 0.6)
                 })
         

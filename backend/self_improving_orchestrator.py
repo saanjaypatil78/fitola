@@ -9,7 +9,7 @@ This orchestrator:
 - Makes proactive suggestions
 """
 import logging
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, List
 from datetime import datetime
 
 logger = logging.getLogger(__name__)
@@ -269,7 +269,7 @@ class SelfImprovingOrchestrator:
                 "Improves recommendations over time"
             ],
             "recent_learnings": [
-                pattern.get("content", "")[:100] + "..."
+                str(pattern.get("content", ""))[:100] + "..."
                 for pattern in patterns[:3]
             ]
         }
