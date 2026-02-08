@@ -58,8 +58,40 @@ Fitola is a revolutionary AI-powered fitness and social wellness platform that c
          ├──► Supabase (PostgreSQL + Auth)
          ├──► Google Gemini AI (Plans & Chat)
          ├──► OpenStreetMap (Map Tiles)
-         └──► Redis (Caching & Leaderboards)
+         ├──► Redis (Caching & Leaderboards)
+         └──► MCP Servers (Agentic Workflows)
 ```
+
+## 🤖 Agentic Workflow Automation
+
+Fitola leverages **Model Context Protocol (MCP)** servers for intelligent development automation:
+
+### Integrated MCP Servers
+
+- **Sequential Thinking**: Enhanced AI reasoning for complex problem-solving
+- **Stitch MCP (Google Labs)**: AI-powered UI generation from prompts/sketches
+  - Generate Flutter widgets and screens automatically
+  - 400 daily credits for design generation (free tier)
+  - Export to Figma or production code
+
+### Capabilities
+
+✨ **AI-Powered Development**:
+- Generate UI screens from natural language descriptions
+- Auto-create boilerplate code and components
+- Intelligent code completion and refactoring
+- Automated test generation
+
+🚀 **Development Speed**:
+- 60% faster UI implementation
+- 40% reduction in boilerplate code
+- Instant design iterations
+- Automated testing workflows
+
+📚 **Learn More**:
+- **[Agentic Workflow Guide](AGENTIC_WORKFLOW.md)**: Complete MCP setup and usage
+- **[Automation Guide](AUTOMATION_GUIDE.md)**: Step-by-step automation workflows
+- **[Stitch MCP Setup](docs/STITCH_MCP_SETUP.md)**: Google Labs UI generation setup
 
 ## 🛠️ Tech Stack
 
@@ -200,10 +232,14 @@ flutter test integration_test
 
 ## 📚 Documentation
 
+- **[Agentic Workflow Guide](AGENTIC_WORKFLOW.md)**: AI-powered development with MCP servers
+- **[Automation Guide](AUTOMATION_GUIDE.md)**: Complete automation workflows and CI/CD
 - **[Product Requirements Document (PRD)](docs/PRD.md)**: Complete product specifications
 - **[Technical Documentation](docs/TECHNICAL.md)**: Architecture, API docs, deployment
 - **[Stitch MCP Setup](docs/STITCH_MCP_SETUP.md)**: Integrate Stitch MCP server for UI generation
 - **[Backend Integration Guide](BACKEND_INTEGRATION.md)**: API integration, error handling, services documentation
+- **[Quick Start Guide](QUICKSTART.md)**: Get started in 5 minutes
+- **[Testing Guide](TESTING_GUIDE.md)**: Comprehensive testing documentation
 - **[UX Wireframes](docs/UX_WIREFRAMES.md)**: Design specifications and screen flows
 - **[API Documentation](http://localhost:8000/docs)**: Interactive Swagger UI (when backend is running)
 

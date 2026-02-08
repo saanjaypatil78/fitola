@@ -74,6 +74,69 @@ The `POST /api/v1/plans/ai` response includes `plan_json` (parsed JSON or null),
 
 ---
 
+## 4. Automated Deployment Workflow
+
+Fitola includes automated deployment capabilities through agentic workflows and CI/CD pipelines.
+
+### 4.1 One-Command Deployment
+
+Use the automated deployment script:
+
+```bash
+# Deploy everything to production
+./deploy.sh production true
+
+# Deploy backend only
+./deploy.sh production false
+
+# Deploy to staging
+./deploy.sh staging true
+```
+
+The script automatically:
+- Runs all tests (backend & mobile)
+- Builds the backend
+- Deploys to Vercel
+- Builds mobile apps (APK & Web)
+- Validates deployment
+
+### 4.2 CI/CD Pipeline
+
+Fitola supports GitHub Actions for automated CI/CD:
+
+**Continuous Integration** (on every push/PR):
+- Backend linting (black, flake8)
+- Backend tests (pytest with coverage)
+- Flutter analysis
+- Flutter tests
+- Build validation
+
+**Continuous Deployment** (on main branch):
+- Automatic deployment to Vercel
+- Web app build and deployment
+- APK artifact generation
+
+See **[AUTOMATION_GUIDE.md](AUTOMATION_GUIDE.md)** for complete CI/CD setup.
+
+### 4.3 Agentic Development Automation
+
+Leverage MCP servers for deployment automation:
+
+**Sequential Thinking MCP**:
+- Deployment strategy planning
+- Environment configuration validation
+- Rollback procedures
+- Health check automation
+
+**Stitch MCP**:
+- Generate deployment dashboards
+- Create monitoring UIs
+- Build admin panels
+
+📚 **Learn More**: See **[AGENTIC_WORKFLOW.md](AGENTIC_WORKFLOW.md)** for AI-powered development workflows.
+
+---
+
 ## ⚠️ Security Notice
 You shared a Gemini API key in a public chat session. For your security:
 1. **Revoke the key** in the Google AI Studio / Google Cloud Console immediately.
