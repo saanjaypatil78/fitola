@@ -232,6 +232,10 @@ flutter test integration_test
 
 ## 📚 Documentation
 
+**📖 [Complete Documentation Index](DOCUMENTATION_INDEX.md)** - Navigate all documentation
+
+### Quick Links
+
 - **[Agentic Workflow Guide](AGENTIC_WORKFLOW.md)**: AI-powered development with MCP servers
 - **[Automation Guide](AUTOMATION_GUIDE.md)**: Complete automation workflows and CI/CD
 - **[Product Requirements Document (PRD)](docs/PRD.md)**: Complete product specifications
