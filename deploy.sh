@@ -36,7 +36,7 @@ fi
 
 # Check if we're in the right directory
 if [ ! -f "mcp.json" ]; then
-  echo -e "${RED}❌ Not in project root directory. Please run from /home/runner/work/fitola/fitola${NC}"
+  echo -e "${RED}❌ Not in project root directory. Please run from the Fitola project root.${NC}"
   exit 1
 fi
 
