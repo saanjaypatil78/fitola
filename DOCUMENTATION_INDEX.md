@@ -1,16 +1,33 @@
-# Fitola Documentation Index
+# Fitola Documentation Index - v2.0
 
 ## 📚 Quick Navigation
 
-Welcome to Fitola's comprehensive documentation! This index helps you find exactly what you need.
+**Version 2.0 NEW**: AGI Team Management & SkillKit Integration
+
+---
+
+## 🤖 AGI Team & SkillKit (NEW v2.0)
+
+### AGI Team Management
+- **[AGI_TEAM_MANAGEMENT.md](AGI_TEAM_MANAGEMENT.md)** ⭐ - Complete AGI team architecture
+- **[AGENTS.md](AGENTS.md)** ⭐ - Agent configurations
+
+### SkillKit Integration
+- **[SKILLKIT_INTEGRATION.md](SKILLKIT_INTEGRATION.md)** ⭐ - Universal skill management
+- **[skills/](skills/)** ⭐ - 5 custom Fitola skills
+
+### Custom Skills
+1. **[fitola-flutter](skills/fitola-flutter/SKILL.md)** - Flutter development
+2. **[fitola-backend](skills/fitola-backend/SKILL.md)** - Backend development
+3. **[fitola-ai-integration](skills/fitola-ai-integration/SKILL.md)** - AI integration
+4. **[fitola-testing](skills/fitola-testing/SKILL.md)** - Testing automation
+5. **[fitola-deployment](skills/fitola-deployment/SKILL.md)** - Deployment automation
 
 ---
 
 ## 🚀 Getting Started
 
-Start here if you're new to Fitola:
-
-1. **[README.md](README.md)** - Project overview, features, and quick links
+1. **[README.md](README.md)** - Project overview (REWRITTEN v2.0)
 2. **[QUICKSTART.md](QUICKSTART.md)** - Get up and running in 5 minutes
 3. **[DEPLOYMENT.md](DEPLOYMENT.md)** - Deploy to production
 
@@ -18,66 +35,37 @@ Start here if you're new to Fitola:
 
 ## 🤖 Agentic Workflows & Automation
 
-Learn about AI-powered development automation:
-
-### Core Documentation
-- **[AGENTIC_WORKFLOW.md](AGENTIC_WORKFLOW.md)** ⭐ - Complete guide to MCP servers
-  - Sequential Thinking MCP setup
-  - Stitch MCP (Google Labs) setup
-  - Usage examples and best practices
-  - Security and privacy controls
-
-- **[AUTOMATION_GUIDE.md](AUTOMATION_GUIDE.md)** ⭐ - Step-by-step automation workflows
-  - Feature development automation
-  - CI/CD pipeline setup
-  - Automated testing
-  - Deployment automation
-  - Code quality automation
-
-### Supporting Documentation
+- **[AGENTIC_WORKFLOW.md](AGENTIC_WORKFLOW.md)** - MCP servers guide
+- **[AUTOMATION_GUIDE.md](AUTOMATION_GUIDE.md)** - Automation workflows
 - **[AGENTIC_IMPLEMENTATION_SUMMARY.md](AGENTIC_IMPLEMENTATION_SUMMARY.md)** - Implementation overview
-- **[ARCHITECTURE_DIAGRAMS.md](ARCHITECTURE_DIAGRAMS.md)** - Visual architecture and workflows
-- **[docs/STITCH_MCP_SETUP.md](docs/STITCH_MCP_SETUP.md)** - Detailed Stitch MCP setup
+- **[ARCHITECTURE_DIAGRAMS.md](ARCHITECTURE_DIAGRAMS.md)** - Visual architecture
 
 ---
 
 ## 🏗️ Architecture & Technical
 
-Understand the technical architecture:
-
-- **[ARCHITECTURE_DIAGRAMS.md](ARCHITECTURE_DIAGRAMS.md)** - Visual system architecture
 - **[docs/TECHNICAL.md](docs/TECHNICAL.md)** - Complete technical documentation
-- **[BACKEND_INTEGRATION.md](BACKEND_INTEGRATION.md)** - Backend API integration guide
+- **[BACKEND_INTEGRATION.md](BACKEND_INTEGRATION.md)** - Backend API integration
 
 ---
 
-## 📱 Implementation Details
+## 📱 Implementation
 
-Detailed implementation documentation:
-
-### Backend
-- **[IMPLEMENTATION_SUMMARY_BACKEND.md](IMPLEMENTATION_SUMMARY_BACKEND.md)** - Backend implementation details
-- **[BACKEND_INTEGRATION.md](BACKEND_INTEGRATION.md)** - API integration and services
-
-### Frontend
-- **[IMPLEMENTATION_SUMMARY.md](IMPLEMENTATION_SUMMARY.md)** - Complete Flutter app implementation
-- **[SCREENS_IMPLEMENTATION_SUMMARY.md](SCREENS_IMPLEMENTATION_SUMMARY.md)** - Screen implementations
-- **[WIDGETS_IMPLEMENTATION_SUMMARY.md](WIDGETS_IMPLEMENTATION_SUMMARY.md)** - Widget implementations
+- **[IMPLEMENTATION_SUMMARY.md](IMPLEMENTATION_SUMMARY.md)** - Complete Flutter app
+- **[IMPLEMENTATION_SUMMARY_BACKEND.md](IMPLEMENTATION_SUMMARY_BACKEND.md)** - Backend
+- **[SCREENS_IMPLEMENTATION_SUMMARY.md](SCREENS_IMPLEMENTATION_SUMMARY.md)** - Screens
+- **[WIDGETS_IMPLEMENTATION_SUMMARY.md](WIDGETS_IMPLEMENTATION_SUMMARY.md)** - Widgets
 
 ---
 
 ## 🧪 Testing
 
-Testing guides and strategies:
-
-- **[TESTING_GUIDE.md](TESTING_GUIDE.md)** - Comprehensive testing documentation
-- **[AUTOMATION_GUIDE.md](AUTOMATION_GUIDE.md#automated-testing)** - Automated testing workflows
+- **[TESTING_GUIDE.md](TESTING_GUIDE.md)** - Comprehensive testing
+- **[AUTOMATION_GUIDE.md](AUTOMATION_GUIDE.md#automated-testing)** - Automated testing
 
 ---
 
 ## 🎨 Design & UX
-
-Design specifications and wireframes:
 
 - **[docs/UX_WIREFRAMES.md](docs/UX_WIREFRAMES.md)** - UI/UX design specifications
 - **[docs/UX_SPECIFICATION.md](docs/UX_SPECIFICATION.md)** - UX specifications
@@ -87,141 +75,50 @@ Design specifications and wireframes:
 
 ## 🔧 Development Tools
 
-Scripts and automation tools:
-
-- **[deploy.sh](deploy.sh)** - One-command deployment script
-- **[.github/workflows/ci.yml](.github/workflows/ci.yml)** - CI pipeline configuration
+- **[package.json](package.json)** ⭐ - Node.js dependencies and scripts
+- **[skillkit.yaml](skillkit.yaml)** ⭐ - SkillKit configuration
+- **[deploy.sh](deploy.sh)** - One-command deployment
+- **[.github/workflows/ci.yml](.github/workflows/ci.yml)** - CI pipeline
 - **[.github/workflows/deploy.yml](.github/workflows/deploy.yml)** - Deployment pipeline
 - **[mcp.json](mcp.json)** - MCP server configuration
 
 ---
 
-## 📋 Documentation by Use Case
+## 📋 Quick Use Cases
 
-### "I want to start developing"
-1. [README.md](README.md) - Overview
-2. [QUICKSTART.md](QUICKSTART.md) - Setup guide
-3. [AGENTIC_WORKFLOW.md](AGENTIC_WORKFLOW.md) - Enable AI superpowers
+### Start Developing
+1. [README.md](README.md)
+2. [QUICKSTART.md](QUICKSTART.md)
+3. [SKILLKIT_INTEGRATION.md](SKILLKIT_INTEGRATION.md)
 
-### "I want to deploy to production"
-1. [DEPLOYMENT.md](DEPLOYMENT.md) - Deployment guide
-2. [AUTOMATION_GUIDE.md](AUTOMATION_GUIDE.md#deployment-automation) - Automated deployment
-3. [deploy.sh](deploy.sh) - Run deployment script
+### Use AGI Team
+1. [AGI_TEAM_MANAGEMENT.md](AGI_TEAM_MANAGEMENT.md)
+2. [SKILLKIT_INTEGRATION.md](SKILLKIT_INTEGRATION.md)
+3. [AGENTS.md](AGENTS.md)
 
-### "I want to understand the architecture"
-1. [ARCHITECTURE_DIAGRAMS.md](ARCHITECTURE_DIAGRAMS.md) - Visual diagrams
-2. [docs/TECHNICAL.md](docs/TECHNICAL.md) - Technical details
-3. [AGENTIC_WORKFLOW.md](AGENTIC_WORKFLOW.md) - Agentic architecture
-
-### "I want to use AI-powered development"
-1. [AGENTIC_WORKFLOW.md](AGENTIC_WORKFLOW.md) - MCP setup
-2. [AUTOMATION_GUIDE.md](AUTOMATION_GUIDE.md) - Automation workflows
-3. [docs/STITCH_MCP_SETUP.md](docs/STITCH_MCP_SETUP.md) - Stitch UI generation
-
-### "I want to contribute"
-1. [README.md](README.md#contributing) - Contributing guidelines
-2. [TESTING_GUIDE.md](TESTING_GUIDE.md) - Testing requirements
-3. [AUTOMATION_GUIDE.md](AUTOMATION_GUIDE.md#best-practices) - Best practices
-
-### "I want to understand the implementation"
-1. [IMPLEMENTATION_SUMMARY.md](IMPLEMENTATION_SUMMARY.md) - Full implementation
-2. [SCREENS_IMPLEMENTATION_SUMMARY.md](SCREENS_IMPLEMENTATION_SUMMARY.md) - Screen details
-3. [WIDGETS_IMPLEMENTATION_SUMMARY.md](WIDGETS_IMPLEMENTATION_SUMMARY.md) - Widget details
+### Deploy to Production
+1. [DEPLOYMENT.md](DEPLOYMENT.md)
+2. [AUTOMATION_GUIDE.md](AUTOMATION_GUIDE.md#deployment-automation)
+3. [deploy.sh](deploy.sh)
 
 ---
 
-## 📊 Documentation Statistics
+## 📊 v2.0 Statistics
 
-### Files Created for This PR
-```
-📄 AGENTIC_WORKFLOW.md              10.9 KB  ⭐ New
-📄 AUTOMATION_GUIDE.md              15.1 KB  ⭐ New
-📄 AGENTIC_IMPLEMENTATION_SUMMARY.md 11.3 KB  ⭐ New
-📄 ARCHITECTURE_DIAGRAMS.md         16.1 KB  ⭐ New
-📄 deploy.sh                         4.9 KB  ⭐ New
-📄 .github/workflows/ci.yml          5.2 KB  ⭐ New
-📄 .github/workflows/deploy.yml      4.9 KB  ⭐ New
+### New Files
+- AGI_TEAM_MANAGEMENT.md (14.8 KB)
+- SKILLKIT_INTEGRATION.md (11.6 KB)
+- 5 Custom Skills (5.6 KB total)
+- AGENTS.md (0.5 KB)
+- skillkit.yaml (0.3 KB)
+- package.json (updated)
+- README.md (rewritten)
 
-Updated:
-📝 README.md                        Updated
-📝 QUICKSTART.md                    Updated
-📝 DEPLOYMENT.md                    Updated
-```
-
-### Total Documentation
-```
-13 Markdown files
- 2 GitHub Actions workflows
- 1 Deployment script
- 1 MCP configuration
-──────────────────────
-17 Documentation files
-```
+### Total: 25+ Documentation Files
 
 ---
 
-## 🎯 Key Features Documented
+**Last Updated**: February 9, 2026  
+**Version**: 2.0 (AGI Team & SkillKit Release)
 
-### Agentic Workflow Systems ✅
-- ✅ Sequential Thinking MCP
-- ✅ Stitch MCP (Google Labs)
-- ✅ MCP server setup and configuration
-- ✅ Usage examples and workflows
-- ✅ Best practices and troubleshooting
-
-### CI/CD Automation ✅
-- ✅ GitHub Actions workflows
-- ✅ Automated testing
-- ✅ Code quality checks
-- ✅ Build validation
-- ✅ Deployment automation
-
-### Development Tools ✅
-- ✅ One-command deployment script
-- ✅ Automated testing workflows
-- ✅ Code generation examples
-- ✅ UI generation with Stitch
-
----
-
-## 🔗 External Resources
-
-### MCP Resources
-- [Model Context Protocol Docs](https://modelcontextprotocol.io)
-- [Sequential Thinking MCP](https://github.com/modelcontextprotocol/servers)
-- [Stitch MCP GitHub](https://github.com/_davideast/stitch-mcp)
-- [Stitch Labs](https://stitch.withgoogle.com)
-
-### Project Resources
-- [GitHub Repository](https://github.com/saanjaypatil78/fitola)
-- [API Documentation](https://fitola.vercel.app/docs) (when running)
-- [Vercel Deployment](https://fitola.vercel.app)
-
----
-
-## 📞 Need Help?
-
-- **GitHub Issues**: [Create an issue](https://github.com/saanjaypatil78/fitola/issues)
-- **Email**: your.email@example.com
-- **Documentation Questions**: Check this index first!
-
----
-
-## 🎉 Quick Links
-
-| Task | Documentation |
-|------|---------------|
-| 🚀 Get Started | [QUICKSTART.md](QUICKSTART.md) |
-| 🤖 AI Development | [AGENTIC_WORKFLOW.md](AGENTIC_WORKFLOW.md) |
-| 🔄 Automation | [AUTOMATION_GUIDE.md](AUTOMATION_GUIDE.md) |
-| 🏗️ Architecture | [ARCHITECTURE_DIAGRAMS.md](ARCHITECTURE_DIAGRAMS.md) |
-| 🚢 Deploy | [DEPLOYMENT.md](DEPLOYMENT.md) |
-| 🧪 Testing | [TESTING_GUIDE.md](TESTING_GUIDE.md) |
-| 📱 Implementation | [IMPLEMENTATION_SUMMARY.md](IMPLEMENTATION_SUMMARY.md) |
-
----
-
-**Last Updated**: February 8, 2026
-**Documentation Version**: 2.0 (Agentic Workflow Release)
-
-Built with ❤️ by [Sanjay Santosh Patil](https://github.com/saanjaypatil78)
+Built with ❤️ by Sanjay Santosh Patil and the Fitola AGI Team
