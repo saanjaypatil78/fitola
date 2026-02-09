@@ -263,6 +263,11 @@ The app does not expose a dedicated `debugMode` flag for logging. To collect log
 - Run the app with verbose logging:
   ```bash
   flutter run -v
+  ```
+- For a no-subscription live preview in a browser:
+  ```bash
+  flutter run -d web-server --web-hostname 0.0.0.0 --web-port 8080
+  ```
 ## Success Criteria
 
 ✅ All authentication methods work

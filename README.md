@@ -121,7 +121,7 @@ Fitola is a revolutionary AI-powered fitness and social wellness platform that c
 4. **Set up environment variables**:
    ```bash
    cp .env.example .env
-   # Add your GEMINI_API_KEY (and optional GEMINI_MODEL), SUPABASE keys, RUBE_MCP_JWT, and RUBE_MCP_BASE_URL to .env
+   # Add your GEMINI_API_KEY (and optional GEMINI_MODEL), SUPABASE keys, RUBE_MCP_JWT, RUBE_MCP_BASE_URL, and CLICKHOUSE_* settings to .env
    # Edit .env and add:
    # GEMINI_API_KEY=your_gemini_api_key
    # SUPABASE_URL=your_supabase_url
