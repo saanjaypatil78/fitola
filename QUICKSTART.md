@@ -118,7 +118,79 @@ Open the printed URL in your browser to view the live preview.
 4. Copy URL and anon key
 5. Add to both `backend/.env` and `mobile/.env`
 
-## Step 5: Test the App
+## Step 5: Set Up Agentic Workflow (Optional but Recommended)
+
+### 5.1 Install MCP Servers
+
+Fitola integrates **Model Context Protocol (MCP)** servers for AI-powered development automation.
+
+**Prerequisites**:
+- Node.js 18+ with `npx`
+- MCP-compatible IDE (VS Code with GitHub Copilot, Claude Desktop, etc.)
+
+**Install Sequential Thinking MCP** (auto-installed when accessed):
+```bash
+npx -y @modelcontextprotocol/server-sequential-thinking
+```
+
+**Install Stitch MCP** (Google Labs UI generation):
+```bash
+# Prerequisites: Google Cloud CLI
+gcloud auth login
+
+# Run setup helper
+npx @_davideast/stitch-mcp init
+```
+
+### 5.2 Configure MCP
+
+The `mcp.json` file in the project root is already configured:
+
+```json
+{
+  "servers": {
+    "sequential-thinking": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"]
+    },
+    "stitch": {
+      "command": "npx",
+      "args": ["@_davideast/stitch-mcp", "proxy"],
+      "env": {
+        "STITCH_PROJECT_ID": "YOUR_PROJECT_ID_HERE"
+      }
+    }
+  }
+}
+```
+
+Update your `.env` with your Google Cloud project ID:
+```env
+STITCH_PROJECT_ID=your_google_cloud_project_id
+STITCH_USE_SYSTEM_GCLOUD=1
+```
+
+### 5.3 Verify Setup
+
+```bash
+# Verify Stitch MCP
+npx @_davideast/stitch-mcp doctor
+
+# Check configuration
+cat mcp.json
+```
+
+### 5.4 What MCP Enables
+
+✨ **Development Superpowers**:
+- Generate Flutter screens from natural language descriptions
+- Auto-create boilerplate code and components
+- Intelligent problem-solving with sequential thinking
+- UI design generation (400 free daily credits)
+
+📚 **Learn More**: See [AGENTIC_WORKFLOW.md](AGENTIC_WORKFLOW.md) for complete guide
+
+## Step 6: Test the App
 
 1. **Launch App** - You should see the splash screen
 2. **Select Language** - Choose your preferred language
