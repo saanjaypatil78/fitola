@@ -44,11 +44,56 @@ class ParallaxWidget extends StatelessWidget {
       height: height,
       child: LayoutBuilder(
         builder: (context, constraints) {
+          // If no scroll controller provided, render without animation
+          if (scrollController == null) {
+            return ClipRRect(
+              borderRadius: const BorderRadius.only(
+                bottomLeft: Radius.circular(24),
+                bottomRight: Radius.circular(24),
+              ),
+              child: Stack(
+                children: [
+                  // Static background
+                  Positioned(
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    height: height + 100,
+                    child: background,
+                  ),
+                  
+                  // Gradient overlay for text readability
+                  if (addGradientOverlay)
+                    Positioned.fill(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: gradientColors ?? [
+                              Colors.transparent,
+                              Colors.black.withOpacity(0.3),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  
+                  // Foreground content
+                  if (foreground != null)
+                    Positioned.fill(
+                      child: foreground!,
+                    ),
+                ],
+              ),
+            );
+          }
+          
           return AnimatedBuilder(
-            animation: scrollController ?? ScrollController(),
+            animation: scrollController!,
             builder: (context, child) {
               double offset = 0;
-              if (scrollController != null && scrollController!.hasClients) {
+              if (scrollController!.hasClients) {
                 offset = scrollController!.offset * parallaxSpeed;
               }
               
