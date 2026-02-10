@@ -19,3 +19,4 @@ export 'empty_state_widget.dart';
 export 'expandable_info_card.dart';
 export 'info_card.dart';
 export 'styled_choice_chip.dart';
+export 'parallax_widget.dart';

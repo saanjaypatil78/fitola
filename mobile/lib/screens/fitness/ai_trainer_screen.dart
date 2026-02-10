@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fitola/config/routes.dart';
 import 'package:fitola/config/theme.dart';
+import 'package:fitola/widgets/parallax_widget.dart';
 
 class AITrainerScreen extends StatefulWidget {
   const AITrainerScreen({super.key});
@@ -14,6 +15,7 @@ class _AITrainerScreenState extends State<AITrainerScreen> {
   String _selectedGoal = 'weight_loss';
   String _selectedDifficulty = 'beginner';
   bool _isGenerating = false;
+  final ScrollController _scrollController = ScrollController();
 
   final Map<String, Map<String, dynamic>> _goals = {
     'weight_loss': {
@@ -55,6 +57,12 @@ class _AITrainerScreenState extends State<AITrainerScreen> {
       }
     }
   }
+  
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,44 +72,85 @@ class _AITrainerScreenState extends State<AITrainerScreen> {
         elevation: 0,
       ),
       body: SingleChildScrollView(
+        controller: _scrollController,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Header Section
-            Container(
-              padding: const EdgeInsets.all(24),
-              decoration: BoxDecoration(
-                color: FitolaTheme.primaryColor,
-                borderRadius: const BorderRadius.only(
-                  bottomLeft: Radius.circular(24),
-                  bottomRight: Radius.circular(24),
+            // Header Section with Parallax Effect
+            ParallaxWidget(
+              scrollController: _scrollController,
+              height: 200,
+              parallaxSpeed: 0.4,
+              background: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      FitolaTheme.primaryColor,
+                      FitolaTheme.primaryColor.withOpacity(0.7),
+                    ],
+                  ),
+                ),
+                child: Stack(
+                  children: [
+                    // Animated background circles
+                    Positioned(
+                      top: -50,
+                      right: -50,
+                      child: Container(
+                        width: 200,
+                        height: 200,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.white.withOpacity(0.1),
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      bottom: -30,
+                      left: -30,
+                      child: Container(
+                        width: 150,
+                        height: 150,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.white.withOpacity(0.1),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              child: Column(
-                children: [
-                  const Icon(
-                    Icons.smart_toy,
-                    size: 80,
-                    color: Colors.white,
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    'AI-Powered Fitness Plans',
-                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+              foreground: Padding(
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(
+                      Icons.smart_toy,
+                      size: 80,
                       color: Colors.white,
-                      fontWeight: FontWeight.bold,
                     ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Let AI create a personalized plan just for you',
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Colors.white70,
+                    const SizedBox(height: 16),
+                    Text(
+                      'AI-Powered Fitness Plans',
+                      style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
                     ),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
+                    const SizedBox(height: 8),
+                    Text(
+                      'Let AI create a personalized plan just for you',
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Colors.white70,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
               ),
             ),
             
