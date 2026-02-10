@@ -48,6 +48,10 @@ cp .env.example .env
 # SUPABASE_KEY=your_supabase_key_here
 # STITCH_PROJECT_ID=your_google_cloud_project_id
 # STITCH_USE_SYSTEM_GCLOUD=1
+# CLICKHOUSE_HOST=your_clickhouse_host_here
+# CLICKHOUSE_PORT=8443
+# CLICKHOUSE_USER=default
+# CLICKHOUSE_PASSWORD=your_clickhouse_password_here
 ```
 
 ### 2.4 Start Backend Server
@@ -92,6 +96,13 @@ flutter run -d ios
 ```bash
 flutter run -d chrome
 ```
+
+### 3.5 Live Preview (Open Source, No Subscription)
+For a lightweight live preview in any browser, use Flutter's built-in web server:
+```bash
+flutter run -d web-server --web-hostname 0.0.0.0 --web-port 8080
+```
+Open the printed URL in your browser to view the live preview.
 
 ## Step 4: Get API Keys (Optional for Full Features)
 

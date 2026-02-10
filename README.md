@@ -130,6 +130,97 @@ Fitola implements a **supreme intellectual management team** with 12+ specialize
 Product Manager → Planner → Architect → Builder → Tester → 
 Code Reviewer → Security Reviewer → Performance Optimizer → 
 Documentation Writer → Deployer → Production
+### Prerequisites
+- **Flutter**: 3.24.5 or later
+- **Python**: 3.10 or later
+- **Git**: Latest version
+- **Supabase Account**: For database and auth
+- **Gemini API Key**: From Google AI Studio
+
+### Backend Setup
+
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/saanjaypatil78/fitola.git
+   cd fitola/backend
+   ```
+
+2. **Create virtual environment**:
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # Windows: venv\Scripts\activate
+   ```
+
+3. **Install dependencies**:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. **Set up environment variables**:
+   ```bash
+   cp .env.example .env
+   # Add your GEMINI_API_KEY (and optional GEMINI_MODEL), SUPABASE keys, RUBE_MCP_JWT, RUBE_MCP_BASE_URL, and CLICKHOUSE_* settings to .env
+   # Edit .env and add:
+   # GEMINI_API_KEY=your_gemini_api_key
+   # SUPABASE_URL=your_supabase_url
+   # SUPABASE_KEY=your_supabase_key
+   ```
+
+5. **Run development server**:
+   ```bash
+   uvicorn main:app --reload
+   ```
+
+   API will be available at `http://localhost:8000`
+
+### Mobile App Setup
+
+1. **Navigate to mobile directory**:
+   ```bash
+   cd mobile
+   ```
+
+2. **Install Flutter dependencies**:
+   ```bash
+   flutter pub get
+   ```
+
+3. **Set up environment** (create `.env` file):
+   ```env
+   API_BASE_URL=http://localhost:8000/api/v1
+   SUPABASE_URL=your_supabase_url
+   SUPABASE_ANON_KEY=your_supabase_anon_key
+   ```
+
+4. **Run the app**:
+   ```bash
+   # For Android
+   flutter run
+
+   # For iOS
+   flutter run -d ios
+
+   # For Web
+   flutter run -d chrome
+   ```
+
+### Database Setup
+
+1. Create a Supabase project at https://supabase.com
+2. Run the SQL migrations from `docs/TECHNICAL.md`
+3. Enable Row Level Security (RLS) policies
+4. Copy your project URL and anon key to `.env`
+
+## 📱 App Screenshots
+
+*Screenshots coming soon - app is ready to build!*
+
+## 🧪 Testing
+
+### Backend Tests
+```bash
+cd backend
+pytest
 ```
 
 📚 **[Complete AGI Team Documentation →](AGI_TEAM_MANAGEMENT.md)**
