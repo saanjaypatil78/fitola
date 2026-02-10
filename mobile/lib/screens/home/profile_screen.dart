@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:fitola/config/routes.dart';
 import 'package:fitola/config/theme.dart';
 import 'package:fitola/providers/auth_provider.dart';
+import 'package:fitola/widgets/parallax_widget.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -13,6 +14,13 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   bool _isEditing = false;
+  final ScrollController _scrollController = ScrollController();
+  
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,77 +43,117 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ],
       ),
       body: SingleChildScrollView(
+        controller: _scrollController,
         child: Column(
           children: [
-            // Profile Header
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(24),
-              decoration: BoxDecoration(
-                color: FitolaTheme.primaryColor,
-                borderRadius: const BorderRadius.only(
-                  bottomLeft: Radius.circular(24),
-                  bottomRight: Radius.circular(24),
-                ),
-              ),
-              child: Column(
-                children: [
-                  Stack(
-                    children: [
-                      CircleAvatar(
-                        radius: 60,
-                        backgroundColor: Colors.white,
-                        child: user?.photoUrl != null
-                            ? ClipOval(
-                                child: Image.network(
-                                  user!.photoUrl!,
-                                  width: 120,
-                                  height: 120,
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (context, error, stackTrace) =>
-                                      const Icon(Icons.person, size: 60),
-                                ),
-                              )
-                            : const Icon(Icons.person, size: 60, color: FitolaTheme.primaryColor),
-                      ),
-                      if (_isEditing)
-                        Positioned(
-                          bottom: 0,
-                          right: 0,
-                          child: Container(
-                            decoration: const BoxDecoration(
-                              color: Colors.white,
-                              shape: BoxShape.circle,
-                            ),
-                            child: IconButton(
-                              icon: const Icon(Icons.camera_alt, color: FitolaTheme.primaryColor),
-                              onPressed: () {
-                                // TODO: Implement photo picker
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(content: Text('Photo picker coming soon')),
-                                );
-                              },
-                            ),
-                          ),
-                        ),
+            // Profile Header with Parallax Effect
+            ParallaxWidget(
+              scrollController: _scrollController,
+              height: 280,
+              parallaxSpeed: 0.35,
+              background: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      FitolaTheme.primaryColor,
+                      FitolaTheme.primaryColor.withOpacity(0.8),
                     ],
                   ),
-                  const SizedBox(height: 16),
-                  Text(
-                    user?.name ?? 'User Name',
-                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
+                ),
+                child: Stack(
+                  children: [
+                    // Background decorative elements
+                    Positioned(
+                      top: -60,
+                      right: -60,
+                      child: Container(
+                        width: 200,
+                        height: 200,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.white.withOpacity(0.1),
+                        ),
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    user?.email ?? 'user@example.com',
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Colors.white70,
+                    Positioned(
+                      bottom: -40,
+                      left: -40,
+                      child: Container(
+                        width: 150,
+                        height: 150,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.white.withOpacity(0.1),
+                        ),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
+              ),
+              foreground: Padding(
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  children: [
+                    const SizedBox(height: 20),
+                    Stack(
+                      children: [
+                        CircleAvatar(
+                          radius: 60,
+                          backgroundColor: Colors.white,
+                          child: user?.photoUrl != null
+                              ? ClipOval(
+                                  child: Image.network(
+                                    user!.photoUrl!,
+                                    width: 120,
+                                    height: 120,
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (context, error, stackTrace) =>
+                                        const Icon(Icons.person, size: 60),
+                                  ),
+                                )
+                              : const Icon(Icons.person, size: 60, color: FitolaTheme.primaryColor),
+                        ),
+                        if (_isEditing)
+                          Positioned(
+                            bottom: 0,
+                            right: 0,
+                            child: Container(
+                              decoration: const BoxDecoration(
+                                color: Colors.white,
+                                shape: BoxShape.circle,
+                              ),
+                              child: IconButton(
+                                icon: const Icon(Icons.camera_alt, color: FitolaTheme.primaryColor),
+                                onPressed: () {
+                                  // TODO: Implement photo picker
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(content: Text('Photo picker coming soon')),
+                                  );
+                                },
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      user?.name ?? 'User Name',
+                      style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      user?.email ?? 'user@example.com',
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Colors.white70,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
             
