@@ -1,0 +1,50 @@
+{
+  "name": "fitola",
+  "version": "2.0.0",
+  "description": "AI-Powered Personal Fitness & Social Wellness Platform with AGI Team Management",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "skillkit:init": "npx skillkit init",
+    "skillkit:sync": "npx skillkit sync",
+    "skillkit:recommend": "npx skillkit recommend",
+    "skillkit:install": "npx skillkit install",
+    "skillkit:list": "npx skillkit list",
+    "skills:validate": "npx skillkit validate ./skills",
+    "agi:status": "npx skillkit status",
+    "deploy": "bash deploy.sh production true",
+    "deploy:staging": "bash deploy.sh staging true",
+    "deploy:backend-only": "bash deploy.sh production false"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/saanjaypatil78/fitola.git"
+  },
+  "keywords": [
+    "fitness",
+    "ai",
+    "flutter",
+    "fastapi",
+    "gemini",
+    "social-wellness",
+    "agentic-ai",
+    "skillkit",
+    "multi-agent-system",
+    "agi-team",
+    "mobile-app",
+    "health-tech"
+  ],
+  "author": "Sanjay Santosh Patil",
+  "license": "MIT",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/saanjaypatil78/fitola/issues"
+  },
+  "homepage": "https://github.com/saanjaypatil78/fitola#readme",
+  "devDependencies": {
+    "skillkit": "^1.15.0"
+  }
+}
