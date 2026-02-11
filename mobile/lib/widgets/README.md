@@ -4,6 +4,40 @@ This directory contains reusable UI widgets for the Fitola mobile application. A
 
 ## Widget Overview
 
+### Visual Effects & Animation
+
+#### ParallaxWidget
+Advanced parallax scrolling effects for creating depth and visual interest.
+
+**Components**:
+- `ParallaxWidget`: Main parallax container for headers and sections
+- `ParallaxListItem`: Parallax effect for individual list items
+- `SimpleParallaxContainer`: Lightweight parallax wrapper
+- `ParallaxFlowDelegate`: Custom flow delegate for parallax calculations
+
+**Usage**:
+```dart
+ParallaxWidget(
+  scrollController: _scrollController,
+  height: 200,
+  parallaxSpeed: 0.4,
+  background: Container(
+    decoration: BoxDecoration(
+      gradient: LinearGradient(colors: [Colors.blue, Colors.purple]),
+    ),
+  ),
+  foreground: YourContent(),
+)
+```
+
+**Features**:
+- Customizable parallax speed (0.0-1.0)
+- Optional gradient overlays for text readability
+- Efficient 60fps performance
+- Support for custom backgrounds and foregrounds
+
+**Documentation**: See `PARALLAX_USAGE_GUIDE.md` for detailed instructions
+
 ### Navigation & Actions
 
 #### LoadingButton
@@ -201,6 +235,14 @@ When adding new widgets:
 6. Export in `widgets.dart`
 
 ## Widget Count
-- **Total Widgets**: 15
-- **New in This Phase**: 10
-- **Previously Implemented**: 5
+- **Total Widgets**: 16
+- **Visual Effects**: 1 (ParallaxWidget)
+- **Navigation & Actions**: 2
+- **Data Display**: 2
+- **Cards & Containers**: 5
+- **Lists & Tiles**: 1
+- **Selection & Input**: 1
+- **Empty States**: 1
+- **Communication**: 1
+- **Dialogs**: 1
+- **Map Components**: 1
