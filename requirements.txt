@@ -8,3 +8,6 @@ httpx
 pydantic-settings
 # MemuBot integration for adaptive self-improving AI
 memu-py>=0.1.0
+pytest
+black
+email-validator

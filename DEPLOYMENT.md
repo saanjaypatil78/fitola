@@ -52,6 +52,15 @@ Fitola is pre-configured for Vercel using `vercel.json`.
       - `RUBE_MCP_TIMEOUT` (optional): HTTP timeout in seconds (defaults to `10`).
       - `STITCH_PROJECT_ID`: Google Cloud project ID for Stitch MCP (required for Stitch MCP).
       - `STITCH_USE_SYSTEM_GCLOUD` (optional): Set to `1` to reuse your system gcloud credentials.
+      - `CLICKHOUSE_HOST`: ClickHouse host for the ClickHouse MCP server.
+      - `CLICKHOUSE_PORT`: ClickHouse port (for example, `8443` for secure HTTPS).
+      - `CLICKHOUSE_USER`: ClickHouse user.
+      - `CLICKHOUSE_PASSWORD`: ClickHouse password.
+      - `CLICKHOUSE_SECURE` (optional): Set to `true` for HTTPS connections.
+      - `CLICKHOUSE_VERIFY` (optional): Set to `true` to verify TLS certificates.
+      - `CLICKHOUSE_CONNECT_TIMEOUT` (optional): Connection timeout in seconds.
+      - `CLICKHOUSE_SEND_RECEIVE_TIMEOUT` (optional): Request timeout in seconds.
+      - `CLICKHOUSE_MCP_AUTH_TOKEN` (optional): Auth token when exposing ClickHouse MCP over HTTP/SSE.
       - `SUPABASE_URL`: Your Supabase Project URL.
       - `SUPABASE_KEY`: Your Supabase API Key.
 
@@ -71,6 +80,69 @@ Fitola is pre-configured for Vercel using `vercel.json`.
 
 The `POST /api/v1/plans/ai` response includes `plan_json` (parsed JSON or null),
 `plan_text` for the raw response, and `plan_format` to indicate parsing success.
+
+---
+
+## 4. Automated Deployment Workflow
+
+Fitola includes automated deployment capabilities through agentic workflows and CI/CD pipelines.
+
+### 4.1 One-Command Deployment
+
+Use the automated deployment script:
+
+```bash
+# Deploy everything to production
+./deploy.sh production true
+
+# Deploy backend only
+./deploy.sh production false
+
+# Deploy to staging
+./deploy.sh staging true
+```
+
+The script automatically:
+- Runs all tests (backend & mobile)
+- Builds the backend
+- Deploys to Vercel
+- Builds mobile apps (APK & Web)
+- Validates deployment
+
+### 4.2 CI/CD Pipeline
+
+Fitola supports GitHub Actions for automated CI/CD:
+
+**Continuous Integration** (on every push/PR):
+- Backend linting (black, flake8)
+- Backend tests (pytest with coverage)
+- Flutter analysis
+- Flutter tests
+- Build validation
+
+**Continuous Deployment** (on main branch):
+- Automatic deployment to Vercel
+- Web app build and deployment
+- APK artifact generation
+
+See **[AUTOMATION_GUIDE.md](AUTOMATION_GUIDE.md)** for complete CI/CD setup.
+
+### 4.3 Agentic Development Automation
+
+Leverage MCP servers for deployment automation:
+
+**Sequential Thinking MCP**:
+- Deployment strategy planning
+- Environment configuration validation
+- Rollback procedures
+- Health check automation
+
+**Stitch MCP**:
+- Generate deployment dashboards
+- Create monitoring UIs
+- Build admin panels
+
+📚 **Learn More**: See **[AGENTIC_WORKFLOW.md](AGENTIC_WORKFLOW.md)** for AI-powered development workflows.
 
 ---
 

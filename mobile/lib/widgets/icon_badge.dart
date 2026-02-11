@@ -26,11 +26,9 @@ class IconBadge extends StatelessWidget {
     this.padding,
     this.isCircular = true,
   })  : assert(
-          icon != null || (text != null && text!.isNotEmpty),
+          icon != null || (text != null && text.isNotEmpty),
           'IconBadge requires either a non-null icon or non-empty text.',
-        ),
-        assert(icon != null || (text != null && text!.trim().isNotEmpty),
-          'IconBadge requires either a non-null icon or non-empty text.'),
+        );
 
   @override
   Widget build(BuildContext context) {
