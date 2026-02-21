@@ -3,41 +3,18 @@ import logging
 import os
 import re
 from contextlib import asynccontextmanager
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List, Optional
 from urllib.parse import urlparse
 
-from fastapi import FastAPI, HTTPException, Request
-from pydantic import BaseModel, Field
-from dotenv import load_dotenv
-from google import genai
 import httpx
+from dotenv import load_dotenv
+from fastapi import FastAPI, HTTPException, Query, Request
+from fastapi.middleware.cors import CORSMiddleware
+from google import genai
+from pydantic import BaseModel, EmailStr, Field
 
 load_dotenv()
 logger = logging.getLogger(__name__)
-from typing import List, Optional
-from fastapi import FastAPI, HTTPException, Query
-from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel, EmailStr
-from google import genai
-from dotenv import load_dotenv
-import math
-
-load_dotenv()
-
-app = FastAPI(
-    title="Fitola Backend API",
-    description="AI-Powered Personal Fitness & Social Wellness Platform",
-    version="1.0.0",
-)
-
-# CORS Configuration
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # Configure for production
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
 
 # Initialize Gemini Client
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
@@ -157,7 +134,21 @@ async def close_rube_http_client() -> None:
         RUBE_HTTP_CLIENT = None
 
 
-app = FastAPI(title="Fitola Backend", version="1.0.0", lifespan=lifespan)
+app = FastAPI(
+    title="Fitola Backend API",
+    description="AI-Powered Personal Fitness & Social Wellness Platform",
+    version="1.0.0",
+    lifespan=lifespan,
+)
+
+# CORS Configuration
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Configure for production
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 async def fetch_rube_json(
