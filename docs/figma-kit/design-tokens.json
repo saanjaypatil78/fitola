@@ -1,0 +1,29 @@
+{
+  "meta": {
+    "name": "FitLens Design Tokens",
+    "version": "1.0.0",
+    "grid": "8pt"
+  },
+  "color": {
+    "primary": {"500": "#14B8A6", "600": "#0D9488", "700": "#0F766E"},
+    "secondary": {"500": "#FF7A59", "600": "#F97316"},
+    "neutral": {"0": "#FFFFFF", "50": "#F7F9FA", "100": "#EEF2F4", "700": "#334155", "900": "#212121"},
+    "semantic": {"success": "#22C55E", "warning": "#F59E0B", "error": "#EF4444", "info": "#3B82F6"},
+    "chart": {"steps": "#14B8A6", "calories": "#FF7A59", "protein": "#6366F1", "carbs": "#0EA5E9", "fat": "#F59E0B"}
+  },
+  "spacing": {"xs": 4, "sm": 8, "md": 16, "lg": 24, "xl": 32, "2xl": 40},
+  "radius": {"sm": 8, "md": 12, "lg": 16, "pill": 999},
+  "typography": {
+    "fontFamily": "Roboto, Google Sans, sans-serif",
+    "h1": {"size": 32, "lineHeight": 40, "weight": 700},
+    "h2": {"size": 24, "lineHeight": 32, "weight": 700},
+    "h3": {"size": 20, "lineHeight": 28, "weight": 600},
+    "body": {"size": 16, "lineHeight": 24, "weight": 400},
+    "caption": {"size": 12, "lineHeight": 16, "weight": 400}
+  },
+  "elevation": {
+    "card": "0 2 8 rgba(15,23,42,0.08)",
+    "modal": "0 8 24 rgba(15,23,42,0.16)"
+  },
+  "breakpoints": {"mobile": 480, "tablet": 1024, "desktop": 1440}
+}

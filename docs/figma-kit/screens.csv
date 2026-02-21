@@ -1,0 +1,37 @@
+platform,page,screen,key_content
+Web,04_HighFidelity/Web,Dashboard Overview,Steps/calories/workout cards + quick actions
+Web,04_HighFidelity/Web,Step Tracker,Live progress + weekly/monthly charts + badges
+Web,04_HighFidelity/Web,Workout Library,Categories + search + filters
+Web,04_HighFidelity/Web,Workout Detail,Description/calorie burn/start/complete actions
+Web,04_HighFidelity/Web,Food Capture Upload,Upload + guidance tips + analyze CTA
+Web,04_HighFidelity/Web,AI Analysis Result,Detected foods/portion/kcal/confidence/edit-confirm
+Web,04_HighFidelity/Web,Nutrition Summary,Daily kcal vs target + macro donut + meal timeline
+Web,04_HighFidelity/Web,Trends & Insights,Correlations + weekly/monthly charts + export
+Web,04_HighFidelity/Web,Achievements & Badges,Milestones/streaks/next target
+Web,04_HighFidelity/Web,Community Feed,Social updates + likes/comments/shares
+Web,04_HighFidelity/Web,Challenges,Challenge list + leaderboard + join/create
+Web,04_HighFidelity/Web,Groups & Forums,Topic-based discussion hubs
+Web,04_HighFidelity/Web,Help & Support,FAQ + contact + troubleshooting
+Web,06_Subscription,Pricing & Comparison (INR),₹ pricing cards + monthly/yearly toggle + feature table
+Web,06_Subscription,Checkout - Payment Method,Razorpay card + UPI (PhonePe) + eMandate options
+Web,06_Subscription,Checkout - Processing,Gateway processing/loading states
+Web,06_Subscription,Checkout - Success/Failure,Confirmation + recovery actions
+Web,06_Subscription,Subscription Management,Current plan/change/cancel/payment methods/billing history
+Web,07_DietPlans,Diet Questionnaire,Goals/restrictions/allergies/preferences multi-step form
+Web,07_DietPlans,Weekly Plan Overview,Calendar + adherence + daily summaries
+Web,07_DietPlans,Daily Meal Detail,Meal cards + swap + portion adjust + log
+Web,07_DietPlans,Recipe Detail,Ingredients/steps/macros/favorites
+Web,07_DietPlans,Shopping List,Auto-generated list + export/share
+Mobile,03_HighFidelity/Mobile,Onboarding Carousel,Value props + permission prompts
+Mobile,03_HighFidelity/Mobile,Auth & Profile Setup,Sign up/login + goals + target setup
+Mobile,03_HighFidelity/Mobile,Home Dashboard,Steps kcal balance quick actions
+Mobile,03_HighFidelity/Mobile,Step Tracker,Goal ring + trend chart + long-press goal edit
+Mobile,03_HighFidelity/Mobile,Workout Library,List with search filters
+Mobile,03_HighFidelity/Mobile,Active Workout,Timer/progress/live metrics
+Mobile,03_HighFidelity/Mobile,Food Camera Capture,Overlay guidance + analyze action
+Mobile,03_HighFidelity/Mobile,AI Result + Edit,Segmentation + edit/confirm/save
+Mobile,03_HighFidelity/Mobile,Nutrition Summary,Kcal and macro target cards
+Mobile,03_HighFidelity/Mobile,Trends,Weekly/monthly charts + insights
+Mobile,03_HighFidelity/Mobile,Profile & Settings,Goals/privacy/devices/theme/language
+Mobile,03_HighFidelity/Mobile,Subscription (INR),Tier cards + UPI/PhonePe and Razorpay flows
+Mobile,03_HighFidelity/Mobile,Diet Plans,Weekly planner + meal swap + shopping list

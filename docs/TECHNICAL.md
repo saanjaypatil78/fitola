@@ -608,6 +608,61 @@ Get global leaderboard.
 }
 ```
 
+
+#### Economy (F2P + P2E)
+
+##### GET /economy/profile/{user_id}
+Get a user's economy profile including free-to-play progression and play-to-earn eligibility.
+
+##### POST /economy/session-complete
+Award F2P rewards for a workout session and calculate P2E claim projections.
+
+**Request Body:**
+```json
+{
+  "user_id": "uuid",
+  "workout_minutes": 45,
+  "intensity": "moderate",
+  "shared_progress": true
+}
+```
+
+##### POST /economy/claim
+Submit a P2E claim request (minimum threshold enforced).
+
+**Request Body:**
+```json
+{
+  "user_id": "uuid",
+  "amount_fitcoins": 700
+}
+```
+
+
+
+#### VIP + Game Vault
+
+##### GET /vip/level-window/{current_level}
+Returns a VIP progression window with previous 5 and next 5 levels, including cost and fixed perks.
+
+##### POST /vip/upgrade-quote
+Returns upgrade pricing where each next level is 50% more expensive than previous (1.5x geometric model).
+
+**Request Body:**
+```json
+{
+  "current_level": 10,
+  "target_level": 20
+}
+```
+
+##### POST /vault/trophy/unbox
+Provably-fair hash-based trophy unboxing with fixed perks + randomized reward output.
+
+##### GET /vault/{user_id}
+Returns saved Game Vault rewards and perks for a user.
+
+
 ## Development Setup
 
 ### Prerequisites

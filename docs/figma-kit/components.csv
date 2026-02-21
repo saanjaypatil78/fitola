@@ -1,0 +1,16 @@
+category,name,variants,notes
+Button,Button/Primary,"State=Default|Hover|Pressed|Disabled; Size=Small|Medium|Large",Filled teal CTA
+Button,Button/Secondary,"State=Default|Hover|Pressed|Disabled",Outlined action
+Input,Input/TextField,"State=Default|Focus|Error|Success",Label+helper text
+Card,Card/DailySummary,"Type=Steps|Calories|Workout|Hydration",Dashboard widgets
+Nav,Navigation/BottomBar,"Tab=Home|Log|Capture|Trends|Profile",Mobile only
+Nav,Navigation/Sidebar,"State=Expanded|Collapsed",Web only
+Chart,Chart/Line,"Range=7D|30D|90D",Steps/calorie trend
+Chart,Chart/Donut,"Type=Macro|GoalProgress",Protein/carbs/fat
+AI,AI/CaptureOverlay,"State=Ready|LowLight|BadAngle",Camera guide
+AI,AI/SegmentationOverlay,"State=Detected|Ambiguous|Failed",Food result overlay
+Payment,Payment/MethodOption,"Type=RazorpayCard|UPIPhonePe|UPIOther|EMandate; State=Default|Selected|Disabled",INR billing
+Payment,Payment/StatusModal,"Type=Processing|Success|Failure",Gateway status
+Plan,Plan/PricingCard,"Tier=Free|Basic|Pro|Premium; Billing=Monthly|Yearly",INR + save badge
+Meal,Meal/EntryCard,"State=Planned|Logged|Skipped",Diet plans
+Badge,Badge/Achievement,"Level=Bronze|Silver|Gold|Platinum",Gamification
