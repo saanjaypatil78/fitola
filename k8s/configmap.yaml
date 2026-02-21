@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fitola-config
+  namespace: fitola
+data:
+  GEMINI_MODEL: "gemini-2.5-flash"
+  RUBE_MCP_BASE_URL: "https://rube.app"
+  MEMU_API_BASE_URL: "https://api.memu.so"
+  REDIS_HOST: "fitola-redis"
+  REDIS_PORT: "6379"

@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: fitola-backend
+  namespace: fitola
+  labels:
+    app: fitola-backend
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: 8000
+    protocol: TCP
+    name: http
+  selector:
+    app: fitola-backend
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fitola-redis
+  namespace: fitola
+  labels:
+    app: fitola-redis
+spec:
+  type: ClusterIP
+  ports:
+  - port: 6379
+    targetPort: 6379
+    protocol: TCP
+    name: redis
+  selector:
+    app: fitola-redis
