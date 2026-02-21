@@ -5,3 +5,4 @@ export 'fitbuddy.dart';
 export 'fitness_plan.dart';
 export 'nutrition_plan.dart';
 export 'model_utils.dart';
+export 'economy_profile.dart';

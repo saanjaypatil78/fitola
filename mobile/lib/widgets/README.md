@@ -23,6 +23,19 @@ Expandable floating action button for status management and chat translation.
 
 ### Data Display
 
+#### VipDiamondBadge
+Diamond-style VIP badge for premium levels (`VIP 1` to `VIP 999`).
+Each level unlocks one additional feature automatically.
+```dart
+VipDiamondBadge(
+  vipLevel: 128,
+  showNextLevelHint: true,
+)
+```
+- Supports VIP 1 to VIP 999
+- Adds +1 unlocked feature at every level
+- Highlights the latest smart feature unlock
+
 #### StatColumn
 Displays a statistic with value and label, commonly used for metrics.
 ```dart
@@ -201,6 +214,6 @@ When adding new widgets:
 6. Export in `widgets.dart`
 
 ## Widget Count
-- **Total Widgets**: 15
-- **New in This Phase**: 10
+- **Total Widgets**: 16
+- **New in This Phase**: 11
 - **Previously Implemented**: 5

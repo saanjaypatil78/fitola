@@ -608,6 +608,37 @@ Get global leaderboard.
 }
 ```
 
+
+#### Economy (F2P + P2E)
+
+##### GET /economy/profile/{user_id}
+Get a user's economy profile including free-to-play progression and play-to-earn eligibility.
+
+##### POST /economy/session-complete
+Award F2P rewards for a workout session and calculate P2E claim projections.
+
+**Request Body:**
+```json
+{
+  "user_id": "uuid",
+  "workout_minutes": 45,
+  "intensity": "moderate",
+  "shared_progress": true
+}
+```
+
+##### POST /economy/claim
+Submit a P2E claim request (minimum threshold enforced).
+
+**Request Body:**
+```json
+{
+  "user_id": "uuid",
+  "amount_fitcoins": 700
+}
+```
+
+
 ## Development Setup
 
 ### Prerequisites

@@ -3,41 +3,18 @@ import logging
 import os
 import re
 from contextlib import asynccontextmanager
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List, Optional
 from urllib.parse import urlparse
 
-from fastapi import FastAPI, HTTPException, Request
-from pydantic import BaseModel, Field
-from dotenv import load_dotenv
-from google import genai
 import httpx
+from dotenv import load_dotenv
+from fastapi import FastAPI, HTTPException, Query, Request
+from fastapi.middleware.cors import CORSMiddleware
+from google import genai
+from pydantic import BaseModel, EmailStr, Field
 
 load_dotenv()
 logger = logging.getLogger(__name__)
-from typing import List, Optional
-from fastapi import FastAPI, HTTPException, Query
-from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel, EmailStr
-from google import genai
-from dotenv import load_dotenv
-import math
-
-load_dotenv()
-
-app = FastAPI(
-    title="Fitola Backend API",
-    description="AI-Powered Personal Fitness & Social Wellness Platform",
-    version="1.0.0",
-)
-
-# CORS Configuration
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # Configure for production
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
 
 # Initialize Gemini Client
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
@@ -157,7 +134,21 @@ async def close_rube_http_client() -> None:
         RUBE_HTTP_CLIENT = None
 
 
-app = FastAPI(title="Fitola Backend", version="1.0.0", lifespan=lifespan)
+app = FastAPI(
+    title="Fitola Backend API",
+    description="AI-Powered Personal Fitness & Social Wellness Platform",
+    version="1.0.0",
+    lifespan=lifespan,
+)
+
+# CORS Configuration
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Configure for production
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 async def fetch_rube_json(
@@ -292,6 +283,19 @@ class ChatMessageRequest(BaseModel):
     message: str
     type: str = "text"
     file_url: Optional[str] = None
+
+
+class SessionCompletionRequest(BaseModel):
+    user_id: str
+    workout_minutes: int = Field(ge=5, le=360)
+    intensity: str = Field(default="moderate")
+    shared_progress: bool = False
+
+
+class RewardClaimRequest(BaseModel):
+    user_id: str
+    amount_fitcoins: int = Field(gt=0, le=10000)
+
 
 
 # =============================================================================
@@ -665,6 +669,111 @@ async def stop_location_sharing(user_id: str, target_user_id: str):
         "message": "Location sharing stopped",
         "user_id": user_id,
         "target_user_id": target_user_id,
+    }
+
+
+
+
+def _normalize_intensity_multiplier(intensity: str) -> float:
+    intensity_map = {
+        "light": 1.0,
+        "moderate": 1.2,
+        "intense": 1.5,
+    }
+    return intensity_map.get(intensity.lower(), 1.0)
+
+
+def _build_economy_profile(user_id: str) -> dict:
+    # F2P: keep progression available to all users via FitCoins + XP + missions.
+    # P2E: allow optional reward claims backed by anti-abuse checks and thresholds.
+    return {
+        "user_id": user_id,
+        "model": {
+            "f2p": {
+                "enabled": True,
+                "core_loops": [
+                    "daily workout missions",
+                    "streak multipliers",
+                    "social challenge bonuses",
+                ],
+                "soft_currency": "fitcoins",
+            },
+            "p2e": {
+                "enabled": True,
+                "claim_window": "weekly",
+                "minimum_claim_fitcoins": 500,
+                "anti_cheat": [
+                    "device anomaly checks",
+                    "session duration validation",
+                    "streak fraud detection",
+                ],
+            },
+        },
+        "wallet": {
+            "fitcoins": 1240,
+            "xp": 9320,
+            "season_level": 18,
+            "eligible_to_claim": True,
+        },
+        "progression": {
+            "daily_missions_completed": 2,
+            "weekly_target": 5,
+            "active_streak_days": 12,
+        },
+    }
+
+
+@app.get("/api/v1/economy/profile/{user_id}")
+async def get_economy_profile(user_id: str):
+    """Return blended F2P + P2E economy state for a user."""
+    return _build_economy_profile(user_id)
+
+
+@app.post("/api/v1/economy/session-complete")
+async def complete_economy_session(payload: SessionCompletionRequest):
+    """Award F2P progression and calculate P2E claimable credits for a session."""
+    intensity_multiplier = _normalize_intensity_multiplier(payload.intensity)
+    base_fitcoins = max(10, int(payload.workout_minutes * 0.8))
+    social_bonus = 25 if payload.shared_progress else 0
+    earned_fitcoins = int(base_fitcoins * intensity_multiplier) + social_bonus
+    earned_xp = int(payload.workout_minutes * 4 * intensity_multiplier)
+
+    return {
+        "user_id": payload.user_id,
+        "session": {
+            "workout_minutes": payload.workout_minutes,
+            "intensity": payload.intensity,
+            "shared_progress": payload.shared_progress,
+        },
+        "f2p_rewards": {
+            "earned_fitcoins": earned_fitcoins,
+            "earned_xp": earned_xp,
+            "streak_bonus_applied": payload.workout_minutes >= 30,
+        },
+        "p2e_projection": {
+            "claimable_fitcoins": int(earned_fitcoins * 0.3),
+            "claim_window": "weekly",
+            "status": "pending_verification",
+        },
+    }
+
+
+@app.post("/api/v1/economy/claim")
+async def claim_p2e_rewards(payload: RewardClaimRequest):
+    """Claim P2E rewards if the minimum threshold is met."""
+    minimum_claim = 500
+    if payload.amount_fitcoins < minimum_claim:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Minimum claim is {minimum_claim} FitCoins for P2E withdrawals.",
+        )
+
+    return {
+        "user_id": payload.user_id,
+        "claimed_fitcoins": payload.amount_fitcoins,
+        "status": "queued",
+        "eta": "24h",
+        "message": "P2E claim request queued for anti-cheat verification.",
     }
 
 
