@@ -62,6 +62,8 @@
 - **National Rankings**: Country-specific leaderboards
 - **Streak Tracking**: Consistency rewards
 - **Achievement Badges**: Milestone celebrations
+- **F2P Economy Loop**: Free progression with FitCoins, XP, and daily missions
+- **P2E Reward Layer**: Verified weekly claims from earned FitCoins (anti-cheat protected)
 
 ---
 
