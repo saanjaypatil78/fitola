@@ -84,7 +84,7 @@ yarn.lock
 
 # Android
 mobile/android/.gradle/
-mobile/android/gradle/
+mobile/android/gradle/wrapper/gradle-wrapper.jar
 mobile/android/local.properties
 mobile/android/app/debug/
 mobile/android/app/release/
