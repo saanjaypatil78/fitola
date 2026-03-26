@@ -38,6 +38,9 @@ This guide explains how to deploy and run the Fitola backend.
 
 Fitola is pre-configured for Vercel using `vercel.json`.
 
+**One-click deploy:**  
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/saanjaypatil78/fitola&project-name=fitola&repository-name=fitola&env=GEMINI_API_KEY,GEMINI_MODEL,RUBE_MCP_JWT,RUBE_MCP_BASE_URL,RUBE_MCP_TIMEOUT,STITCH_PROJECT_ID,CLICKHOUSE_HOST,CLICKHOUSE_PORT,CLICKHOUSE_USER,CLICKHOUSE_PASSWORD,CLICKHOUSE_SECURE,CLICKHOUSE_VERIFY,CLICKHOUSE_CONNECT_TIMEOUT,CLICKHOUSE_SEND_RECEIVE_TIMEOUT,CLICKHOUSE_MCP_AUTH_TOKEN,SUPABASE_URL,SUPABASE_KEY&envDescription=Add%20your%20API%20keys%20to%20finish%20deployment)
+
 1. **Connect GitHub to Vercel**:
    - Go to your [Vercel Dashboard](https://vercel.com/dashboard).
    - Click **Add New Project** and import the `saanjaypatil78/fitola` repository.
@@ -69,7 +72,58 @@ Fitola is pre-configured for Vercel using `vercel.json`.
 
 ---
 
-## 3. API Endpoints
+## 3. Netlify Functions Deployment (Serverless)
+
+Deploy the FastAPI backend as a Netlify serverless function.
+
+**One-click deploy:**  
+[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/saanjaypatil78/fitola#GEMINI_API_KEY=&GEMINI_MODEL=gemini-2.5-flash&RUBE_MCP_JWT=&RUBE_MCP_BASE_URL=https://rube.app&RUBE_MCP_TIMEOUT=10&STITCH_PROJECT_ID=&CLICKHOUSE_HOST=&CLICKHOUSE_PORT=&CLICKHOUSE_USER=&CLICKHOUSE_PASSWORD=&SUPABASE_URL=&SUPABASE_KEY=)
+
+1. **What you get**
+   - `netlify.toml` routes all traffic to `/.netlify/functions/api`.
+   - `netlify/functions/api.py` wraps the FastAPI app with `Mangum` for AWS Lambda.
+   - Minimal static stub at `/` that documents the function path.
+
+2. **Environment variables**
+   - Configure the same variables as Vercel (Gemini, Rube MCP, Supabase, ClickHouse, Stitch).
+
+3. **Test locally**
+   ```bash
+   npm install -g netlify-cli
+   netlify dev
+   # API available at http://localhost:8888/.netlify/functions/api
+   ```
+
+---
+
+## 4. Google Cloud Run Deployment
+
+Use the provided `Dockerfile` to deploy the backend to Cloud Run.
+
+**One-click deploy:**  
+[![Run on Google Cloud](https://deploy.cloud.run/button.svg)](https://deploy.cloud.run?git_repo=https://github.com/saanjaypatil78/fitola.git)
+
+1. **Manual deployment**
+   ```bash
+   gcloud builds submit --tag gcr.io/$(gcloud config get-value project)/fitola .
+   gcloud run deploy fitola \
+     --image gcr.io/$(gcloud config get-value project)/fitola \
+     --platform managed \
+     --allow-unauthenticated \
+     --region us-central1 \
+     --set-env-vars GEMINI_API_KEY=... \
+     --set-env-vars RUBE_MCP_JWT=... \
+     --set-env-vars SUPABASE_URL=... \
+     --set-env-vars SUPABASE_KEY=...
+   ```
+
+2. **Runtime**
+   - Container listens on port `8080` (Cloud Run default).
+   - `uvicorn main:app` from `/app/backend`.
+
+---
+
+## 5. API Endpoints
 
 - `POST /api/v1/chat`: AI-powered chat (Gemini 2.5 Flash).
 - `GET /api/v1/map/nearby`: FitBuddy locator logic.
@@ -83,11 +137,11 @@ The `POST /api/v1/plans/ai` response includes `plan_json` (parsed JSON or null),
 
 ---
 
-## 4. Automated Deployment Workflow
+## 6. Automated Deployment Workflow
 
 Fitola includes automated deployment capabilities through agentic workflows and CI/CD pipelines.
 
-### 4.1 One-Command Deployment
+### 6.1 One-Command Deployment
 
 Use the automated deployment script:
 
@@ -109,7 +163,7 @@ The script automatically:
 - Builds mobile apps (APK & Web)
 - Validates deployment
 
-### 4.2 CI/CD Pipeline
+### 6.2 CI/CD Pipeline
 
 Fitola supports GitHub Actions for automated CI/CD:
 
@@ -127,7 +181,7 @@ Fitola supports GitHub Actions for automated CI/CD:
 
 See **[AUTOMATION_GUIDE.md](AUTOMATION_GUIDE.md)** for complete CI/CD setup.
 
-### 4.3 Agentic Development Automation
+### 6.3 Agentic Development Automation
 
 Leverage MCP servers for deployment automation:
 

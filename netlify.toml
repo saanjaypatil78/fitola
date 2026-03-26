@@ -1,0 +1,13 @@
+[build]
+  command = "echo \"No static build required\""
+  publish = "netlify/public"
+  functions = "netlify/functions"
+
+[functions]
+  python_version = "3.12"
+  included_files = ["backend/**"]
+
+[[redirects]]
+  from = "/*"
+  to = "/.netlify/functions/api"
+  status = 200

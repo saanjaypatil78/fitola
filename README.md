@@ -325,6 +325,14 @@ flutter run
 
 ## 🚀 Deployment
 
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/saanjaypatil78/fitola&project-name=fitola&repository-name=fitola&env=GEMINI_API_KEY,GEMINI_MODEL,RUBE_MCP_JWT,RUBE_MCP_BASE_URL,RUBE_MCP_TIMEOUT,STITCH_PROJECT_ID,CLICKHOUSE_HOST,CLICKHOUSE_PORT,CLICKHOUSE_USER,CLICKHOUSE_PASSWORD,CLICKHOUSE_SECURE,CLICKHOUSE_VERIFY,CLICKHOUSE_CONNECT_TIMEOUT,CLICKHOUSE_SEND_RECEIVE_TIMEOUT,CLICKHOUSE_MCP_AUTH_TOKEN,SUPABASE_URL,SUPABASE_KEY&envDescription=Add%20your%20API%20keys%20to%20finish%20deployment)
+[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/saanjaypatil78/fitola#GEMINI_API_KEY=&GEMINI_MODEL=gemini-2.5-flash&RUBE_MCP_JWT=&RUBE_MCP_BASE_URL=https://rube.app&RUBE_MCP_TIMEOUT=10&STITCH_PROJECT_ID=&CLICKHOUSE_HOST=&CLICKHOUSE_PORT=&CLICKHOUSE_USER=&CLICKHOUSE_PASSWORD=&SUPABASE_URL=&SUPABASE_KEY=)
+[![Run on Google Cloud](https://deploy.cloud.run/button.svg)](https://deploy.cloud.run?git_repo=https://github.com/saanjaypatil78/fitola.git)
+
+- Vercel: serverless Python via `vercel.json` (no extra config needed).
+- Netlify: serverless wrapper at `/.netlify/functions/api` using `Mangum`.
+- Google Cloud Run: containerized backend via the included `Dockerfile` (port `8080`).
+
 ```bash
 # Deploy everything
 npm run deploy
